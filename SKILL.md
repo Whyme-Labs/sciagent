@@ -261,3 +261,66 @@ Cannot proceed until ALL of the following are documented:
 ### Research Log Entry
 
 Write `research-log/000-setup.md` recording all setup decisions.
+
+---
+
+## Phase 1: Literature Review
+
+### What to Do
+
+1. **Generate search queries** (5-15) covering:
+   - The exact problem from the idea DNA
+   - Key techniques likely involved
+   - Known baselines and benchmarks for the domain
+   - Recent survey papers
+
+2. **Dispatch literature searcher subagents** — one per available source, in parallel.
+
+   Use the `prompts/literature-searcher.md` template. For each dispatch, fill in:
+   - The search queries
+   - Which source to search (web search, arXiv, Scholar Gateway, etc.)
+   - How many papers to find (divide the total target across sources)
+
+   ```
+   Agent tool:
+     subagent_type: general-purpose
+     model: haiku  # fast/cheap — mechanical search + extraction
+     description: "Literature search: [source name]"
+     prompt: [filled-in template from prompts/literature-searcher.md]
+   ```
+
+3. **Synthesize subagent results:**
+   - Deduplicate papers found by multiple sources
+   - Resolve conflicting relevance assessments
+   - Merge into a unified collection
+
+4. **Build the literature map:**
+   - **What's been tried** — group by technique family
+   - **What works** — strongest results with specific numbers on which benchmarks
+   - **What's missing** — gaps, contradictions, unexplored combinations
+   - **Mathematical foundations** — key theorems, proofs, bounds underpinning the field
+   - **Baselines to beat** — current SOTA with exact metric values
+
+5. **Identify 2-3 research directions** based on gaps. For each:
+   - What gap it addresses
+   - Why existing work hasn't solved it
+   - What prior evidence suggests it could work
+   - Preliminary feasibility (is this doable with our compute?)
+
+6. **Check in with user** — present the literature map and proposed directions. Wait for the user to pick a direction (or suggest their own).
+
+### Quality Gate
+
+Cannot proceed until:
+- [ ] Literature map documented with papers grouped by technique
+- [ ] At least one gap identified with cited evidence
+- [ ] Baselines to beat identified with specific metric numbers
+- [ ] User has approved a research direction
+
+### Research Log Entry
+
+Write `research-log/001-literature-review.md` — full literature map, paper summaries, gaps, chosen direction.
+
+### Git Commit
+
+`research: literature review — [N] papers surveyed, pursuing [direction]`
