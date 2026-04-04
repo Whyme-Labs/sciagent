@@ -17,18 +17,24 @@ Every experiment is gated by scientific reasoning. No blind hyperparameter tweak
 
 ## Installation
 
-### As a Claude Code Skill
-
-Add to your Claude Code configuration:
+### Personal Skill (available across all projects)
 
 ```bash
-claude mcp add sciagent -- cat /path/to/sciagent/SKILL.md
+# Clone the repo
+git clone https://github.com/Whyme-Labs/sciagent.git
+
+# Symlink or copy into Claude Code's skill discovery directory
+ln -s "$(pwd)/sciagent" ~/.claude/skills/sciagent
 ```
 
-Or reference it directly when starting a session:
+Claude Code auto-discovers skills from `~/.claude/skills/`. Once installed, invoke with `/sciagent` or Claude will auto-trigger it when your request matches the skill description.
 
-```
-Read sciagent/SKILL.md and follow the research protocol.
+### Project Skill (available only in one project)
+
+```bash
+# From your project root
+mkdir -p .claude/skills
+ln -s /path/to/sciagent .claude/skills/sciagent
 ```
 
 ### Requirements
