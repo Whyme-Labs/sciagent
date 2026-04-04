@@ -199,3 +199,65 @@ research: experiment batch complete — [headline finding]
 research: analysis iter [X] — [outcome], [headline finding]
 research: paper draft v1 — [title]
 ```
+
+---
+
+## Phase 0: Research Setup
+
+### What to Do
+
+1. **Decompose the research idea into DNA components:**
+   - **Problem** — the concrete, actionable pain point
+   - **Assumption** — why the problem exists or what would fix it
+     - `explicit`: stated by the user
+     - `inferred`: deduced by you (clearly labeled)
+   - **Novelty claim** — what is genuinely new about this approach
+   - **Domain** — ML, systems, data science, etc.
+   - **Success criteria** — what would a good result look like?
+   - **Scope constraints** — time budget, compute budget, experiment count limit
+
+2. **Quick literature scan** (3-5 papers) to validate the idea isn't trivially solved or fundamentally flawed. Use available search tools directly (no subagent needed for this small scan).
+
+3. **Estimate compute requirements.** Ask the user:
+   - Where to run experiments (local machine specs, or remote — SSH details, cloud provider)
+   - Budget constraints (time, money, API calls)
+   - Document their answers — this becomes the paper's Experimental Setup section.
+
+4. **Set up the research workspace:**
+   - Initialize git repo (or use existing)
+   - Create the directory structure (see Research Workspace Structure above)
+   - Document the environment in `experiments/configs/environment.md`:
+     - OS, hardware specs, GPU model and VRAM
+     - Python version, key library versions
+     - CUDA/driver versions (if applicable)
+   - Create `results.tsv` with header row:
+     ```
+     run_id	metric	metric_value	memory_gb	runtime_s	status	description
+     ```
+   - Git commit: `research: initialize workspace for [topic]`
+
+5. **Define the evaluation contract** in `experiments/configs/evaluation-contract.md`:
+   - What can you modify? (model code, hyperparameters, training logic)
+   - What is read-only? (evaluation harness, data loading, metrics, dataset splits)
+   - What is the primary metric and how is it computed?
+   - What are the immutable constants? (sequence length, dataset, eval protocol)
+
+6. **Set research intensity** — ask user:
+   - **Light:** quick exploration, 5-10 papers, few experiments
+   - **Medium:** solid investigation, 15-25 papers, full experiment plan
+   - **Deep:** publication-grade, 30-50 papers, comprehensive ablations
+
+### Quality Gate
+
+Cannot proceed until ALL of the following are documented:
+- [ ] Idea DNA (problem / assumption / novelty_claim)
+- [ ] Success criteria with specific metrics and thresholds
+- [ ] Compute environment configured and documented
+- [ ] Evaluation contract written
+- [ ] Research intensity set
+- [ ] `results.tsv` initialized
+- [ ] Workspace committed to git
+
+### Research Log Entry
+
+Write `research-log/000-setup.md` recording all setup decisions.
