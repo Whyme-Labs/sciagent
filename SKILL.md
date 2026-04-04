@@ -423,3 +423,129 @@ Write `research-log/002-hypothesis.md` — full hypothesis, mathematical derivat
 ### Git Commit
 
 `research: hypothesis — [one-line claim summary]`
+
+---
+
+## Phase 3: PoC Validation
+
+### What to Do
+
+1. **Design a minimal probe** — the smallest possible experiment that tests the core assumptions:
+   - A toy dataset or subset (1-5% of full data)
+   - A simplified version of the architecture
+   - A back-of-envelope calculation implemented as code
+   - A mathematical simulation checking theoretical bounds hold empirically
+
+   The PoC should complete in **minutes**, not hours.
+
+2. **Dispatch experiment implementer subagent.**
+
+   Use the `prompts/experiment-implementer.md` template. Fill in:
+   - The assumption being tested
+   - Expected output (what numbers/behavior = confirm vs. reject)
+   - Target environment from `experiments/configs/environment.md`
+   - Run constraints (must complete in minutes)
+   - The hypothesis context
+
+   ```
+   Agent tool:
+     subagent_type: general-purpose
+     model: sonnet  # standard — code writing with clear spec
+     description: "PoC: test [assumption]"
+     prompt: [filled-in template from prompts/experiment-implementer.md]
+   ```
+
+   The subagent writes PoC code in `experiments/poc/`, runs it, and reports:
+   code location, raw output, runtime, errors.
+
+3. **Interpret results against predictions:**
+   - **Assumptions confirmed** — document the evidence. Proceed to Phase 4.
+   - **Assumptions partially confirmed** — revise the hypothesis to account for what you learned. Update `research-log/002-hypothesis.md`. Re-run the self-critique from Phase 2.
+   - **Assumptions violated** — this is a valuable finding, not a failure. Document why. Loop back to Phase 2 with the new evidence.
+
+4. **Checkpoint with user** — present PoC results, your interpretation, and your recommendation: proceed / revise hypothesis / abandon direction.
+
+### Quality Gate
+
+Cannot proceed to full experiments unless:
+- [ ] PoC results support the core assumptions (or hypothesis was revised to account for findings)
+- [ ] User approved the go/no-go decision
+
+### Research Log Entry
+
+Write `research-log/003-poc-[name].md` — design rationale, code location, results, interpretation, decision.
+
+### Git Commit
+
+`research: poc — [assumption tested], result: [confirmed/revised/rejected]`
+
+---
+
+## Phase 4: Experiment Design & Execution
+
+### What to Do
+
+1. **Design the experiment plan** — an adaptive strategy, not a single run:
+   - **Baseline run** — reproduce SOTA or closest comparison from literature. MUST succeed first. If you can't reproduce the baseline, your results mean nothing.
+   - **Core experiment** — implement the hypothesis. Single clean change from baseline.
+   - **Ablation studies** — if hypothesis involves components A+B+C, plan: A-only, B-only, C-only, A+B, A+C, B+C, A+B+C to isolate contributions.
+   - **Scaling analysis** — 2-3 runs at different data/model/compute scales if relevant.
+   - **Robustness checks** — different random seeds, dataset splits, hyperparameter ranges.
+
+   Write the plan explicitly: what each run changes, estimated time, estimated compute.
+
+2. **Dispatch experiment implementer subagent for each run, sequentially.**
+
+   Use the `prompts/experiment-implementer.md` template. For each dispatch, fill in:
+   - Full experiment spec (what to implement, what config to use, what metrics to log)
+   - Environment details from `experiments/configs/environment.md`
+   - Baseline results (after baseline run completes)
+   - Run commands and output locations
+
+   ```
+   Agent tool:
+     subagent_type: general-purpose
+     model: sonnet  # standard — code writing
+     description: "Experiment: [run-id] — [description]"
+     prompt: [filled-in template from prompts/experiment-implementer.md]
+   ```
+
+   The subagent writes clean experiment code in `experiments/`, runs it using context management rules (redirect output, grep metrics), and reports: code location, extracted metrics, runtime, errors.
+
+3. **After each run, interpret and adapt:**
+   - **Baseline**: if results don't match literature within reasonable margin, stop and debug. Do NOT proceed with a broken baseline.
+   - **Core experiment**: compare against baseline on pre-defined metrics.
+   - **Adapt the plan based on core results:**
+     - Core succeeds → proceed with full ablation + scaling plan
+     - Core partially succeeds → narrow ablations to the underperforming component, skip scaling
+     - Core fails → stop, log failure with analysis, loop back to Phase 2
+
+4. **Track results in two places after each run:**
+   - Append to `results.tsv`: run_id, metric, value, memory_gb, runtime_s, status, description
+   - Write narrative research log entry
+
+   Apply the simplicity criterion after each run.
+
+   If improved: `git commit` and keep.
+   If regressed or unchanged: `git reset` to last kept state, log as tried-and-failed.
+
+   Generate comparison plots after each batch of related runs.
+
+5. **Checkpoint with user** after baseline + core experiment, before ablations.
+
+### Quality Gate
+
+Cannot claim success unless:
+- [ ] Baseline is reproduced (matches literature within reasonable margin)
+- [ ] Core experiment beats baseline on the pre-defined primary metric by the pre-defined threshold
+- [ ] Ablations isolate which components contribute
+
+### Research Log Entry
+
+Per-run: `research-log/004-exp-[run-id].md` — config, results, comparison, interpretation.
+Batch summary: `research-log/004-exp-summary.md` — full results table.
+
+### Git Commit
+
+Per-run: `research: exp [run-id] — [brief result]`
+After batch: `research: experiment batch complete — [headline finding]`
