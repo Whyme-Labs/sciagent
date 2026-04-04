@@ -549,3 +549,173 @@ Batch summary: `research-log/004-exp-summary.md` — full results table.
 
 Per-run: `research: exp [run-id] — [brief result]`
 After batch: `research: experiment batch complete — [headline finding]`
+
+---
+
+## Phase 5: Analysis & Iteration
+
+### What to Do
+
+1. **Dispatch results analyzer subagent.**
+
+   Use the `prompts/results-analyzer.md` template. Fill in:
+   - Raw metrics from every run (copy from research log entries and results.tsv)
+   - The hypothesis and predicted outcomes
+   - Baseline numbers from literature
+   - Which figures to generate (comparison charts, ablation heatmaps, scaling curves, loss trajectories)
+
+   ```
+   Agent tool:
+     subagent_type: general-purpose
+     model: sonnet  # standard — statistics + figures
+     description: "Results analysis: iteration [X]"
+     prompt: [filled-in template from prompts/results-analyzer.md]
+   ```
+
+   Subagent produces: results tables, statistical tests (t-test, confidence intervals), publication-quality figures saved to `paper/figures/`.
+
+   Review the analyzer's output for correctness before proceeding.
+
+2. **Deep analysis — answer each question explicitly:**
+   - **Did it work?** Does the primary metric meet the success threshold?
+   - **Why did it work (or not)?** Does the empirical evidence support the mathematical theory from Phase 2?
+   - **What contributed most?** Which components mattered in ablations?
+   - **How robust is it?** Consistent across seeds, splits, scales?
+   - **What was surprising?** Any unexpected results?
+   - **How does it compare to literature?** Position against the baselines from Phase 1.
+
+3. **Assess diminishing returns:**
+   - Compare the improvement trajectory across iterations.
+   - If the last N iterations yielded < X% cumulative improvement, flag: "Diminishing returns detected. Recommend concluding or pivoting."
+
+4. **Decide next action — one of three paths:**
+
+   **Path A: Iterate** — results are promising but there's a clear evidence-based next step.
+   - State what you'll try next AND why, citing evidence from this analysis.
+   - Loop back to Phase 2 with accumulated knowledge.
+   - Increment the iteration counter.
+
+   **Path B: Pivot** — hypothesis was disproved but the evidence reveals a new direction.
+   - Document what was learned and why the original direction didn't work.
+   - Propose a new direction with justification from the evidence just gathered.
+   - Loop back to Phase 1 (targeted literature search) or Phase 2.
+   - Checkpoint with user before pivoting.
+
+   **Path C: Conclude** — success criteria met, diminishing returns, or budget exhausted.
+   - Summarize the complete research journey.
+   - Proceed to Phase 6.
+
+5. **Checkpoint with user** — present analysis and recommended path. Include remaining budget: experiments left, compute left, time left.
+
+### Quality Gate
+
+Cannot iterate without evidence-based justification for the next experiment.
+Cannot conclude without answering ALL six analysis questions above.
+User must approve the path decision.
+
+### Research Log Entry
+
+Write `research-log/[N]-analysis-iter-[X].md` — results table, statistical tests, figure list, answers to all analysis questions, decision and rationale.
+
+### Git Commit
+
+`research: analysis iter [X] — [iterate/pivot/conclude], [headline finding]`
+
+---
+
+## Phase 6: Paper Writing
+
+### What to Do
+
+1. **Plan the paper structure** — define the title, write a section-by-section outline, and map which research log content feeds into each section.
+
+2. **Dispatch section writer subagents in parallel** for independent sections.
+
+   Use the `prompts/section-writer.md` template. For each dispatch, fill in:
+   - Which section to write
+   - The relevant research log content (pasted in full)
+   - The paper outline for overall context
+   - Style guidelines: academic tone, third person, cite as [Author, Year]
+
+   Parallelizable groups:
+   - **Group 1 (parallel):** Related Work, Methodology, Experimental Setup
+   - **Group 2 (after Group 1):** Results, Discussion
+   - **Group 3 (after Group 2):** Introduction, Abstract, Conclusion
+
+   ```
+   Agent tool:
+     subagent_type: general-purpose
+     model: sonnet  # standard — writing from structured inputs
+     description: "Write section: [section name]"
+     prompt: [filled-in template from prompts/section-writer.md]
+   ```
+
+3. **Assemble and edit** — merge section outputs into a coherent paper:
+   - Fix cross-section references
+   - Ensure notation is consistent throughout
+   - Write transitional text between sections
+   - Verify the paper tells a coherent story anchored in the idea DNA
+
+   The complete paper structure:
+   - **Title** — concise, descriptive
+   - **Abstract** — problem, approach, key result, significance (150-300 words)
+   - **Introduction** — motivate problem, state numbered contributions, outline structure
+   - **Related Work** — organized by technique family, fair positioning
+   - **Methodology** — formal presentation, all assumptions stated, proofs included
+   - **Experimental Setup** — reproducible from this section alone
+   - **Results** — tables, figures, statistical significance
+   - **Discussion** — interpretation, honest limitations, unexpected findings
+   - **Conclusion** — contributions, implications, evidence-based future work
+   - **References** — all cited papers, properly formatted
+
+4. **Supplementary materials:**
+   - Full experiment log table (all runs, all metrics — from results.tsv)
+   - Hyperparameter configurations for every run
+   - Additional figures
+   - Proof derivations too long for main text
+   - Environment and reproducibility checklist
+
+5. **Dispatch paper reviewer subagent** (most capable model).
+
+   Use the `prompts/paper-reviewer.md` template. Fill in the complete assembled paper text.
+
+   ```
+   Agent tool:
+     subagent_type: general-purpose
+     model: opus  # most capable — catches subtle issues
+     description: "Paper review: [title]"
+     prompt: [filled-in template from prompts/paper-reviewer.md]
+   ```
+
+   Reviewer returns:
+
+   **Blind assessment:**
+   - Claims backed by evidence? Notation consistent? Limitations honest?
+   - Related work fair? Anti-stacking check passed?
+   - Assessment: PUBLISH_READY / NEEDS_REVISION
+
+   **Actionable coaching:**
+   - Field-level rewrite suggestions, missing references, structural improvements.
+
+   If NEEDS_REVISION: fix issues (or dispatch targeted section writers) and re-dispatch reviewer.
+
+6. **Generate output** in user's preferred format:
+   - **Primary: DOCX** — use document generation tools
+   - **Optional: LaTeX** — .tex + .bib files
+   - **Fallback: Markdown** — save in `paper/`
+
+7. **Present to user:** "Paper draft complete: [title]. [word count] words, [N] figures, [M] references. Saved to [path]. Please review."
+
+### Quality Gate
+
+Paper cannot be marked complete until:
+- [ ] Paper reviewer assessment is PUBLISH_READY
+- [ ] User has reviewed the draft
+
+### Research Log Entry
+
+Write `research-log/[N]-paper-draft.md` — compilation decisions, reviewer findings and fixes.
+
+### Git Commit
+
+`research: paper draft v1 — [title]`
