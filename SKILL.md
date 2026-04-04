@@ -324,3 +324,102 @@ Write `research-log/001-literature-review.md` — full literature map, paper sum
 ### Git Commit
 
 `research: literature review — [N] papers surveyed, pursuing [direction]`
+
+---
+
+## Phase 2: Hypothesis Formation
+
+### What to Do
+
+1. **Formulate the hypothesis** with these components:
+   - **Claim** — precise, falsifiable statement ("We hypothesize that X will improve Y by Z because...")
+   - **Independent variables** — what you're changing
+   - **Dependent variables** — what you're measuring
+   - **Controls** — what stays constant
+   - **Expected effect** — directional prediction with estimated magnitude if possible
+
+2. **Provide mathematical/theoretical justification** (HARD GATE — you cannot skip this):
+   - Derive or cite the mathematical basis for why the hypothesis should hold
+   - Show the reasoning chain explicitly: "From [theorem/result A] in [Paper X], we know that... Combined with [finding B] from [Paper Y], this implies..."
+   - If proposing a novel approach, prove or argue formally that it is sound — not just "it might work"
+   - State ALL assumptions explicitly
+
+3. **Predict failure modes:**
+   - What could go wrong?
+   - Under what conditions does the theoretical justification break?
+   - What result would **disprove** the hypothesis?
+   - What result would be inconclusive vs. conclusive?
+
+4. **Define metrics:**
+   - Primary metric (the one that decides keep/reject)
+   - Secondary metrics (informative but not decisive)
+   - Baseline numbers to beat (from Phase 1 literature review)
+   - Concrete thresholds: what number = success? What number = failure?
+
+5. **Anti-stacking check** — explicitly verify before proceeding:
+   - Is this a genuine conceptual reframing, or just bolting techniques together?
+   - Can the hypothesis be explained WITHOUT the words "combine" or "integrate"?
+   - Does it propose a new way of *thinking* about the problem, or just a new configuration of existing parts?
+   - If it fails this check, go back to step 1 and rethink.
+
+6. **Self-critique** — re-read your hypothesis and justification. Ask:
+   - Is this falsifiable?
+   - Is the math correct? (re-derive it)
+   - Am I making logical leaps without evidence?
+   - Would a skeptical reviewer at a top venue accept this justification?
+   - Does this still advance the user's original idea DNA, or has it drifted?
+   - If ANY answer is no, revise before continuing.
+
+7. **Dispatch theory reviewer subagent** (most capable model).
+
+   Use the `prompts/theory-reviewer.md` template. Fill in:
+   - The complete hypothesis (all components from step 1)
+   - The full mathematical justification (step 2)
+   - The cited evidence chain
+   - The predicted failure modes (step 3)
+
+   ```
+   Agent tool:
+     subagent_type: general-purpose
+     model: opus  # most capable — deep mathematical reasoning
+     description: "Theory review: [hypothesis summary]"
+     prompt: [filled-in template from prompts/theory-reviewer.md]
+   ```
+
+   The reviewer returns two outputs:
+
+   **Blind assessment:**
+   - Mathematical errors or gaps
+   - Logical leaps without evidence
+   - Missing assumptions
+   - Stacking detected
+   - Alternative explanations not accounted for
+   - Overall: RIGOROUS / NEEDS_REVISION / FUNDAMENTALLY_FLAWED
+
+   **Actionable coaching:**
+   - Suggestions for strengthening the derivation
+   - Additional references
+   - Alternative formulations
+
+   Handle the assessment:
+   - RIGOROUS: proceed to Phase 3.
+   - NEEDS_REVISION: revise based on coaching, re-dispatch reviewer.
+   - FUNDAMENTALLY_FLAWED: rethink entirely. Consider looping to Phase 1 for more literature.
+
+### Quality Gate
+
+Cannot proceed until:
+- [ ] Hypothesis is falsifiable with defined variables and controls
+- [ ] Mathematical/theoretical justification is complete with citations
+- [ ] Failure modes identified
+- [ ] Metrics defined with concrete thresholds
+- [ ] Anti-stacking check passed
+- [ ] Theory reviewer assessment is RIGOROUS
+
+### Research Log Entry
+
+Write `research-log/002-hypothesis.md` — full hypothesis, mathematical derivation, evidence chain, predictions, failure modes, reviewer assessment.
+
+### Git Commit
+
+`research: hypothesis — [one-line claim summary]`
