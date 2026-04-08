@@ -55,6 +55,12 @@ Agent tool:
     - Or does it read as "we combined X + Y + Z"?
     - Does the narrative frame techniques as means to a conceptual goal, or as the contribution itself?
 
+    **Occam's Razor Check:**
+    - Are explanations in the Discussion more complex than the evidence warrants?
+    - Does the Methodology contain unnecessary steps or components?
+    - Could a simpler approach have achieved comparable results? If so, is this acknowledged?
+    - Are there claims that invoke complex mechanisms when simpler ones suffice?
+
     **Coherence and Flow:**
     - Does each section connect logically to the next?
     - Is there a clear narrative arc: problem → gap → approach → evidence → conclusion?

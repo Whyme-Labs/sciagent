@@ -17,25 +17,35 @@ Every experiment is gated by scientific reasoning. No blind hyperparameter tweak
 
 ## Installation
 
-### Personal Skill (available across all projects)
+### npx (recommended)
 
 ```bash
-# Clone the repo
-git clone https://github.com/Whyme-Labs/sciagent.git
+npx skills add Whyme-Labs/sciagent
+```
 
-# Symlink or copy into Claude Code's skill discovery directory
+Or install globally (available in all projects):
+
+```bash
+npx skills add -g Whyme-Labs/sciagent
+```
+
+### Manual (git clone)
+
+**Personal skill** (available across all projects):
+
+```bash
+git clone https://github.com/Whyme-Labs/sciagent.git
 ln -s "$(pwd)/sciagent" ~/.claude/skills/sciagent
 ```
 
-Claude Code auto-discovers skills from `~/.claude/skills/`. Once installed, invoke with `/sciagent` or Claude will auto-trigger it when your request matches the skill description.
-
-### Project Skill (available only in one project)
+**Project skill** (available only in one project):
 
 ```bash
-# From your project root
 mkdir -p .claude/skills
 ln -s /path/to/sciagent .claude/skills/sciagent
 ```
+
+Claude Code auto-discovers skills from `~/.claude/skills/` and `.claude/skills/`.
 
 ### Requirements
 
@@ -96,6 +106,14 @@ your-research-project/
 ├── data/                   # Datasets
 └── paper/                  # Living document + figures
 ```
+
+## Thinking Frameworks
+
+Three cross-cutting reasoning frameworks are woven throughout all phases:
+
+- **First Principles Thinking** — decompose claims to bedrock truths (proven theorems, replicated results), strip away conventions, rebuild from fundamentals
+- **Socratic Questioning** — structured probing at every user checkpoint and in reviewer subagents to surface hidden assumptions
+- **Occam's Razor** — prefer the simplest hypothesis, experiment design, and explanation that accounts for the evidence
 
 ## Key Principles
 

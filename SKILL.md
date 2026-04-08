@@ -1,8 +1,10 @@
 ---
 name: sciagent
 description: Autonomous scientific research agent. Takes a research idea, conducts rigorous literature-backed investigation with mathematical justification, runs adaptive experiments, maintains research logs, and produces publication-quality papers.
-version: 1.0.0
+license: MIT
 metadata:
+  author: sohweimeng
+  version: "1.0.0"
   emoji: "🔬"
 ---
 
@@ -138,6 +140,16 @@ If a refinement makes the metric worse:
 3. Mark approach as tried-and-failed to prevent retrying
 4. Continue from last known good state
 
+### Thinking Frameworks
+
+Three reasoning frameworks are applied cross-cuttingly throughout all phases (see `reference/thinking-frameworks.md` for full definitions):
+
+- **First Principles Thinking** — decompose claims and assumptions to bedrock truths (proven theorems, physical laws, replicated results). Separate bedrock from convention. Rebuild from bedrock only.
+- **Socratic Questioning** — use structured probing (clarification, probing assumptions, probing evidence, exploring perspectives, examining consequences, questioning the question) at user checkpoints and in reviewer subagents.
+- **Occam's Razor** — among competing hypotheses or approaches that explain the evidence equally well, prefer the simplest. Don't introduce complexity the evidence doesn't demand.
+
+These reinforce existing principles (theory-before-experiments, simplicity criterion, anti-stacking) but make the reasoning methods explicit and systematic.
+
 ### Scoring vs. Coaching Separation
 
 All reviewer subagents produce two separate outputs:
@@ -206,8 +218,10 @@ research: paper draft v1 — [title]
 
 ### What to Do
 
-1. **Decompose the research idea into DNA components:**
-   - **Problem** — the concrete, actionable pain point
+1. **Decompose the research idea into DNA components** using **First Principles** and **Socratic questioning** (see `reference/thinking-frameworks.md`):
+   - Apply Socratic probes to the user's initial idea: "Why do you believe this approach hasn't been tried?" / "What would have to be true for this to work?" / "Is the stated problem the real gap, or a symptom of how the field conventionally frames things?"
+   - For each DNA component, decompose to bedrock: ask "why is this true?" until hitting a proven result or an unexamined assumption.
+   - **Problem** — the concrete, actionable pain point (validated via first principles — is this bedrock or symptom?)
    - **Assumption** — why the problem exists or what would fix it
      - `explicit`: stated by the user
      - `inferred`: deduced by you (clearly labeled)
@@ -294,9 +308,10 @@ Write `research-log/000-setup.md` recording all setup decisions.
    - Resolve conflicting relevance assessments
    - Merge into a unified collection
 
-4. **Build the literature map:**
+4. **Build the literature map** (apply **First Principles** — see `reference/thinking-frameworks.md`):
    - **What's been tried** — group by technique family
    - **What works** — strongest results with specific numbers on which benchmarks
+   - **Bedrock vs. convention audit** — which claims in the literature are well-proven (replicated results, proven theorems) vs. widely-accepted-but-challengeable conventions? Conventions are potential research opportunities.
    - **What's missing** — gaps, contradictions, unexplored combinations
    - **Mathematical foundations** — key theorems, proofs, bounds underpinning the field
    - **Baselines to beat** — current SOTA with exact metric values
@@ -331,12 +346,13 @@ Write `research-log/001-literature-review.md` — full literature map, paper sum
 
 ### What to Do
 
-1. **Formulate the hypothesis** with these components:
+1. **Formulate the hypothesis** using **Occam's Razor** (see `reference/thinking-frameworks.md`) — prefer the simplest falsifiable hypothesis first. If a simpler hypothesis could explain the expected results, test that one before adding complexity. Components:
    - **Claim** — precise, falsifiable statement ("We hypothesize that X will improve Y by Z because...")
    - **Independent variables** — what you're changing
    - **Dependent variables** — what you're measuring
    - **Controls** — what stays constant
    - **Expected effect** — directional prediction with estimated magnitude if possible
+   - **Simplicity check** — could a simpler claim account for the same expected outcome? If yes, test the simpler version first.
 
 2. **Provide mathematical/theoretical justification** (HARD GATE — you cannot skip this):
    - Derive or cite the mathematical basis for why the hypothesis should hold
@@ -463,7 +479,7 @@ Write `research-log/002-hypothesis.md` — full hypothesis, mathematical derivat
    - **Assumptions partially confirmed** — revise the hypothesis to account for what you learned. Update `research-log/002-hypothesis.md`. Re-run the self-critique from Phase 2.
    - **Assumptions violated** — this is a valuable finding, not a failure. Document why. Loop back to Phase 2 with the new evidence.
 
-4. **Checkpoint with user** — present PoC results, your interpretation, and your recommendation: proceed / revise hypothesis / abandon direction.
+4. **Checkpoint with user** — apply **Socratic probing** (see `reference/thinking-frameworks.md`): "What's the simplest explanation for these results? Are we seeing what we expected, or are we interpreting the results to fit our hypothesis?" Present PoC results, your interpretation, and your recommendation: proceed / revise hypothesis / abandon direction.
 
 ### Quality Gate
 
@@ -485,12 +501,13 @@ Write `research-log/003-poc-[name].md` — design rationale, code location, resu
 
 ### What to Do
 
-1. **Design the experiment plan** — an adaptive strategy, not a single run:
+1. **Design the experiment plan** — apply **Occam's Razor** (see `reference/thinking-frameworks.md`): design the minimal set of experiments that tests the core claim. Resist adding variations not justified by current evidence. An adaptive strategy, not a single run:
    - **Baseline run** — reproduce SOTA or closest comparison from literature. MUST succeed first. If you can't reproduce the baseline, your results mean nothing.
    - **Core experiment** — implement the hypothesis. Single clean change from baseline.
    - **Ablation studies** — if hypothesis involves components A+B+C, plan: A-only, B-only, C-only, A+B, A+C, B+C, A+B+C to isolate contributions.
    - **Scaling analysis** — 2-3 runs at different data/model/compute scales if relevant.
    - **Robustness checks** — different random seeds, dataset splits, hyperparameter ranges.
+   - **Simplicity audit** — before running, ask: "Is every planned experiment justified by a specific question we need answered?" Remove any "just in case" runs.
 
    Write the plan explicitly: what each run changes, estimated time, estimated compute.
 
@@ -576,9 +593,10 @@ After batch: `research: experiment batch complete — [headline finding]`
 
    Review the analyzer's output for correctness before proceeding.
 
-2. **Deep analysis — answer each question explicitly:**
+2. **Deep analysis — answer each question explicitly** (apply **Occam's Razor** to interpretation — see `reference/thinking-frameworks.md`: prefer the simplest explanation that accounts for all the data):
    - **Did it work?** Does the primary metric meet the success threshold?
    - **Why did it work (or not)?** Does the empirical evidence support the mathematical theory from Phase 2?
+   - **Simplest explanation test** — what is the most parsimonious explanation for these results? If a simpler theory explains the data as well as the proposed hypothesis, flag this.
    - **What contributed most?** Which components mattered in ablations?
    - **How robust is it?** Consistent across seeds, splits, scales?
    - **What was surprising?** Any unexpected results?
@@ -605,7 +623,7 @@ After batch: `research: experiment batch complete — [headline finding]`
    - Summarize the complete research journey.
    - Proceed to Phase 6.
 
-5. **Checkpoint with user** — present analysis and recommended path. Include remaining budget: experiments left, compute left, time left.
+5. **Checkpoint with user** — apply **Socratic probing** (see `reference/thinking-frameworks.md`): "What would change your mind about this result? Is there a simpler explanation we haven't considered?" Present analysis and recommended path. Include remaining budget: experiments left, compute left, time left.
 
 ### Quality Gate
 

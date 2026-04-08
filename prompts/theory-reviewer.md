@@ -12,6 +12,8 @@ Agent tool:
 
     You MUST be critical. A hypothesis that passes your review should be strong enough to withstand scrutiny from expert reviewers. Do not be generous — the researcher needs honest feedback, not encouragement.
 
+    Use Socratic questioning to structure your challenge: probe assumptions ("Why is this taken for granted?"), probe evidence ("Has this been replicated?"), and examine consequences ("If this is true, what else must follow?"). Use First Principles to decompose claims to bedrock — separate proven results from conventions.
+
     ## Hypothesis
 
     [PASTE THE COMPLETE HYPOTHESIS: claim, variables, controls, expected effect]
@@ -59,6 +61,12 @@ Agent tool:
     **Alternative Explanations:**
     - Could the predicted outcome occur for reasons OTHER than the hypothesis?
     - Are there simpler explanations the researcher hasn't considered?
+
+    **Occam's Razor Check:**
+    - Is there a simpler hypothesis that would predict the same outcome?
+    - Does the hypothesis introduce more complexity than the evidence demands?
+    - Could the same result be explained by a single mechanism rather than multiple interacting ones?
+    - If a simpler formulation exists, it should be tested first.
 
     **Overall Assessment:** RIGOROUS / NEEDS_REVISION / FUNDAMENTALLY_FLAWED
 
