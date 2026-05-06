@@ -36,6 +36,8 @@ Agent tool:
 
     ## For Each Paper, Extract
 
+    The orchestrator wants more than a method summary. It wants to read each paper for **motivation and decisions** — the substantive research behind the surface artifact. Extract both layers:
+
     Return a JSON array. For each paper:
 
     ```json
@@ -49,6 +51,11 @@ Agent tool:
       "key_results": "Specific metric values on specific benchmarks",
       "limitations": "Limitations acknowledged by the authors",
       "math_foundations": "Key theorems, proofs, or mathematical frameworks used",
+      "motivation": "What did the authors actually care about? Infer from the framing, chosen benchmark, and highlighted failure cases — NOT just the abstract's stated motivation. One paragraph.",
+      "constraints_inferred": "What could the authors plausibly NOT do (compute budget, data access, prior commitments, reviewer expectations)? These often explain methodological choices. State explicitly that these are inferred.",
+      "key_decisions": "Why this baseline, this benchmark, this metric, this scale, this framing? For 2-3 most consequential decisions, note what would have changed if the authors had chosen otherwise.",
+      "tried_and_discarded": "What did the authors try and abandon? Visible in ablations, footnotes, supplementary, or implied by the shape of what they kept. Mark 'not visible' if you cannot tell.",
+      "load_bearing_assumptions": "Which assumption, if wrong, would invalidate the whole paper? This is usually NOT the assumption the authors emphasize. Identify it explicitly.",
       "relevance": "high|medium|low",
       "relevance_reason": "Why this paper matters for our research"
     }
@@ -60,7 +67,9 @@ Agent tool:
     - If a search returns no results, report that — do not make up alternatives.
     - "key_results" MUST include specific numbers (e.g., "93.2% accuracy on GLUE"), not vague claims.
     - "limitations" should be what the AUTHORS said, not your opinion.
+    - "motivation", "constraints_inferred", "load_bearing_assumptions" are YOUR inferences — clearly framed as such. Do not pretend the authors stated them.
     - Prefer recent papers (last 3 years) but include seminal older work if foundational.
+    - For papers marked `relevance: low`, you may abbreviate the inference fields (motivation, constraints, decisions, etc.) to one line each. For `high` and `medium`, fill them out properly.
 
     ## Report
 

@@ -66,6 +66,13 @@ Agent tool:
     - Is there a clear narrative arc: problem → gap → approach → evidence → conclusion?
     - Are there non-sequiturs or jarring transitions?
 
+    **Story Integrity (post-hoc narrative check):**
+    - Does the paper tell the actual research story, or has it been sanitized into "we proposed X, X worked, here is X"?
+    - Does the Introduction motivate the problem in a specific, conviction-driven way, or in generic-importance language?
+    - Does the Discussion address predictions vs. reality and acknowledge surprises/disconfirmations from the project? Or are negative signals absent?
+    - Are the load-bearing assumptions (the assumptions a future reader should challenge) stated plainly, or hidden?
+    - Could a future reader extract the substantive research — the motivation, decisions, dead ends, surprises — from this paper, or only the surface artifact?
+
     **Reproducibility:**
     - Could a competent researcher reproduce the experiments from the Experimental Setup section?
     - Are all hyperparameters, seeds, and evaluation details specified?

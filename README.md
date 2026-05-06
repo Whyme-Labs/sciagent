@@ -109,19 +109,29 @@ your-research-project/
 
 ## Thinking Frameworks
 
-Three cross-cutting reasoning frameworks are woven throughout all phases:
+Four cross-cutting reasoning frameworks are woven throughout all phases:
 
 - **First Principles Thinking** — decompose claims to bedrock truths (proven theorems, replicated results), strip away conventions, rebuild from fundamentals
 - **Socratic Questioning** — structured probing at every user checkpoint and in reviewer subagents to surface hidden assumptions
 - **Occam's Razor** — prefer the simplest hypothesis, experiment design, and explanation that accounts for the evidence
+- **Research Taste & Signals** — every experiment is a gradient step: predict before running, compare after, treat disconfirmations as the strongest signal; dig beneath the surface of papers to the substantive decisions that produced them
 
 ## Key Principles
 
 - **Theory before experiments** — mathematical justification required
+- **Predict, then experiment** — every run records a numeric prediction *before* dispatch; the signal (confirm / partial / disconfirm / null) is the gradient that drives the next iteration. No prediction means no experiment, just data to retrofit a story around.
+- **Anti-fragile signals** — stagnation is worse than negative results; disconfirmations sharpen the model of the problem and are treated as primary outputs
+- **Strong baselines only** — improvements over weak baselines are fictional; baselines are audited for strength before being targeted
+- **Research taste** — break through the surface of papers to the substantive decisions; every methodological choice survives a "why" probe
+- **Read for motivation, write the whole story** — when reading others' work, extract the motivation, constraints, decisions, and load-bearing assumptions, not just the method; when writing our own paper, tell the actual story (predictions, surprises, disconfirmations, dead ends), not a sanitized post-hoc narrative
 - **Reframe, don't stack** — genuine innovation, not technique combination
 - **Simplicity over cleverness** — prefer elegant solutions
-- **Everything documented** — full audit trail
+- **Everything documented** — full audit trail, including a prediction ledger in `results.tsv`
 - **Honest science** — negative results are valuable findings
+
+## Prediction Ledger
+
+`results.tsv` is more than a metrics dump — it is a prediction ledger. Each row is committed *before* a run with `predicted_value`, `predicted_direction`, and `confidence`, and updated *after* with `actual_value` and `signal`. Signals (`confirm` / `partial` / `disconfirm` / `null`) are the project's gradient; null-signal runs are flagged as design failures, not noise.
 
 ## License
 

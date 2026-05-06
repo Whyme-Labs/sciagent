@@ -1,6 +1,6 @@
 # Thinking Frameworks
 
-Three cross-cutting reasoning frameworks applied throughout the research process. These are not phases — they are lenses applied within existing phases to sharpen scientific reasoning, challenge assumptions, and resist unnecessary complexity.
+Four cross-cutting reasoning frameworks applied throughout the research process. These are not phases — they are lenses applied within existing phases to sharpen scientific reasoning, challenge assumptions, and resist unnecessary complexity.
 
 ---
 
@@ -107,8 +107,94 @@ For any hypothesis, experiment design, or result interpretation, ask:
 
 ---
 
+## 4. Research Taste & Signals
+
+**Core idea:** Research progress is stochastic gradient descent. Each experiment is a step, and a step is only useful if it produces a *gradient* — a signal about which direction to move next. Taste is the discipline of choosing steps that are likely to produce strong signals, and of reading the substantive (not surface) lessons of papers and results. The mental compass — *belief preceding sight* — directs the random walk; predictions and evidence ground each step.
+
+### Three Operating Beliefs
+
+1. **A result without a prediction is not a signal.** If you did not write down what you expected before the run, you cannot tell after the run whether you were right, lucky, or fooling yourself. The narrative will always rationalize the number. Prediction → Run → Compare is the loop that generates true gradients.
+
+2. **Negative signals are valuable; null signals are expensive.** A disconfirmed prediction sharpens your model of the problem — it is a strong gradient pointing away from a wrong hypothesis. A run that produces no clear signal (you didn't know what you expected, or the experiment couldn't distinguish hypotheses) is the worst outcome: it consumed compute and yielded no direction. Eliminate null-signal experiments before running them, not after.
+
+3. **Taste is repeated "why."** Reading a paper, do not stop at the proposed method. Ask: *why* did the authors choose this dataset, this baseline, this metric, this framing? *Which* prior decisions made this particular method seem natural? *What* would have made them choose differently? The published artifact is the surface; the substantive research is the chain of decisions that produced it. The same applies to your own work: every methodological choice should survive a "why" probe back to bedrock.
+
+### The Predict–Run–Compare Loop
+
+For every experiment (PoC or full run):
+
+1. **Predict** — record a numeric prediction, a directional prediction (`beat-baseline` / `match-baseline` / `regress` / `unclear`), and a confidence level (`low` / `medium` / `high`).
+2. **Justify** — write one paragraph: why this prediction, citing theory or prior runs.
+3. **Run** — execute the experiment.
+4. **Compare** — was the prediction `confirm` / `partial` / `disconfirm` / `null`?
+5. **Update** — if confirmed, your model of the problem is unchanged but more credible. If disconfirmed, *something specific* in your model is wrong; identify what. If null, the experiment was poorly designed; redesign before next run.
+
+### Reading and Writing — the Same Lens
+
+Reading others' work and writing our own are the same skill applied in opposite directions. Both reach for the substance behind the surface.
+
+**When reading a paper**, do not stop at the method. The published artifact is the surface. The substantive research is the chain of decisions that produced it. For each significant paper in the literature review, extract:
+
+- **Motivation** — what did the authors actually care about? What problem were they living with that drove this work? (This is rarely fully written down; you have to infer it from the introduction's framing, the choice of benchmark, the choice of failure cases shown.)
+- **Constraints** — what could the authors not do? Compute, data access, prior commitments, reviewer expectations. These constraints often explain methodological choices better than the stated motivation does.
+- **Decisions** — why this baseline, this benchmark, this metric, this scale, this framing? For each, ask: what would have changed if they had chosen otherwise?
+- **What they tried and discarded** — sometimes visible in ablations, footnotes, supplementary; often visible only between the lines. A paper rarely shows you its dead ends, but the shape of the dead ends is implied by the shape of what they kept.
+- **Load-bearing assumptions** — which assumption, if wrong, would invalidate the whole paper? This is usually not the assumption the authors highlight.
+
+A paper read this way is a much richer artifact than a paper read for "what method did they propose."
+
+**When writing our own paper**, apply the same lens to ourselves. The reader will read us the way we read others — so write the version they would *want* to extract:
+
+- **Tell the actual story** — why does this problem matter (not in generic-importance language, but in the specific way it mattered to us)? Why this approach and not the alternatives? What were our real constraints?
+- **Show the journey** — what did we predict? What surprised us? What disconfirmations forced us to revise? The Introduction sets up the question; the Discussion is where the journey is honest. Disconfirmations recorded in the prediction ledger become first-class material for the Discussion, not buried.
+- **Surface the load-bearing assumptions** — state them plainly, as the assumptions a future reader should challenge. This is the opposite of hiding them.
+- **Resist the post-hoc narrative** — the temptation is to rewrite the story so the conclusion looks inevitable. Resist this. A paper that admits "we expected X, but observed ¬X, and that surprise led us to Y" teaches more, ages better, and is harder to dismiss than a paper that pretends Y was obvious from the start.
+- **The personal "fire" should be visible** — not as autobiography, but as the conviction that motivated the specific framing. This is what makes a paper feel alive rather than mechanical, and it is what makes the reader trust that the authors actually believed what they were doing.
+
+The duality is the discipline: every "why" we extract from others is a "why" we owe our own readers.
+
+### Anti-Fragility
+
+Treat shocks as fuel, not noise:
+
+- A surprising negative result is the cheapest insight you can buy. Spend at least as much analysis time on disconfirmations as on confirmations.
+- When the literature says X and your experiment shows ¬X, do not first assume your experiment is broken. First take the disagreement seriously: under what conditions could both be true? What does the literature implicitly assume that your setup violates?
+- A research line that has not encountered a single surprise yet is suspicious — it usually means the experiments are too easy, too well-aligned with the hypothesis, or under-instrumented.
+
+### Forcing Questions
+
+- "What did I predict, and what did I actually observe? What does the gap teach me?"
+- "If this experiment came out the opposite of my prediction, would I know what to do next? If not, the experiment is poorly designed."
+- "Is this baseline strong enough that beating it means something, or am I improving over a strawman?"
+- "Why did the authors of this paper make *this specific* methodological choice? What would have changed if they had chosen otherwise?"
+- "What is the ‘fire’ behind this research direction — the conviction that brought us here? Is each step grounded in evidence, or am I drifting from the original idea DNA?"
+- "Have I had any genuine surprises this iteration? If not, am I actually learning anything?"
+
+### Complacency Red Flags
+
+- Running an experiment without writing the prediction down first.
+- Explaining away a disconfirmation ("the seed was unlucky") without rerunning to verify.
+- A `results.tsv` where every `signal` is `confirm` — either the predictions are too vague, or the experiments are too easy.
+- Treating a paper's claimed result as a fact rather than as the output of a chain of decisions.
+- Comparing against a baseline because it is convenient, not because it is the strongest available.
+
+### When to Apply
+
+| Phase | Application |
+|-------|-------------|
+| Phase 0: Setup | Surface the personal "fire" — why does this idea matter? Capture it as part of the idea DNA so the project has a compass. |
+| Phase 1: Literature | For top papers, do a "decision archaeology" pass: why these baselines, why these metrics, why this framing? Audit baseline strength. |
+| Phase 2: Hypothesis | Predicted effect must be quantified with a confidence level, not just directional. |
+| Phase 3: PoC | Record the prediction in `results.tsv` *before* dispatching. Write Prediction-vs-Reality in the log entry. |
+| Phase 4: Experiments | Strong baseline gate. Predict-then-run for every experiment. Treat disconfirmations as primary outputs. |
+| Phase 5: Analysis | Calibration audit — across all runs, where were predictions systematically off? That bias is the deepest finding. |
+| Phase 6: Paper | Discussion section explicitly reports surprises and disconfirmations, not just successes. |
+
+---
+
 ## How the Frameworks Interact
 
 - **First Principles** strips claims to bedrock. **Occam's Razor** strips hypotheses to essentials. Together they prevent both question-bloat and approach-bloat.
 - **Socratic Questioning** is the engine that drives both — it's how you probe whether a claim is bedrock (first principles) and whether complexity is justified (Occam's razor).
-- These frameworks reinforce the existing SciAgent principles: theory-before-experiments (first principles ensures the theory is on solid ground), simplicity criterion (Occam's razor applied to experiment results), and anti-stacking (first principles asks whether the combination is conceptually necessary or just conventional).
+- **Research Taste & Signals** ties the loop closed: it ensures every experiment produces a gradient, that gradients are honestly interpreted, and that the substantive (not surface) lessons of prior work guide direction. It is the framework that transforms a sequence of runs into actual research.
+- These frameworks reinforce the existing SciAgent principles: theory-before-experiments (first principles ensures the theory is on solid ground), predict-then-experiment (research taste makes signals first-class), simplicity criterion (Occam's razor applied to experiment results), and anti-stacking (first principles asks whether the combination is conceptually necessary or just conventional).
