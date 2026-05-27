@@ -6,14 +6,14 @@ A Claude Code skill for autonomous scientific research — from idea to publicat
 
 SciAgent encodes a complete scientific research methodology that Claude follows. Give it a research idea, and it will:
 
-1. **Review literature** — search multiple sources in parallel, build a gap analysis
+1. **Review literature** — search multiple sources in parallel, build a gap analysis, populate Exemplar Move Tables that feed Phase 6 writing
 2. **Form hypotheses** — with mathematical justification and cited prior work (not guessing)
 3. **Validate with PoC** — run quick probes before committing to full experiments
 4. **Run experiments** — adaptive plans with baselines, ablations, and robustness checks
 5. **Analyze & iterate** — statistical analysis, diminishing returns detection, evidence-based pivots
-6. **Write the paper** — full academic structure with supplementary materials
+6. **Write the paper** — narrative arc + motivation surface map + writing rationale matrix as the execution plan; three independent reviewers in parallel + editor synthesis; anti-shallow-revision metrics on every iteration
 
-Every experiment is gated by scientific reasoning. No blind hyperparameter tweaking.
+Every experiment is gated by scientific reasoning. No blind hyperparameter tweaking. Every paragraph of the paper is gated by a rationale-matrix row. No generic academic prose.
 
 ## Installation
 
@@ -132,6 +132,28 @@ Four cross-cutting reasoning frameworks are woven throughout all phases:
 ## Prediction Ledger
 
 `results.tsv` is more than a metrics dump — it is a prediction ledger. Each row is committed *before* a run with `predicted_value`, `predicted_direction`, and `confidence`, and updated *after* with `actual_value` and `signal`. Signals (`confirm` / `partial` / `disconfirm` / `null`) are the project's gradient; null-signal runs are flagged as design failures, not noise.
+
+## Paper Architecture
+
+Phase 6 produces three planning artifacts *before* any prose is written:
+
+- **`paper/narrative-arc.md`** — the story: the fire, why this approach (and not the alternatives), the journey including predictions and disconfirmations, load-bearing assumptions, what was tried and discarded.
+- **`paper/motivation-surface-map.md`** — the places where the reader meets the story: title, abstract opening, Introduction topic sentences, headings, figure callouts, Discussion opening and closing. Real draft sentences in the highest-leverage rows, not vague strategy notes.
+- **`paper/writing-rationale-matrix.md`** — the row-per-manuscript-unit execution plan. Columns: Manuscript Unit | Planned Function | Idea-DNA Link | Exemplar Pattern | Venue Norm | Evidence Anchor | Operation | Final Text Check. Row 1 justifies the whole-work framework. Subsequent rows follow the chosen structure in order.
+
+Section-writer subagents receive their slice of the matrix as a constraint, not a suggestion. They must satisfy every row's Final Text Check.
+
+## Three Independent Reviewers + Editor Synthesis
+
+Single reviewers correlate with their own prompts. SciAgent dispatches three reviewers **in parallel**, each from a different angle (Methods / Results / Story), each seeing only its prompt and the paper text — no narrative arc, no rationale matrix, no shared context. After all three return, an independence-validation step catches cross-contamination (identical phrasings, role drift). An editor synthesis then merges the three validated reviews into one revision decision.
+
+## Anti-Shallow-Revision Metrics
+
+For any revised draft (v2+), the editor synthesis compares v(N) to v(N-1) against six metrics — near-identical paragraph ratio, dominant operation in the rationale matrix, `KEEP`-row count, missing obligatory moves, unsupported new claims, numbers without source. A revision that fails any row is "patch writing" (a few sentences added or reworded, structure untouched) and must be redone closed-book using `reference/deep-imitation-protocol.md`. These metrics override the reviewer votes — a patch-writing revision is NEEDS_REVISION even with three ACCEPT votes.
+
+## Branch-of-Origin Routing
+
+When a reviewer flags a problem, the orchestrator routes the fix back to the phase that owns the weak artifact, not just the surface where the failure appeared. A generic Introduction is a Phase 0/6-step-1 problem (idea DNA + narrative arc), not a Phase 6 prose patch. A weak baseline is a Phase 1/4 problem, not a Results-section rewrite. Patching at the surface is faster but leaves the upstream gap — and the upstream gap will resurface in peer review.
 
 ## License
 

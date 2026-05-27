@@ -178,6 +178,38 @@ If a refinement makes the metric worse:
 3. Mark approach as tried-and-failed to prevent retrying
 4. Continue from last known good state
 
+### Anti-Shallow-Revision Metrics
+
+Applied when comparing draft v(N) to v(N-1) for any section the editor synthesis flagged for substantive revision. The motivating failure: a "revision" that adds two sentences and reorders one paragraph, leaving the structural problem the reviewers flagged untouched.
+
+A revision must satisfy:
+
+| Metric | Threshold | Rationale |
+|---|---|---|
+| Near-identical paragraph ratio | below 35% | Detects untouched bulk |
+| Dominant operation in matrix | not `ADD` | A real revision changes structure, not just adds prose |
+| `KEEP` rows | below 25% (unless reviewers asked for polish only) | Same reason |
+| Missing obligatory moves (from rationale matrix) | 0 | Spine integrity |
+| Unsupported new claims introduced in revision | 0 | No claims without evidence anchor |
+| Numbers without source | 0 | Every number traces to a run, table, or citation |
+
+A revision that fails any row is "patch writing" and must be redone closed-book using the method in `reference/deep-imitation-protocol.md`. These are not universal quality measures — they catch the specific failure of treating a deep revision as a surface edit.
+
+### Branch-of-Origin Routing on Audit Failure
+
+When a reviewer (theory reviewer in Phase 2, editor synthesis in Phase 6) flags a problem, route the fix back to the phase that owns the weak artifact rather than patching downstream.
+
+| Failure surfaces in | Real owner is |
+|---|---|
+| Methodology section is unclear or incomplete | Phase 2 (hypothesis / theoretical justification) |
+| Discussion does not address disconfirmations | Phase 5 (analysis) — surfaces missing |
+| Baselines are weak | Phase 1 (baseline strength audit) + Phase 4 (Strong Baseline Gate) |
+| Introduction motivation is generic | Phase 6 step 1 (narrative arc) + Phase 0 (Idea DNA) |
+| Section structure does not transfer exemplar patterns | Phase 1 (Exemplar Move Tables) + Phase 6 step 2b (rationale matrix) |
+| Anti-stacking failure at writing layer | Phase 2 (hypothesis was already stacked) — usually not a writing fix |
+
+Patching at the surface where the failure appeared is faster but leaves the upstream gap. The upstream gap will resurface in the next iteration or, worse, in peer review.
+
 ### Thinking Frameworks
 
 Four reasoning frameworks are applied cross-cuttingly throughout all phases (see `reference/thinking-frameworks.md` for full definitions):
@@ -357,7 +389,8 @@ Write `research-log/000-setup.md` recording all setup decisions.
      - **Decisions** — *why* this baseline, this benchmark, this metric, this scale, this framing? For each: what would have changed if they had chosen otherwise?
      - **What was tried and discarded** — visible in ablations, footnotes, supplementary, or implied by the shape of what they kept.
      - **Load-bearing assumptions** — which assumption, if wrong, would invalidate the whole paper? Usually not the assumption the authors emphasize.
-     This is what is meant by reading beyond the surface: a paper read this way becomes a much richer artifact than "what method did they propose." (See Reading and Writing — the Same Lens in `reference/thinking-frameworks.md`.)
+     - **Exemplar Move Table (Table 1 from `reference/deep-imitation-protocol.md`)** — for each section job you expect to write in Phase 6 (typically Introduction, Methodology, Results, Discussion), record the paragraph-level moves the authors used, with notes on *why* those moves worked given the authors' constraints. This is the bridge between reading and writing: the rows you fill here become direct inputs to Phase 6's writing rationale matrix. Without this table, decision archaeology stays in your head and the writing pass regenerates academic boilerplate.
+     This is what is meant by reading beyond the surface: a paper read this way becomes a much richer artifact than "what method did they propose." (See Reading and Writing — the Same Lens in `reference/thinking-frameworks.md`, and the three-table method in `reference/deep-imitation-protocol.md`.)
    - **What's missing** — gaps, contradictions, unexplored combinations
    - **Mathematical foundations** — key theorems, proofs, bounds underpinning the field
    - **Baselines to beat — strength audit** — current SOTA with exact metric values, AND an honest assessment of baseline strength: are reported baselines well-tuned, recently established, and from trusted reimplementations? Or are some "baselines" widely-cited strawmen that have not been improved because the field stopped tuning them? Mark each candidate baseline as `strong`, `weak`, or `unverified`. Only `strong` baselines are worth beating; `weak` and `unverified` baselines must be re-tuned or replaced before they count as a target.
@@ -375,6 +408,7 @@ Write `research-log/000-setup.md` recording all setup decisions.
 Cannot proceed until:
 - [ ] Literature map documented with papers grouped by technique
 - [ ] Decision archaeology completed for the 3-5 most relevant papers
+- [ ] Exemplar Move Table (Table 1) populated per section job — saved to `research-log/001b-decision-archaeology.md`
 - [ ] At least one gap identified with cited evidence
 - [ ] Baselines to beat identified with specific metric numbers AND a strength rating (strong / weak / unverified)
 - [ ] User has approved a research direction
@@ -739,15 +773,30 @@ Write `research-log/[N]-analysis-iter-[X].md` — results table, statistical tes
 
    This narrative arc is the spine of the paper. It is what prevents the polished sections from collapsing into a sanitized post-hoc story where the conclusion looks inevitable.
 
+1b. **Build the motivation surface map** (`paper/motivation-surface-map.md`). The narrative arc captures the story; the surface map captures the places where the reader meets it — title, abstract opening, Introduction topic sentences, headings, figure callouts, Discussion opening and closing. A paper with a clean arc can still fail to communicate it because the reader never lands on the moments where the arc surfaces.
+
+   Follow the schema in `reference/motivation-surface-map.md`. For each reader touchpoint, record the narrative-arc role it carries, the planned wording or strategy, and the venue constraint. The highest-leverage rows (title, abstract opening, Introduction final paragraph, Discussion opening) should contain real draft sentences, not vague strategy notes.
+
 2. **Plan the paper structure** — define the title, write a section-by-section outline, and map which research log content feeds into each section. Each section must reference where it draws from the narrative arc:
    - **Introduction** draws from "the fire" and "why this approach"
    - **Discussion** draws from "the journey" (predictions, surprises, disconfirmations) and "load-bearing assumptions"
    - **Conclusion** draws from "what was tried and discarded" and the honest takeaways
 
+2b. **Build the writing rationale matrix** (`paper/writing-rationale-matrix.md`) — the row-per-manuscript-unit execution plan that the section-writer subagents will follow. This is built **before** any section is dispatched.
+
+   Follow the schema in `reference/writing-rationale-matrix.md`. Columns: Row ID | Manuscript Unit | Planned Function | Idea-DNA Link | Exemplar Pattern | Venue Norm | Evidence Anchor | Operation | Final Text Check.
+
+   The first row is special — it justifies the whole-work framework (why this controlling structure, which exemplar arc informs it, how it follows the confirmed Idea DNA, what the structural pivot is). Subsequent rows follow the chosen structure in order, splitting it into the smallest useful units.
+
+   This matrix is the execution plan. A shallow matrix ("polish wording," "improve clarity" repeated across rows) is a failure — if you cannot fill the cells substantively, the Phase 1 decision archaeology or the narrative arc is the real gap. Stop and fix that, not the matrix.
+
 3. **Dispatch section writer subagents in parallel** for independent sections.
 
    Use the `prompts/section-writer.md` template. For each dispatch, fill in:
    - Which section to write
+   - The rationale-matrix rows for this section (full table slice — these are the constraints the subagent must satisfy)
+   - The motivation-surface-map rows for this section (these are the sentences and headings the subagent is not free to change)
+   - The Exemplar Move Tables (from Phase 1 decision archaeology) for this section's job
    - The relevant research log content (pasted in full)
    - The paper outline for overall context
    - Style guidelines: academic tone, third person, cite as [Author, Year]
@@ -793,29 +842,40 @@ Write `research-log/[N]-analysis-iter-[X].md` — results table, statistical tes
    - Environment and reproducibility checklist
    - (Optional) "Things we tried that didn't work" appendix — informative dead ends with brief explanations
 
-6. **Dispatch paper reviewer subagent** (most capable model).
+6. **Dispatch three independent paper reviewer subagents IN PARALLEL** (one message, three Agent tool calls). Each reviewer is assigned a distinct role and receives ONLY its filled-in prompt + the complete paper text — no narrative arc, no rationale matrix, no prediction ledger. Independence is the point: real peer reviewers reason from the paper alone.
 
-   Use the `prompts/paper-reviewer.md` template. Fill in the complete assembled paper text.
+   Use the `prompts/independent-reviewer.md` template. The three roles:
+   - **Methods Reviewer** — mathematical correctness, specification completeness, assumption honesty, methodology-results alignment, reproducibility.
+   - **Results Reviewer** — baseline strength, statistical honesty, ablation completeness, figure/table integrity, robustness, negative-result discipline.
+   - **Story Reviewer** — motivation specificity, related-work fairness, anti-stacking, post-hoc-narrative detection, discussion honesty, load-bearing assumption clarity, coherence.
 
    ```
-   Agent tool:
+   Agent tool (×3 in one message):
      subagent_type: general-purpose
      model: opus  # most capable — catches subtle issues
-     description: "Paper review: [title]"
-     prompt: [filled-in template from prompts/paper-reviewer.md]
+     description: "Independent review (Methods | Results | Story): [title]"
+     prompt: [filled-in template from prompts/independent-reviewer.md, one per role]
    ```
 
-   Reviewer returns:
+   Each reviewer returns a blind assessment (vote: ACCEPT / WEAK_ACCEPT / WEAK_REJECT / REJECT, with located issues) and actionable coaching (separate, advisory).
 
-   **Blind assessment:**
-   - Claims backed by evidence? Notation consistent? Limitations honest?
-   - Related work fair? Anti-stacking check passed?
-   - Assessment: PUBLISH_READY / NEEDS_REVISION
+6b. **Independence validation.** After all three reviews return, run a coarse check on the three blind assessments:
+   - Near-identical phrasings of issues across reviews → contamination flag.
+   - Role drift (Methods Reviewer critiquing motivation framing, Story Reviewer critiquing baseline tuning) → prompt leak flag.
+   - Identical issue ordering and severity across reviews → independence failure.
 
-   **Actionable coaching:**
-   - Field-level rewrite suggestions, missing references, structural improvements.
+   If contamination is detected, re-dispatch the affected reviewer(s) with stricter isolation. Check that you did not accidentally pass shared context.
 
-   If NEEDS_REVISION: fix issues (or dispatch targeted section writers) and re-dispatch reviewer.
+6c. **Editor synthesis.** Merge the three validated reviews into one revision decision using `prompts/paper-reviewer.md` as the editor template:
+   - Aggregate votes. Two REJECT or three WEAK_REJECT or worse → NEEDS_REVISION. All ACCEPT/WEAK_ACCEPT with no blocking issues → PUBLISH_READY.
+   - Deduplicate issues raised by multiple reviewers (these are higher confidence — surface first in the revision plan).
+   - Preserve role-tagged issues raised by only one reviewer (these are role-specific catches, also valuable).
+   - Combine coaching into one actionable revision plan, ordered by severity.
+
+   If NEEDS_REVISION:
+   - For substantive section revisions, **build or update the writing rationale matrix** for the affected sections (apply the anti-shallow-revision metrics — see Cross-Cutting Concerns) and dispatch targeted section writers using the closed-book method from `reference/deep-imitation-protocol.md`.
+   - For surface-level fixes (notation, citation, single-sentence rewording), apply directly without redoing the matrix.
+   - Re-dispatch the three independent reviewers on the revised paper.
 
 7. **Generate output** in user's preferred format:
    - **Primary: DOCX** — use document generation tools
@@ -828,10 +888,15 @@ Write `research-log/[N]-analysis-iter-[X].md` — results table, statistical tes
 
 Paper cannot be marked complete until:
 - [ ] Narrative arc written (`paper/narrative-arc.md`) before sections were dispatched
+- [ ] Motivation surface map written (`paper/motivation-surface-map.md`) before sections were dispatched, with real draft sentences in the highest-leverage rows (title, abstract opening, Introduction final paragraph, Discussion opening)
+- [ ] Writing rationale matrix written (`paper/writing-rationale-matrix.md`) before sections were dispatched, with the whole-work framework justified in Row 1
+- [ ] For any revised draft (v2+): anti-shallow-revision metrics satisfied (see Cross-Cutting Concerns)
+- [ ] Three independent reviewers dispatched in parallel with no shared context; independence validation passed
+- [ ] Editor synthesis produced from validated reviews
 - [ ] Story integrity check passed (Introduction → Results → Discussion reads as the actual journey, not a sanitized post-hoc narrative)
 - [ ] Discussion explicitly addresses prediction-vs-reality and the most informative disconfirmations
 - [ ] Load-bearing assumptions stated plainly in the Methodology
-- [ ] Paper reviewer assessment is PUBLISH_READY
+- [ ] Editor synthesis assessment is PUBLISH_READY
 - [ ] User has reviewed the draft
 
 ### Research Log Entry

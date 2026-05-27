@@ -20,6 +20,26 @@ Agent tool:
 
     Your section must serve this narrative arc, not contradict or sanitize it. The reader will read this paper for motivation and journey, not just method — so write the version they would *want* to extract.
 
+    ## Writing Rationale Matrix Rows (YOUR EXECUTION PLAN — these are constraints, not suggestions)
+
+    [PASTE THE TABLE SLICE FROM paper/writing-rationale-matrix.md THAT COVERS THIS SECTION — every row that applies to a unit you will write]
+
+    Each row tells you, for one manuscript unit: the planned function, which Idea-DNA component it serves, which exemplar pattern it transfers, which venue norm applies, the evidence anchor, the operation (REWRITE / SPLIT / MERGE / DELETE / MOVE / ADD / KEEP), and the Final Text Check the finished prose must satisfy.
+
+    Your output must satisfy every row's Final Text Check. If a row says the paragraph reports a confidence interval, the paragraph reports a confidence interval. If a row says the paragraph does not claim transfer beyond the tested domains, your paragraph does not claim transfer beyond the tested domains. You are not free to drop, merge, or reorder rows — flag the issue and stop.
+
+    ## Motivation Surface Map Cues (the sentences and headings you are NOT free to change)
+
+    [PASTE THE ROWS FROM paper/motivation-surface-map.md FOR THIS SECTION — typically the section heading(s), opening sentence(s), closing sentence(s), and figure callouts.]
+
+    These are the reader touchpoints the orchestrator has already committed to. Use the planned wording verbatim where it is concrete; respect the strategy where it is abstract.
+
+    ## Exemplar Move Tables (from Phase 1 decision archaeology)
+
+    [PASTE THE TABLE-1 ROWS FROM research-log/001b-decision-archaeology.md THAT COVER THIS SECTION'S JOB]
+
+    For each paragraph you write, the rationale matrix row points to a specific exemplar pattern. Use the move (the rhetorical job), not the exemplar's specific words. Treat the exemplar as a structural template, not a phrase bank.
+
     ## Paper Outline (for context)
 
     [PASTE THE FULL PAPER OUTLINE — title, all section headings, brief description of each]
@@ -106,8 +126,10 @@ Agent tool:
 
     ## Report
 
-    - **Status:** DONE
+    - **Status:** DONE | DONE_WITH_CONCERNS | NEEDS_CONTEXT | BLOCKED
     - **Section text:** (the full section text in Markdown)
     - **References used:** (list of [Author, Year] citations included)
     - **Figures referenced:** (list of figure numbers/filenames referenced)
+    - **Rationale-matrix row coverage:** (for each row in the slice you received: ✓ satisfied / ✗ unsatisfied with the reason. If any are ✗, status is DONE_WITH_CONCERNS or BLOCKED.)
+    - **Final Text Check verification:** (for each row's Final Text Check, quote the sentence(s) in your draft that satisfy it. If a check cannot be satisfied with the source material provided, surface it — do not invent evidence.)
 ```
