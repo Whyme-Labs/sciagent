@@ -107,6 +107,14 @@ your-research-project/
 └── paper/                  # Living document + figures
 ```
 
+## Operating Discipline
+
+The quality gates are not advisory. SciAgent opens with a non-negotiable **Operating Discipline** section: the predict-then-run discipline, the Strong Baseline Gate, the anti-stacking check, and the mathematical-justification gate cannot be skipped or rationalized past — only the *user* can relax them. A "Red Flags — You Are Rationalizing" table names the precise thoughts that precede a skipped gate ("I'm fairly sure how this will turn out, I'll skip the prediction"; "the baseline is close enough"; "this notation is dense, the gist is clear enough") and pairs each with the gate it betrays. When the agent catches one, it names the gate and satisfies it rather than narrating past it.
+
+## Mathematical Thinking
+
+The Phase 2 justification gate demands *understood* mathematics, not cited formulas. `reference/mathematical-thinking.md` supplies four lenses — high-dimensional geometric intuition (a matrix is a transformation of space), isomorphism & mapping (relocate a hard problem to where it is easy), limit thinking & error-bound control (approximate and bound the error; state every assumption's validity domain), and probability as a measure over a space (densities and divergences as geometric objects) — plus a meta-discipline: re-derive what you cite, bind every symbol to a concrete meaning, prize the proof over the result, and unpack intimidating notation rather than skipping it. The theory-reviewer subagent enforces these, refusing to pass on notation it has not unpacked or assumptions stated without their regimes.
+
 ## Thinking Frameworks
 
 Four cross-cutting reasoning frameworks are woven throughout all phases:
@@ -126,6 +134,7 @@ Four cross-cutting reasoning frameworks are woven throughout all phases:
 - **Read for motivation, write the whole story** — when reading others' work, extract the motivation, constraints, decisions, and load-bearing assumptions, not just the method; when writing our own paper, tell the actual story (predictions, surprises, disconfirmations, dead ends), not a sanitized post-hoc narrative
 - **Reframe, don't stack** — genuine innovation, not technique combination
 - **Simplicity over cleverness** — prefer elegant solutions
+- **Mathematical depth, not decoration** — the justification gate demands *understood* mathematics (matrices as transformations of space, hard problems mapped into easier spaces, error controlled rather than exact solutions chased, probability as a measure over a space), with the validity domain of every assumption stated, key steps re-derived from scratch, and dense notation unpacked rather than skipped
 - **Everything documented** — full audit trail, including a prediction ledger in `results.tsv`
 - **Honest science** — negative results are valuable findings
 

@@ -14,6 +14,8 @@ Agent tool:
 
     Use Socratic questioning to structure your challenge: probe assumptions ("Why is this taken for granted?"), probe evidence ("Has this been replicated?"), and examine consequences ("If this is true, what else must follow?"). Use First Principles to decompose claims to bedrock — separate proven results from conventions.
 
+    Demand mathematical *depth*, not decoration. A justification that cites formulas without geometric/structural understanding, leaves symbols floating without concrete meaning, skips over dense notation, or states assumptions without their validity domains is hollow — and hollow math that looks rigorous is more dangerous than honest hand-waving because it survives review on appearance. Refuse to pass on notation you have not unpacked yourself.
+
     ## Hypothesis
 
     [PASTE THE COMPLETE HYPOTHESIS: claim, variables, controls, expected effect]
@@ -42,6 +44,13 @@ Agent tool:
     - Are all derivations correct? Re-derive key steps.
     - Are there algebraic errors, incorrect applications of theorems, or unjustified simplifications?
     - Are bounds tight or loose?
+
+    **Mathematical Depth & Validity Domains:**
+    - Does the justification reason in the right lens (a matrix as a transformation of space, a problem mapped into an easier space, error controlled rather than an exact solution chased, probability as a measure over a space), or does it just manipulate symbols?
+    - Is every abstraction bound to a concrete meaning, or are symbols left floating?
+    - Is dense notation unpacked, or waved past? (Unpack it yourself; do not pass on notation you have not read.)
+    - For each assumption: is its validity domain / regime stated? An approximation valid only inside a convergence radius, applied without bounding the boundary, is a latent failure. Flag any assumption stated without its regime.
+    - Is the breakthrough a genuine mathematical *structure*, or "more compute / more components" dressed as theory?
 
     **Logical Soundness:**
     - Does each step follow from the previous?
