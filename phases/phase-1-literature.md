@@ -24,7 +24,9 @@ Goal: a literature map with verified papers, identified gaps, and exact baseline
    - A high-relevance paper you can't place and can't dismiss is a signal to search deeper in its direction, not to ignore it.
    - **Novelty tripwire:** if papers resembling your intended direction keep accumulating in the unused pile, the direction is not novel — confront that now, not at review time.
 
-6. **Build the literature map:**
+6. **Decision archaeology on exemplars:** for the 2-3 papers closest to our direction (the exemplars the paper will be measured against), go beyond the searcher's extraction using `reference/deep-imitation-protocol.md`: reconstruct the decisions behind the paper (why this baseline, this benchmark, this framing; what was tried and discarded; the load-bearing assumption) and build the **Exemplar Move Tables** — the rhetorical moves each exemplar section performs, which Phase 6's rationale matrix will transfer. Write to `research-log/[NNN]-decision-archaeology.md`.
+
+7. **Build the literature map:**
    - **What's been tried** — grouped by technique family
    - **What works** — strongest results with specific numbers on specific benchmarks
    - **What's missing** — gaps, contradictions, unexplored territory
@@ -33,15 +35,16 @@ Goal: a literature map with verified papers, identified gaps, and exact baseline
    - **Mathematical foundations** — key theorems, proofs, bounds underpinning the field
    - **Baselines to beat** — current SOTA with exact metric values
 
-7. **Identify 2-3 research directions** from the gaps. For each: what gap it addresses, why existing work hasn't solved it, what prior evidence suggests it could work, and preliminary feasibility on our compute. **Novelty must be argued by synthesis, not keyword absence** — "no paper matched this phrase" is not evidence of novelty; compare against the closest existing work explicitly.
+8. **Identify 2-3 research directions** from the gaps. For each: what gap it addresses, why existing work hasn't solved it, what prior evidence suggests it could work, and preliminary feasibility on our compute. **Novelty must be argued by synthesis, not keyword absence** — "no paper matched this phrase" is not evidence of novelty; compare against the closest existing work explicitly.
 
-8. **Check in with user** — present the literature map and proposed directions. Wait for the user to pick one (or suggest their own).
+9. **Check in with user** — present the literature map and proposed directions. Wait for the user to pick one (or suggest their own).
 
 ## Gate (record evidence in `state.json.gates["1"]`)
 
 - [ ] Literature map documented, papers grouped by technique
 - [ ] Citation spot-checks passed (list which papers were verified)
 - [ ] Unused-paper sweep done — every high-relevance paper placed or dismissed with a reason
+- [ ] Decision archaeology done on 2-3 exemplars, Exemplar Move Tables written
 - [ ] At least one gap identified with cited evidence
 - [ ] Baselines to beat identified with specific metric numbers
 - [ ] User approved a research direction

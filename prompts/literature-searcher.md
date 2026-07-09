@@ -47,6 +47,8 @@ Agent tool:
 
     ## Output Contract
 
+    The orchestrator wants more than a method summary — it reads each paper for **motivation and decisions**, the substantive research behind the surface artifact. Extract both layers (see the decision-archaeology fields below).
+
     Write your findings to `research-log/lit/[SOURCE_NAME].json` as a JSON array. For each paper:
 
     ```json
@@ -61,6 +63,11 @@ Agent tool:
       "key_results": "Specific metric values on specific benchmarks",
       "limitations": "Limitations acknowledged by the AUTHORS",
       "math_foundations": "Key theorems, proofs, or frameworks used",
+      "motivation": "What did the authors actually care about? Infer from the framing, chosen benchmark, and highlighted failure cases — NOT just the abstract's stated motivation. One paragraph.",
+      "constraints_inferred": "What could the authors plausibly NOT do (compute budget, data access, prior commitments, reviewer expectations)? These often explain methodological choices. State explicitly that these are inferred.",
+      "key_decisions": "Why this baseline, this benchmark, this metric, this scale, this framing? For the 2-3 most consequential decisions, note what would have changed if the authors had chosen otherwise.",
+      "tried_and_discarded": "What did the authors try and abandon? Visible in ablations, footnotes, supplementary, or implied by the shape of what they kept. Mark 'not visible' if you cannot tell.",
+      "load_bearing_assumptions": "Which assumption, if wrong, would invalidate the whole paper? Usually NOT the assumption the authors emphasize. Identify it explicitly.",
       "relevance": "high|medium|low",
       "relevance_reason": "Why this paper matters for our research"
     }
@@ -70,6 +77,8 @@ Agent tool:
     - Only include papers you actually found and opened. Do NOT fabricate papers — every entry will be spot-checked against its URL, and one fabricated entry discards your entire batch.
     - If a search returns no results, report that — do not invent alternatives.
     - "key_results" MUST include specific numbers (e.g., "93.2% accuracy on GLUE"), not vague claims.
+    - "motivation", "constraints_inferred", "key_decisions", "load_bearing_assumptions" are YOUR inferences — clearly framed as such. Do not pretend the authors stated them.
+    - For papers marked `relevance: low`, you may abbreviate the inference fields to one line each. For `high` and `medium`, fill them out properly.
 
     ## Report (your return message — keep under ~1,500 tokens; do NOT paste the JSON)
 

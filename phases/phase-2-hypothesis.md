@@ -23,7 +23,7 @@ Goal: a falsifiable hypothesis with complete, claim-type-appropriate justificati
    - **Empirical/systems claims:** mechanistic reasoning (WHY should this work, causally?) + measurement design: what will be measured, threats to validity, the confound list and how each confound is controlled. Decorative equations that don't carry the argument are a defect, not rigor — the reviewer is instructed to flag mathiness.
    - **Dataset/benchmark claims:** construct-validity argument — why does this dataset measure what it claims to measure? Coverage rationale, contamination analysis, reliability plan (inter-annotator agreement or measurement repeatability).
    - **Engineering claims:** the profile artifact (measured bottleneck numbers, from a published profile or your own PoC measurement — existing NOW, not promised for Phase 4) + per-component mechanism.
-   In all cases: cited prior work, explicit assumptions, no "it might work."
+   In all cases: cited prior work, explicit assumptions, no "it might work." Demand depth of yourself before the reviewer does: reason in the right lens (a matrix as a transformation of space, a problem mapped into an easier space, error controlled rather than exact solutions chased), bind every symbol to a concrete meaning, state each assumption's validity domain, and unpack dense notation rather than skipping it — `reference/mathematical-thinking.md` is the lens catalog. Hollow math that looks rigorous is worse than honest hand-waving.
 
 4. **Predict failure modes:** what could go wrong; under what conditions the justification breaks; what result would **disprove** the hypothesis; what would be inconclusive vs. conclusive.
 

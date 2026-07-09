@@ -4,14 +4,14 @@ Goal: a publication-quality paper — deterministically verified for internal co
 
 ## Steps
 
-1. **Write the story before the outline.** A paper is an argument, not a report. In 3-5 sentences, write the narrative arc:
+1. **Write the story before the outline — to `paper/narrative-arc.md`.** A paper is an argument, not a report. The arc opens with the 3-5 sentence spine:
    - **Tension** — the problem from `PROBLEM.md`, stated so the reader feels why it matters
    - **Gap** — why existing approaches don't resolve it (from the literature map)
    - **Insight** — the named concept from Phase 2, in one sentence
    - **Evidence** — the one or two results that carry the claim (including the distinguishing prediction's outcome)
    - **Resolution** — what is now true that wasn't before, and what it costs (limitations)
 
-   Every section must advance this arc; every writer dispatch includes it. If a planned section doesn't serve the story, cut or merge it.
+   Then the journey material the sections will draw on: why this approach and not the alternatives, the predictions and disconfirmations from the ledger, the load-bearing assumptions, what was tried and discarded. Every section must advance this arc; every writer dispatch includes it. If a planned section doesn't serve the story, cut or merge it. Do NOT sanitize — a predicted-X-observed-¬X journey stays in the arc.
 
 2. **Plan the structure** — title, section-by-section outline mapped to the story arc, and a mapping of which research-log content feeds each section. Draft the outline from the story first, then refine it against the research logs (draft-then-refine beats outlining directly from the material — the story keeps the material from dictating the structure). The complete structure:
    - **Title** — concise, descriptive
@@ -26,6 +26,10 @@ Goal: a publication-quality paper — deterministically verified for internal co
    - **References** — all cited papers, properly formatted
 
 3. **Fresh literature pass (before writing):** one bounded searcher round on the exact claim — what has been published since Phase 1? New papers go through the same verification pipeline into `research-log/lit/`; genuinely concurrent work gets cited and positioned honestly. Reviewers reject for missing the concurrent paper that did the same thing; the citation-database-only rule must not become a staleness trap.
+
+3b. **Build the writing execution plan** (before any writer is dispatched — these are what keep the sections from collapsing into generic prose):
+   - **`paper/motivation-surface-map.md`** (`reference/motivation-surface-map.md`) — the reader touchpoints where the story surfaces: title, abstract opening, Introduction topic sentences, headings, figure callouts, Discussion opening and closing. Draft real sentences for the highest-leverage rows, not strategy notes.
+   - **`paper/writing-rationale-matrix.md`** (`reference/writing-rationale-matrix.md`) — one row per manuscript unit: planned function, Idea-DNA link, exemplar pattern (from the Phase 1 Exemplar Move Tables), venue norm, evidence anchor, operation, and Final Text Check. If most rows say "improve clarity," the blueprint is shallow — redo it.
 
 4. **Dispatch section writer subagents in parallel** for independent sections (`prompts/section-writer.md`). Each writer receives the story arc alongside its source material, writes to `paper/sections/[NN]-[name].md` (**NN = the section's position in the outline, 01-09**), and returns a summary. The Discussion and Conclusion writers ALWAYS receive the full `tried_and_failed` array and every `results.tsv` row (all statuses) — the 3,000-word trimming rule never applies to failure evidence. Groups:
    - **Group 1 (parallel):** Related Work, Methodology, Experimental Setup
@@ -56,9 +60,11 @@ Goal: a publication-quality paper — deterministically verified for internal co
 
 7. **Supplementary materials:** full experiment table from `results.tsv` (all runs, all statuses, including failures and exploratory runs), hyperparameter configs per run, additional figures, long proofs, environment and reproducibility checklist.
 
-8. **Dispatch paper reviewer subagent** (most capable model available; `prompts/paper-reviewer.md`). The dispatch is **sterile** (template content only); the reviewer reads the assembled paper **from disk** and reports its line count (VERIFY against `git show HEAD:<path> | wc -l`). Budget: 2 review rounds — **`spent` increments at dispatch time, every dispatch; every verdict is logged verbatim before any re-dispatch; an adverse verdict can never be declared invalid.** At Deep intensity, dispatch TWO independent reviewers in parallel with different emphases (methodology/statistics vs. claims/novelty) and reconcile.
+8. **Review gate.** All dispatches are **sterile** (template content only); reviewers read the assembled paper **from disk** and report its line count (VERIFY against `git show HEAD:<path> | wc -l`). Budget: 2 review rounds — **`spent` increments at dispatch time, every round, regardless of verdict; every verdict is logged verbatim before any re-dispatch; an adverse verdict can never be declared invalid.**
+   - **Light/Medium intensity:** single reviewer, `prompts/paper-reviewer.md`.
+   - **Deep intensity:** three independent reviewers in parallel (`prompts/independent-reviewer.md` — Methods / Results / Story roles, each seeing only its prompt + the paper, no shared context), then an independence check (near-identical phrasings across reviews = contamination — re-dispatch the contaminated role), then `prompts/editor-synthesis.md` merges them into one decision. The whole 3+1 flow = one review round.
    - **PUBLISH_READY** — valid only with evidence of scrutiny (what was checked, strongest objection considered). Otherwise one invalid-scrutiny re-dispatch per round.
-   - **NEEDS_REVISION** — fix issues (or dispatch targeted section writers), re-dispatch. The re-review receives the previous issue list, judges each issue RESOLVED/IMPROVED/UNCHANGED/WORSE, and must also spend part of its report hunting new issues.
+   - **NEEDS_REVISION** — apply **Branch-of-Origin Routing** (SKILL.md): each issue routes to the phase that owns the weak artifact, not a prose patch. For sections needing substantive revision: rebuild their rationale-matrix rows and redo them closed-book per `reference/deep-imitation-protocol.md`. On re-review, the editor/reviewer receives the previous issue list, judges each RESOLVED/IMPROVED/UNCHANGED/WORSE, applies the **anti-shallow-revision metrics** (a patch-writing revision fails regardless of votes), and must also hunt new issues.
    - Budget exhausted → present the draft to the user with remaining open issues listed honestly.
 
 9. **Generate output** in the format chosen at Phase 0: DOCX (primary), LaTeX (.tex + .bib), or Markdown in `paper/`.
@@ -69,6 +75,7 @@ Goal: a publication-quality paper — deterministically verified for internal co
 
 - [ ] Test set was evaluated exactly once, and the paper's headline numbers are those numbers (empirical projects)
 - [ ] Fresh literature pass done; concurrent work cited
+- [ ] Writing plan built before writing: `paper/narrative-arc.md`, `paper/motivation-surface-map.md`, `paper/writing-rationale-matrix.md`
 - [ ] All deterministic consistency checks passed (list them with results, including the logged random selections)
 - [ ] Disclosure requirements met (pre-specified vs post-hoc, iteration count, AI-assistance per venue policy, compute)
 - [ ] Paper reviewer verdict PUBLISH_READY with evidence of scrutiny, OR review budget exhausted with open issues disclosed to user; all dispatches counted, all verdicts logged

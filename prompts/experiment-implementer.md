@@ -29,6 +29,17 @@ Agent tool:
 
     [PASTE BASELINE METRICS — omit for the baseline run itself]
 
+    ## Prediction (recorded BEFORE this run)
+
+    The orchestrator has recorded the following prediction in `results.tsv` *before* dispatching this run. Your job is to execute and report; do NOT alter the experiment to make the result match the prediction.
+
+    - **Predicted primary metric value:** [PREDICTED_VALUE]
+    - **Predicted direction:** [beat-baseline / match-baseline / regress / unclear]
+    - **Confidence:** [low / medium / high]
+    - **Rationale:** [ONE-PARAGRAPH RATIONALE — pasted from research log]
+
+    If, while implementing, you notice the experiment as specified would be unable to distinguish `confirm` from `disconfirm` outcomes (i.e. it is a null-signal design), report this as DONE_WITH_CONCERNS or NEEDS_CONTEXT *before* running it. Running a null-signal experiment is the most expensive failure mode in the project.
+
     ## Boundaries
 
     - You MUST NOT modify anything marked immutable in the evaluation contract — evaluation harness, data loading, metrics, splits, seeds. Your changes will be diffed against that list.
@@ -82,6 +93,7 @@ Agent tool:
     - **Status:** DONE / DONE_WITH_CONCERNS / NEEDS_CONTEXT / BLOCKED
     - **Code location:** `experiments/[RUN_ID]/`
     - **Metrics:** the grep output verbatim — NOT the full log
+    - **Predicted vs. actual primary metric:** state the prediction, the actual, and the raw delta. Do NOT classify the signal yourself (that is the orchestrator's call); just report the numbers honestly.
     - **Runtime:** wall-clock seconds
-    - **Notes:** anything unexpected, concerns, observations
+    - **Notes:** anything unexpected, concerns, observations — especially anything that surprised you relative to the prediction
 ```

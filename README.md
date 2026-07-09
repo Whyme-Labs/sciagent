@@ -7,14 +7,14 @@ A Claude Code skill for autonomous scientific research — from idea to publicat
 SciAgent encodes a complete scientific research methodology that Claude follows. Give it a research idea — or just an inspiration — and it will:
 
 0. **Ideate** (inspiration entry) — survey the topic landscape, gather SOTA numbers and active benchmarks, scout a reproducible baseline to innovate on, and propose concrete candidate ideas for you to pick from
-1. **Review literature** — search multiple sources in parallel, verify citations, build a gap analysis
-2. **Form hypotheses** — with mathematical justification and cited prior work, gated by independent theory review
+1. **Review literature** — search multiple sources in parallel, verify citations, build a gap analysis, and run decision archaeology on exemplar papers (Exemplar Move Tables that feed Phase 6 writing)
+2. **Form hypotheses** — with claim-type-appropriate justification and cited prior work, gated by independent theory review demanding mathematical depth, not decoration
 3. **Validate with PoC** — run quick probes before committing to full experiments
-4. **Run experiments** — baseline reproduction first, adversarial code review before results are believed, then adaptive plans with ablations, tuned-baseline parity, and multi-seed robustness
-5. **Analyze & iterate** — statistical analysis with effect sizes, budgeted iteration, evidence-based pivots, and an explicit publish decision (contribution paper / conclusive negative result / internal report)
-6. **Write the paper** — story-first narrative (tension → gap → insight → evidence → resolution), full academic structure, deterministically verified for consistency and citation faithfulness, then reviewer-gated
+4. **Run experiments** — baseline reproduction first, adversarial code review before results are believed, then predict-then-run adaptive plans with ablations, tuned-baseline parity, and multi-seed robustness
+5. **Analyze & iterate** — statistical analysis with effect sizes, prediction-vs-reality signals, budgeted iteration, evidence-based pivots, and an explicit publish decision (contribution paper / conclusive negative result / internal report)
+6. **Write the paper** — narrative arc + motivation surface map + writing rationale matrix as the execution plan; deterministic consistency and citation-faithfulness checks; three independent reviewers in parallel + editor synthesis at Deep intensity; anti-shallow-revision metrics on every revision
 
-Every experiment is gated by scientific reasoning. No blind hyperparameter tweaking.
+Every experiment is gated by scientific reasoning. No blind hyperparameter tweaking. Every paragraph of the paper is gated by a rationale-matrix row. No generic academic prose.
 
 ## Architecture: A Structured Research Loop
 
@@ -55,33 +55,51 @@ prompts/
 ├── code-reviewer.md            # Adversarial leakage/split/metric audit of experiment code
 ├── experiment-implementer.md   # One run per dispatch, immutable-contract-aware
 ├── results-analyzer.md         # Statistics + publication-quality figures
-├── section-writer.md           # One paper section per dispatch
-└── paper-reviewer.md           # Top-venue publication-readiness review
+├── section-writer.md           # One paper section per dispatch, matrix-constrained
+├── paper-reviewer.md           # Single-reviewer publication-readiness review (Light/Medium)
+├── independent-reviewer.md     # Three parallel independent reviewers (Deep)
+└── editor-synthesis.md         # Merges the three reviews into one decision (Deep)
+reference/
+├── mathematical-thinking.md    # Depth lenses for the justification gate
+├── thinking-frameworks.md      # First principles, Socratic, Occam, research taste
+├── deep-imitation-protocol.md  # Decision archaeology for reading; closed-book redo for writing
+├── motivation-surface-map.md   # Reader-touchpoint planning for Phase 6
+└── writing-rationale-matrix.md # Row-per-unit execution plan for Phase 6
 ```
 
 Phase files are loaded just-in-time when the loop enters that phase — the always-loaded core stays small.
 
 ## Installation
 
-### Personal Skill (available across all projects)
+### npx (recommended)
 
 ```bash
-# Clone the repo
-git clone https://github.com/Whyme-Labs/sciagent.git
+npx skills add Whyme-Labs/sciagent
+```
 
-# Symlink or copy into Claude Code's skill discovery directory
+Or install globally (available in all projects):
+
+```bash
+npx skills add -g Whyme-Labs/sciagent
+```
+
+### Manual (git clone)
+
+**Personal skill** (available across all projects):
+
+```bash
+git clone https://github.com/Whyme-Labs/sciagent.git
 ln -s "$(pwd)/sciagent" ~/.claude/skills/sciagent
 ```
 
-Claude Code auto-discovers skills from `~/.claude/skills/`. Once installed, invoke with `/sciagent` or Claude will auto-trigger it when your request matches the skill description.
-
-### Project Skill (available only in one project)
+**Project skill** (available only in one project):
 
 ```bash
-# From your project root
 mkdir -p .claude/skills
 ln -s /path/to/sciagent .claude/skills/sciagent
 ```
+
+Claude Code auto-discovers skills from `~/.claude/skills/` and `.claude/skills/`.
 
 ### Requirements
 
@@ -147,13 +165,62 @@ your-research-project/
 
 ## Key Principles
 
-- **Theory before experiments** — mathematical justification required, independently reviewed
+- **Rigor before confirmation** — claim-type-appropriate justification required and independently reviewed; exploratory runs may seed hypotheses, never confirm them
+- **Predict, then experiment** — every run records a numeric prediction *before* dispatch; the signal (confirm / partial / disconfirm / null) is the gradient that drives the next iteration
+- **Anti-fragile signals** — disconfirmations sharpen the model of the problem and are treated as primary outputs
+- **Strong baselines only** — improvements over weak or untuned baselines are fictional; baselines are audited and given tuning parity before being targeted
 - **Reframe, don't stack** — every hypothesis must make a testable prediction that a plain combination of techniques would not
 - **Extrapolate and engineer** — question structures the field assumes necessary (what property do they actually provide?), and treat composition as engineering: every component justified against a measured bottleneck, ablated, and claimed only through its end-to-end impact
+- **Mathematical depth, not decoration** — matrices as transformations of space, problems mapped into easier spaces, error controlled rather than exact solutions chased; validity domains stated, key steps re-derived, dense notation unpacked
+- **Read for motivation, write the whole story** — extract the decisions and constraints behind others' papers, not just the method; tell our own actual story (predictions, surprises, dead ends), never a sanitized post-hoc narrative
 - **Simplicity over cleverness** — prefer elegant solutions
-- **Everything documented** — full audit trail, negative results included
+- **Everything documented** — full audit trail including the prediction ledger, negative results included
 - **Honest science** — evidence-gated progress; nothing is "done" on self-assessment
 - **Reproducibility** — environment, seeds, and exact commands recorded
+
+## Operating Discipline
+
+The quality gates are not advisory. SciAgent opens with a non-negotiable **Operating Discipline** section: the predict-then-run discipline, the Strong Baseline Gate, the anti-stacking check, and the mathematical-justification gate cannot be skipped or rationalized past — only the *user* can relax them. A "Red Flags — You Are Rationalizing" table names the precise thoughts that precede a skipped gate ("I'm fairly sure how this will turn out, I'll skip the prediction"; "the baseline is close enough"; "this notation is dense, the gist is clear enough") and pairs each with the gate it betrays. When the agent catches one, it names the gate and satisfies it rather than narrating past it.
+
+## Mathematical Thinking
+
+The Phase 2 justification gate demands *understood* mathematics, not cited formulas. `reference/mathematical-thinking.md` supplies four lenses — high-dimensional geometric intuition (a matrix is a transformation of space), isomorphism & mapping (relocate a hard problem to where it is easy), limit thinking & error-bound control (approximate and bound the error; state every assumption's validity domain), and probability as a measure over a space (densities and divergences as geometric objects) — plus a meta-discipline: re-derive what you cite, bind every symbol to a concrete meaning, prize the proof over the result, and unpack intimidating notation rather than skipping it. The theory-reviewer subagent enforces these, refusing to pass on notation it has not unpacked or assumptions stated without their regimes.
+
+## Thinking Frameworks
+
+Four cross-cutting reasoning frameworks are woven throughout all phases:
+
+- **First Principles Thinking** — decompose claims to bedrock truths (proven theorems, replicated results), strip away conventions, rebuild from fundamentals
+- **Socratic Questioning** — structured probing at every user checkpoint and in reviewer subagents to surface hidden assumptions
+- **Occam's Razor** — prefer the simplest hypothesis, experiment design, and explanation that accounts for the evidence
+- **Research Taste & Signals** — every experiment is a gradient step: predict before running, compare after, treat disconfirmations as the strongest signal; dig beneath the surface of papers to the substantive decisions that produced them
+
+
+## Prediction Ledger
+
+`results.tsv` is more than a metrics dump — it is a prediction ledger. Each row is committed *before* a run with `predicted_value`, `predicted_direction`, and `confidence`, and updated *after* with `actual_value` and `signal`. Signals (`confirm` / `partial` / `disconfirm` / `null`) are the project's gradient; null-signal runs are flagged as design failures, not noise.
+
+## Paper Architecture
+
+Phase 6 produces three planning artifacts *before* any prose is written:
+
+- **`paper/narrative-arc.md`** — the story: the fire, why this approach (and not the alternatives), the journey including predictions and disconfirmations, load-bearing assumptions, what was tried and discarded.
+- **`paper/motivation-surface-map.md`** — the places where the reader meets the story: title, abstract opening, Introduction topic sentences, headings, figure callouts, Discussion opening and closing. Real draft sentences in the highest-leverage rows, not vague strategy notes.
+- **`paper/writing-rationale-matrix.md`** — the row-per-manuscript-unit execution plan. Columns: Manuscript Unit | Planned Function | Idea-DNA Link | Exemplar Pattern | Venue Norm | Evidence Anchor | Operation | Final Text Check. Row 1 justifies the whole-work framework. Subsequent rows follow the chosen structure in order.
+
+Section-writer subagents receive their slice of the matrix as a constraint, not a suggestion. They must satisfy every row's Final Text Check.
+
+## Three Independent Reviewers + Editor Synthesis
+
+Single reviewers correlate with their own prompts. SciAgent dispatches three reviewers **in parallel**, each from a different angle (Methods / Results / Story), each seeing only its prompt and the paper text — no narrative arc, no rationale matrix, no shared context. After all three return, an independence-validation step catches cross-contamination (identical phrasings, role drift). An editor synthesis then merges the three validated reviews into one revision decision.
+
+## Anti-Shallow-Revision Metrics
+
+For any revised draft (v2+), the editor synthesis compares v(N) to v(N-1) against six metrics — near-identical paragraph ratio, dominant operation in the rationale matrix, `KEEP`-row count, missing obligatory moves, unsupported new claims, numbers without source. A revision that fails any row is "patch writing" (a few sentences added or reworded, structure untouched) and must be redone closed-book using `reference/deep-imitation-protocol.md`. These metrics override the reviewer votes — a patch-writing revision is NEEDS_REVISION even with three ACCEPT votes.
+
+## Branch-of-Origin Routing
+
+When a reviewer flags a problem, the orchestrator routes the fix back to the phase that owns the weak artifact, not just the surface where the failure appeared. A generic Introduction is a Phase 0/6-step-1 problem (idea DNA + narrative arc), not a Phase 6 prose patch. A weak baseline is a Phase 1/4 problem, not a Results-section rewrite. Patching at the surface is faster but leaves the upstream gap — and the upstream gap will resurface in peer review.
 
 ## License
 

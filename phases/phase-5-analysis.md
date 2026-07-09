@@ -13,7 +13,7 @@ Goal: statistically honest analysis, then a budgeted, evidence-based decision �
    - **Why did it work (or not)?** Does the empirical evidence support the Phase 2 justification?
    - **What contributed most?** Which components mattered in ablations? Did the distinguishing prediction hold?
    - **How robust is it?** Consistent across seeds, splits, scales, generalization benchmarks? **Where does it fail?** — error analysis on concrete failure cases is required, not just aggregate numbers.
-   - **What was surprising?** Unexpected results? (A surprise may trigger a targeted literature query — 1 searcher, ≤ 5 papers, verified as usual.)
+   - **What was surprising?** Read the prediction ledger's `signal` column: every `disconfirm` and `partial` is primary material — where were the predictions wrong, and what does each gap teach about the model of the problem? Any `null` signals mean wasted runs — fix the design pattern. (A surprise may trigger a targeted literature query — 1 searcher, ≤ 5 papers, verified as usual.)
    - **How does it compare to literature?** Position against Phase 1 baselines — including the TUNED baseline, at matched compute.
    - **Does it solve the problem?** Re-read `PROBLEM.md`. The metric is a proxy — does this result advance the core question at the stated scope, or only the proxy? If only the proxy, say so plainly; that changes the path decision and the paper's claims.
 

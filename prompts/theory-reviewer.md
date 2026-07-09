@@ -11,7 +11,11 @@ Agent tool:
 
     ## Objective
 
-    Rigorously evaluate the research hypothesis and its mathematical justification below. You MUST be critical — a hypothesis that passes your review should withstand expert scrutiny. The researcher needs honest feedback, not encouragement.
+    Rigorously evaluate the research hypothesis and its justification below. You MUST be critical — a hypothesis that passes your review should withstand expert scrutiny. The researcher needs honest feedback, not encouragement.
+
+    Use Socratic questioning to structure your challenge: probe assumptions ("Why is this taken for granted?"), probe evidence ("Has this been replicated?"), and examine consequences ("If this is true, what else must follow?"). Use First Principles to decompose claims to bedrock — separate proven results from conventions.
+
+    Demand *depth*, not decoration. A justification that cites formulas without geometric/structural understanding, leaves symbols floating without concrete meaning, skips over dense notation, or states assumptions without their validity domains is hollow — and hollow math that looks rigorous is more dangerous than honest hand-waving, because it survives review on appearance. Refuse to pass on notation you have not unpacked yourself. (Lens catalog: `reference/mathematical-thinking.md`.)
 
     ## Material Under Review
 
@@ -40,6 +44,13 @@ Agent tool:
 
     **Justification Correctness (per the claim type above):** For derivations: re-derive key steps; algebraic errors, incorrect theorem applications, unjustified simplifications, loose bounds? For empirical claims: does the causal mechanism hold; are the confounds actually controlled; is the measurement design sound? Mathiness flagged as a defect.
 
+    **Mathematical Depth & Validity Domains:**
+    - Does the justification reason in the right lens (a matrix as a transformation of space, a problem mapped into an easier space, error controlled rather than an exact solution chased, probability as a measure over a space), or does it just manipulate symbols?
+    - Is every abstraction bound to a concrete meaning, or are symbols left floating?
+    - Is dense notation unpacked, or waved past? (Unpack it yourself; do not pass on notation you have not read.)
+    - For each assumption: is its validity domain / regime stated? An approximation valid only inside a convergence radius, applied without bounding the boundary, is a latent failure. Flag any assumption stated without its regime.
+    - Is the breakthrough a genuine structure, or "more compute / more components" dressed as theory?
+
     **Logical Soundness:** Does each step follow? Leaps where evidence is assumed rather than proven? Hidden assumptions?
 
     **Assumption Completeness:** All assumptions listed? Any unrealistic for the target domain? Which, if violated, invalidate the hypothesis entirely?
@@ -47,6 +58,12 @@ Agent tool:
     **Anti-Stacking Check:** Apply the test matching the hypothesis type.
     - Reframing/extrapolation hypothesis: it must state a testable prediction that a plain combination of the same components would NOT make. Is that prediction genuinely distinguishing, or would the stacked version predict the same thing? Grand rewording of a combination is still stacking.
     - Engineering hypothesis (composition of components toward one goal): composition is legitimate ONLY if it passes all three tests — (1) each component targets a specific, measured bottleneck (not an assumed one); (2) a per-component ablation is planned; (3) the contribution claim is the end-to-end system result under a stated constraint, not the combination itself. Verify each test; "engineering" without measured bottlenecks is stacking wearing a hard hat.
+
+    **Occam's Razor Check:**
+    - Is there a simpler hypothesis that would predict the same outcome?
+    - Does the hypothesis introduce more complexity than the evidence demands?
+    - Could the same result be explained by a single mechanism rather than multiple interacting ones?
+    - If a simpler formulation exists, it should be tested first.
 
     **Alternative Explanations:** Could the predicted outcome occur for reasons OTHER than the hypothesis? Simpler explanations not considered?
 

@@ -13,11 +13,31 @@ Agent tool:
 
     Write the **[SECTION_NAME]** section, to `paper/sections/[NN]-[SECTION_NAME].md`.
 
-    ## The Paper's Story
+    ## Narrative Arc (THE SPINE — read this first)
 
-    [PASTE THE 3-5 SENTENCE NARRATIVE ARC FROM PHASE 6 STEP 1: tension → gap → insight (the named concept) → evidence → resolution]
+    [PASTE THE FULL CONTENTS OF paper/narrative-arc.md — the 3-5 sentence story (tension → gap → insight (the named concept) → evidence → resolution) plus the journey: why this matters, why this approach and not alternatives, predictions and disconfirmations, load-bearing assumptions, what was tried and discarded]
 
-    Your section must advance this arc — a reader should know, by the end of your section, why it was necessary for the story. Use the concept's name consistently.
+    Your section must advance this arc — a reader should know, by the end of your section, why it was necessary for the story. Use the concept's name consistently. Serve the narrative, never contradict or sanitize it: the reader will read this paper for motivation and journey, not just method.
+
+    ## Writing Rationale Matrix Rows (YOUR EXECUTION PLAN — constraints, not suggestions)
+
+    [PASTE THE TABLE SLICE FROM paper/writing-rationale-matrix.md THAT COVERS THIS SECTION — every row that applies to a unit you will write]
+
+    Each row tells you, for one manuscript unit: the planned function, which Idea-DNA component it serves, which exemplar pattern it transfers, which venue norm applies, the evidence anchor, the operation (REWRITE / SPLIT / MERGE / DELETE / MOVE / ADD / KEEP), and the Final Text Check the finished prose must satisfy.
+
+    Your output must satisfy every row's Final Text Check. If a row says the paragraph reports a confidence interval, the paragraph reports a confidence interval. You are not free to drop, merge, or reorder rows — flag the issue and stop.
+
+    ## Motivation Surface Map Cues (the sentences and headings you are NOT free to change)
+
+    [PASTE THE ROWS FROM paper/motivation-surface-map.md FOR THIS SECTION — typically the section heading(s), opening sentence(s), closing sentence(s), and figure callouts.]
+
+    These are the reader touchpoints the orchestrator has already committed to. Use the planned wording verbatim where it is concrete; respect the strategy where it is abstract.
+
+    ## Exemplar Move Tables (from Phase 1 decision archaeology)
+
+    [PASTE THE MOVE-TABLE ROWS FROM THE DECISION-ARCHAEOLOGY LOG ENTRY THAT COVER THIS SECTION'S JOB]
+
+    For each paragraph you write, the rationale matrix row points to a specific exemplar pattern. Use the move (the rhetorical job), not the exemplar's specific words. Treat the exemplar as a structural template, not a phrase bank.
 
     ## Paper Outline (for context)
 
@@ -30,7 +50,7 @@ Agent tool:
     - Methodology: the CURRENT hypothesis entry (the latest superseding iteration file)
     - Experimental Setup: research-log/000-setup.md + experiments/configs/environment.md
     - Results: the analysis tables file + figures list
-    - Discussion: the Phase 5 analysis + ALWAYS the full tried_and_failed array and every results.tsv row, all statuses (failure evidence is never trimmed)
+    - Discussion: the Phase 5 analysis + the prediction-ledger excerpt (predicted vs actual, signals) + ALWAYS the full tried_and_failed array and every results.tsv row, all statuses (failure evidence is never trimmed)
     - Introduction: PROBLEM.md + idea DNA + key findings summary
     - Conclusion: complete research journey summary
     If a source file exceeds ~3,000 words, the orchestrator pastes only the parts relevant to this section.]
@@ -48,6 +68,7 @@ Agent tool:
     - Precise: specific numbers, never "significant improvement" without the number
     - Honest: limitations stated plainly, no overselling
     - Notation defined on first use
+    - **Resist the post-hoc narrative.** Do NOT rewrite the story so the conclusion looks inevitable. If the narrative arc says we predicted X and observed ¬X, the paper should reflect that — most explicitly in the Discussion, but the Introduction's framing must also be consistent with the actual journey.
 
     ## Section-Specific Instructions
 
@@ -61,20 +82,22 @@ Agent tool:
 
     **Results:** Clear tables; reference every figure by number ("as shown in Figure 1"); statistical significance where available; baseline comparisons with specific numbers; ablation results showing component contributions. Include negative results honestly labeled.
 
-    **Discussion:** Interpret results — why did things work or not? Connect back to the theoretical justification. Limitations honest and specific. Unexpected findings and what they might mean. Future work grounded in what was actually learned.
+    **Discussion:** This section is where the journey lives — do NOT write a sanitized post-hoc narrative; use the narrative arc directly. **Predictions vs. reality** — pull from the prediction ledger: where were we right, wrong, surprised, and what did the gaps teach us about the model of the problem? **Disconfirmations as primary outputs** — every meaningful `disconfirm` or `partial` signal is candidate material; a disconfirmation with a clean explanation is more valuable than a confirmation we cannot fully explain. **Load-bearing assumptions** surfaced plainly as what a future reader should challenge. Connect to the theoretical justification — where evidence supported it and where it diverged. Limitations honest and specific, not boilerplate. Future work from what was actually learned, including dead ends.
 
-    **Introduction:** Motivate the problem; state the gap; describe the approach (1 paragraph); numbered contributions; outline of the paper.
+    **Introduction:** Motivate the problem with the fire, not generic importance — why does this matter in the specific way it mattered to us (from the narrative arc)? Briefly surface **why this approach and not the alternatives** — the substantive decision, not just "we propose X." State the gap (drawing on the Phase 1 decision archaeology). Describe the approach (1 paragraph). Numbered contributions. Outline of the paper.
 
     **Abstract:** 150-300 words. Problem → approach → key result → significance. Include the most important metric number.
 
-    **Conclusion:** Summarize contributions (brief, not an abstract repeat); practical implications; future work from actual findings, no generic filler.
+    **Conclusion:** Summarize contributions (brief, not an abstract repeat); practical implications; acknowledge what was tried and discarded (briefly), so readers can extract the substantive research, not just the polished claim; future work from actual findings (including dead ends), no generic filler.
 
     ## Report (your return message — keep under ~1,000 tokens; do NOT paste the section text)
 
-    - **Status:** DONE / NEEDS_CONTEXT
+    - **Status:** DONE / DONE_WITH_CONCERNS / NEEDS_CONTEXT / BLOCKED
     - **File written:** paper/sections/[NN]-[SECTION_NAME].md
     - **Word count:** N
     - **References used:** list of [Author, Year] citations included
     - **Figures referenced:** list of figure numbers/filenames
+    - **Rationale-matrix row coverage:** per row in your slice: ✓ satisfied / ✗ unsatisfied with the reason. Any ✗ → status DONE_WITH_CONCERNS or BLOCKED
+    - **Final Text Check verification:** for each row's check, quote the sentence(s) in your draft that satisfy it. If a check cannot be satisfied with the provided source material, surface it — do not invent evidence
     - **Flags:** any place where source material was thin and the text is correspondingly cautious
 ```

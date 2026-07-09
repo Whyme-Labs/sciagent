@@ -1,6 +1,8 @@
 # Paper Reviewer — Subagent Prompt Template
 
-Fill in all `[PLACEHOLDER]` fields before dispatching. Model: most capable available (broad judgment). Dispatch is **sterile**: template content only. The reviewer reads the paper from disk; increment `paper_review_rounds.spent` at dispatch time, every dispatch. Dispatch ONLY after the deterministic consistency checks in phase-6 have passed. At Deep intensity, dispatch two reviewers in parallel with different emphases (methodology/statistics vs. claims/novelty).
+Fill in all `[PLACEHOLDER]` fields before dispatching. Model: most capable available (broad judgment). Dispatch is **sterile**: template content only. The reviewer reads the paper from disk; increment `paper_review_rounds.spent` at dispatch time, every dispatch. Dispatch ONLY after the deterministic consistency checks in phase-6 have passed.
+
+**Intensity routing:** Light/Medium use this single reviewer. At **Deep** intensity, use `prompts/independent-reviewer.md` (three parallel independent reviewers) + `prompts/editor-synthesis.md` instead — one full round of that flow counts as one review round.
 
 ```
 Agent tool:
@@ -43,6 +45,8 @@ Agent tool:
     **Internal Contradiction Check:** Do the claims cohere? (e.g., an "efficiency" paper must not report improvements that cost more compute without addressing it.) Do the conclusions follow from the presented numbers, at the stated magnitudes?
 
     **Coherence and Flow:** Clear narrative arc problem → gap → approach → evidence → conclusion? Non-sequiturs or jarring transitions?
+
+    **Story Integrity:** Does the paper tell the actual research story — predictions, surprises, disconfirmations from the prediction ledger — or has it been sanitized into "we proposed X, X worked"? A post-hoc narrative presented as prediction is a blocking issue.
 
     **Reproducibility:** Could a competent researcher reproduce the experiments from the Experimental Setup section? All hyperparameters, seeds, evaluation details specified?
 

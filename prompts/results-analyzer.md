@@ -23,7 +23,7 @@ Agent tool:
 
     ## Experiment Results
 
-    Read `results.tsv` from disk (workspace root). In your report, state its total row count and the count by status — the orchestrator verifies these against the file. The schema is one row per (run_id, metric); the primary metric is: [PRIMARY_METRIC from the evaluation contract].
+    Read `results.tsv` from disk (workspace root). In your report, state its total row count and the count by status — the orchestrator verifies these against the file. The schema is one row per (run_id, metric) with prediction-ledger columns (`predicted_value`, `predicted_direction`, `confidence`, `metric_value`, `signal`); the primary metric is: [PRIMARY_METRIC from the evaluation contract]. Include a **prediction-vs-reality analysis**: the confirm/partial/disconfirm/null signal distribution, and which disconfirmations carry the most information.
 
     ## Detailed Run Logs
 
