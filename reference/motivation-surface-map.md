@@ -6,12 +6,12 @@ A paper can have a clean narrative arc and still fail to communicate it because 
 
 ## Save Location
 
-`paper/motivation-surface-map.md` — built in Phase 6 immediately after the narrative arc and before the writing rationale matrix.
+`paper/motivation-surface-map.md` — built in Phase 6 step 3b — after the narrative arc, outline, and fresh literature pass, and before the writing rationale matrix.
 
 ## Required Inputs
 
 - `paper/narrative-arc.md`
-- Idea DNA from `research-log/000-setup.md`
+- Idea DNA from `state.json` (and `PROBLEM.md` for the core question)
 - The chosen target venue's conventions (from Phase 1 literature review)
 
 ## Schema

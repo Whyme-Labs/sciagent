@@ -13,9 +13,9 @@ A shallow matrix is a failure. If most rows say "improve clarity" or "polish wor
 Before building the matrix, all of these must exist:
 
 - `paper/narrative-arc.md` (Phase 6 step 1)
-- `paper/motivation-surface-map.md` (Phase 6 step 1b)
-- `research-log/001b-decision-archaeology.md` with the Exemplar Move Tables (Phase 1)
-- Idea DNA from `research-log/000-setup.md`
+- `paper/motivation-surface-map.md` (Phase 6 step 3b)
+- the `research-log/[NNN]-decision-archaeology.md` entry with the Exemplar Move Tables (Phase 1)
+- Idea DNA from `state.json` (and `PROBLEM.md` for the core question)
 - `results.tsv` prediction ledger (for Discussion/Results evidence anchors)
 - For rewrites only: the previous draft's section text
 
@@ -34,7 +34,7 @@ Column definitions:
 - **Venue Norm** — the target-venue convention this unit respects (e.g., "NeurIPS Intro: numbered contributions in final paragraph," "JMLR Methods: theorem-proof blocks with explicit assumption lists").
 - **Evidence Anchor** — for any unit making a factual claim: the specific source. Examples: `results.tsv:exp-04`, `[Vaswani et al., 2017] Sec 3.2`, `experiments/configs/environment.md`, `paper/figures/ablation.pdf`. Units without an evidence anchor must be either pure transition prose or flagged for deletion.
 - **Operation** — one of `REWRITE`, `SPLIT`, `MERGE`, `DELETE`, `MOVE`, `ADD`, `KEEP` (see deep-imitation-protocol). For a v1 draft, the default is `REWRITE` (writing from notes). For v2+ revisions, the operation distribution must satisfy the anti-shallow-revision metrics.
-- **Final Text Check** — the specific assertion the finished prose must satisfy to count as done. Examples: "uses the term 'attention drift' from confirmed_motivation.md," "reports CI alongside point estimate," "does not claim transfer beyond domains tested in exp-04/05/06."
+- **Final Text Check** — the specific assertion the finished prose must satisfy to count as done. Examples: "uses the named concept's term from paper/narrative-arc.md," "reports CI alongside point estimate," "does not claim transfer beyond domains tested in exp-04/05/06."
 
 ## The First Row Is Special
 

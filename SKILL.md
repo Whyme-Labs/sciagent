@@ -216,7 +216,7 @@ Fixed defaults, recorded into `state.json` at Phase 0 (user may override there �
 | PoC debug attempts | 3 | Loop to Phase 2 with findings |
 | Fix attempts per experiment (keyed to the change being tested, NOT the run ID — a re-run testing the same change is a fix attempt whatever it is named, and must set `parent`) | 2 | Mark `crash`, move on |
 | Cumulative failed runs on one approach since the last `best_state` improvement (baseline re-runs and re-runs of kept configs never reset or count) | 3 | Prune: revert to `best_state`, log approach in `tried_and_failed` with a `failure_class` |
-| Paper review rounds | 2 — same dispatch-time counting rule | Present draft to user with open issues listed |
+| Paper review rounds | 2 — same dispatch-time counting rule; at Deep intensity one 3-reviewer + editor flow = ONE increment, counted when the three reviewers are dispatched | Present draft to user with open issues listed |
 
 Research intensity (set in Phase 0) scales literature breadth and evaluation breadth: **Light** 5-10 papers, primary benchmark only; **Medium** 15-25 papers, primary + 1 generalization benchmark; **Deep** 30-50 papers, primary + 2 generalization benchmarks (a "publication-grade" claim on one benchmark is incoherent).
 
@@ -396,7 +396,7 @@ research-log/               # One .md per research event + progress.md
 research-log/lit/           # Literature databases (JSON, one per source)
 experiments/                # Code, scripts, configs
 experiments/poc/            # Proof-of-concept code
-experiments/configs/        # environment.md, evaluation-contract.md
+experiments/configs/        # environment.md, evaluation-contract.md, data-governance.md
 data/                       # Datasets, intermediate results (provenance recorded)
 paper/                      # Living document
 paper/sections/             # Section drafts from writers

@@ -22,7 +22,7 @@ Agent tool:
     Read the complete hypothesis entry from disk: `[PATH — the current iteration's hypothesis file, e.g., research-log/003-hypothesis-iter-1.md]`
     Report the file's line count in your report (it will be verified against git). Review the file's content: hypothesis with variables and controls, the claim-type-appropriate justification, cited evidence chain, predicted failure modes, and the anti-stacking evidence.
 
-    The project's claim type is: [PROJECT_TYPE / CLAIM TYPE — theoretical | empirical/systems | dataset | engineering]. Apply the matching rigor standard:
+    The claim type under review is: [CLAIM_TYPE — theoretical | empirical/systems | dataset | engineering. For reproduction projects use empirical/systems applied to the original's load-bearing assumptions; for analysis projects use empirical/systems applied to the rival-explanation design]. Apply the matching rigor standard:
     - Theoretical: re-derive the mathematics.
     - Empirical/systems: judge the causal mechanism, measurement design, and confound control. **Equations that decorate rather than carry the argument are a DEFECT (mathiness) — flag them; do not reward them or demand more of them.**
     - Dataset: judge construct validity, coverage rationale, contamination analysis, reliability plan.

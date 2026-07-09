@@ -64,7 +64,7 @@ Goal: a publication-quality paper — deterministically verified for internal co
    - **Light/Medium intensity:** single reviewer, `prompts/paper-reviewer.md`.
    - **Deep intensity:** three independent reviewers in parallel (`prompts/independent-reviewer.md` — Methods / Results / Story roles, each seeing only its prompt + the paper, no shared context), then an independence check (near-identical phrasings across reviews = contamination — re-dispatch the contaminated role), then `prompts/editor-synthesis.md` merges them into one decision. The whole 3+1 flow = one review round.
    - **PUBLISH_READY** — valid only with evidence of scrutiny (what was checked, strongest objection considered). Otherwise one invalid-scrutiny re-dispatch per round.
-   - **NEEDS_REVISION** — apply **Branch-of-Origin Routing** (SKILL.md): each issue routes to the phase that owns the weak artifact, not a prose patch. For sections needing substantive revision: rebuild their rationale-matrix rows and redo them closed-book per `reference/deep-imitation-protocol.md`. On re-review, the editor/reviewer receives the previous issue list, judges each RESOLVED/IMPROVED/UNCHANGED/WORSE, applies the **anti-shallow-revision metrics** (a patch-writing revision fails regardless of votes), and must also hunt new issues.
+   - **NEEDS_REVISION** — apply **Branch-of-Origin Routing** (SKILL.md): each issue routes to the phase that owns the weak artifact, not a prose patch. For sections needing substantive revision: rebuild their rationale-matrix rows and redo them closed-book per `reference/deep-imitation-protocol.md`. On re-review, the editor/reviewer receives the previous issue list and judges each RESOLVED/IMPROVED/UNCHANGED/WORSE, and the **anti-shallow-revision metrics** apply (a patch-writing revision fails regardless of votes): at Deep, the editor computes them; at Light/Medium, YOU compute the six metrics yourself (per `reference/deep-imitation-protocol.md`) before re-dispatching the reviewer, and a failing section goes back to closed-book redo instead of to review. The re-reviewer must also hunt new issues.
    - Budget exhausted → present the draft to the user with remaining open issues listed honestly.
 
 9. **Generate output** in the format chosen at Phase 0: DOCX (primary), LaTeX (.tex + .bib), or Markdown in `paper/`.
@@ -83,5 +83,5 @@ Goal: a publication-quality paper — deterministically verified for internal co
 
 ## Outputs
 
-- Research log: `research-log/[N]-paper-draft.md` — compilation decisions, check results, reviewer findings and fixes, Gate Check
+- Research log: `research-log/[NNN]-paper-draft.md` — compilation decisions, check results, reviewer findings and fixes, Gate Check
 - Commit: `research: paper draft v1 — [title]`

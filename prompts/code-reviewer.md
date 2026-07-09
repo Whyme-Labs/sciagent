@@ -16,7 +16,7 @@ Agent tool:
     ## Code Under Review
 
     Read from disk: [LIST OF PATHS, e.g., experiments/baseline/, experiments/core-1/]
-    Report the total line count of the files you reviewed.
+    Report the per-file line counts of the files you reviewed (the orchestrator verifies them with `wc -l` — a mismatch means you did not read what is on disk).
 
     ## Evaluation Contract
 

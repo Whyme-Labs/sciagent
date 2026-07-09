@@ -4,7 +4,7 @@ Use this template **after** three independent reviewers (dispatched via `prompts
 
 For first-draft review, the editor receives all three independent reviews plus the paper. For revised-draft review (v2+), the editor *also* receives the v(N-1) draft and applies the anti-shallow-revision metrics.
 
-Model: most capable available. Dispatch is **sterile**: template content only. This dispatch counts against `paper_review_rounds` (the whole 3-reviewer + editor round = one round).
+Model: most capable available. Dispatch is **sterile**: template content only. Round accounting: `paper_review_rounds.spent` increments ONCE per 3+1 flow, at the moment the three independent reviewers are dispatched — the editor dispatch itself does not increment again.
 
 ```
 Agent tool:
@@ -30,10 +30,10 @@ Agent tool:
     ### Story Reviewer
     [PASTE THE STORY REVIEWER'S FULL OUTPUT]
 
-    ## Previous Draft (for v2+ revisions only)
+    ## Previous Draft and Issues (for v2+ revisions only)
 
     [FOR FIRST DRAFT: write "Not applicable — this is the first review pass."]
-    [FOR v2+: paste the v(N-1) draft text, and the writing rationale matrix used for this revision (paper/writing-rationale-matrix.md). The anti-shallow-revision metrics apply.]
+    [FOR v2+: paste (a) the previous round's consolidated issue list, (b) the v(N-1) draft text, and (c) the writing rationale matrix used for this revision (paper/writing-rationale-matrix.md). For each previous issue, judge it RESOLVED / IMPROVED / UNCHANGED / WORSE in the new draft — do not re-grade from scratch. The anti-shallow-revision metrics apply.]
 
     ## Your Synthesis — produce these sections in order
 
@@ -59,7 +59,7 @@ Agent tool:
     |---|---|---|---|
     | Near-identical paragraph ratio | below 35% | | |
     | Dominant operation in matrix | not `ADD` | | |
-    | `KEEP` rows in matrix | below 25% | | |
+    | `KEEP` rows in matrix | below 25% (unless the reviewers/user requested polish only) | | |
     | Missing obligatory moves | 0 | | |
     | Unsupported new claims introduced in revision | 0 | | |
     | Numbers without source | 0 | | |

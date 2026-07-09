@@ -28,6 +28,7 @@ Goal: convert the research idea into tracked state, a configured workspace, and 
    - Budget constraints (time, money, API calls) and any overrides to the SKILL.md Budgets table
    - Research intensity: **Light** / **Medium** / **Deep**
    - Preferred paper output format: DOCX (default) / LaTeX / Markdown
+   - **Target venue** (or "undecided" — then default to the domain's top venue for norm purposes). Recorded as `target_venue` in `state.json`; its conventions are captured from the exemplars during Phase 1 decision archaeology and drive the Venue Norm column of the Phase 6 rationale matrix and the AI-disclosure check.
    - **Data governance:** what datasets will be used, under what licenses; any personal/human-subjects data (if yes: stop — user must confirm approvals exist); for LLM-based work, is the benchmark plausibly contaminated in the models used?
    - **Checkpoint defaults (optional):** pre-recorded decisions if the user is unavailable ("if I don't respond in N days, proceed with your recommendation") — stored in `state.json`.
    Record all answers; compute answers become the paper's Experimental Setup section.

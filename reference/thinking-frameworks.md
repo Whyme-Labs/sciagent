@@ -123,7 +123,7 @@ For any hypothesis, experiment design, or result interpretation, ask:
 
 For every experiment (PoC or full run):
 
-1. **Predict** — record a numeric prediction, a directional prediction (`beat-baseline` / `match-baseline` / `regress` / `unclear`), and a confidence level (`low` / `medium` / `high`).
+1. **Predict** — record a numeric prediction, a directional prediction (`match-literature` / `beat-baseline` / `match-baseline` / `regress` / `unclear`), and a confidence level (`low` / `medium` / `high`).
 2. **Justify** — write one paragraph: why this prediction, citing theory or prior runs.
 3. **Run** — execute the experiment.
 4. **Compare** — was the prediction `confirm` / `partial` / `disconfirm` / `null`?

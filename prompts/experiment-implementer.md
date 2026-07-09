@@ -34,7 +34,7 @@ Agent tool:
     The orchestrator has recorded the following prediction in `results.tsv` *before* dispatching this run. Your job is to execute and report; do NOT alter the experiment to make the result match the prediction.
 
     - **Predicted primary metric value:** [PREDICTED_VALUE]
-    - **Predicted direction:** [beat-baseline / match-baseline / regress / unclear]
+    - **Predicted direction:** [match-literature / beat-baseline / match-baseline / regress / unclear]
     - **Confidence:** [low / medium / high]
     - **Rationale:** [ONE-PARAGRAPH RATIONALE — pasted from research log]
 

@@ -28,7 +28,7 @@ For each section that matters (typically Introduction, Methodology, Results, Dis
 
 ### Table 1 — Exemplar Move Table
 
-Filled in Phase 1 alongside decision archaeology. One table per section job, drawing from the 3-5 most relevant prior papers.
+Filled in Phase 1 alongside decision archaeology. One table per section job, drawing from the 2-3 exemplar papers selected in the Phase 1 decision-archaeology step.
 
 ```markdown
 | Exemplar | Paragraph | Move | Evidence Type | Opening Function | Closing Function | Notes on why this move worked |
@@ -39,7 +39,7 @@ A "move" is the rhetorical job of the paragraph — e.g., "establish field-level
 
 ### Table 2 — Our Draft Move Table
 
-Filled in Phase 6 once a first pass exists (or in Phase 4 if a partial draft is being iterated). Mark every paragraph honestly:
+Filled in Phase 6 once a first pass exists. Mark every paragraph honestly:
 
 ```markdown
 | Draft Paragraph | Current Move | Evidence Present | Problem | Keepable Content |
@@ -120,9 +120,9 @@ When patch writing is detected: discard the patch, redo Tables 1-3, and apply th
 
 ## Decision Archaeology Inputs (Phase 1 Use)
 
-When this protocol is used during literature review rather than writing, only Table 1 is built. For each of the 3-5 most relevant prior papers, the table is filled with:
+When this protocol is used during literature review rather than writing, only Table 1 is built. For each of the 2-3 exemplar papers, the table is filled with:
 
 - The paragraph-level moves the authors used in the section job you are studying.
 - The Notes column captures *why* those moves worked given the authors' constraints — this is the "why did the authors arrive here" probe that taste depends on.
 
-The output of Phase-1 deep imitation is a populated Table 1 per section job, stored under `research-log/001b-decision-archaeology.md`. It feeds directly into the Phase 6 Target Section Blueprint without re-derivation.
+The output of Phase-1 deep imitation is a populated Table 1 per section job, stored under `research-log/[NNN]-decision-archaeology.md` (next unused sequence number). It feeds directly into the Phase 6 Target Section Blueprint without re-derivation.

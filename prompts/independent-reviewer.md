@@ -8,10 +8,10 @@ Independence is the point. The Phase 6 paper-reviewer step replaces a single rev
 
 Dispatch three Agent calls in a single message, each using this template with a different `[REVIEWER_ROLE]` slot. Each subagent must receive nothing beyond:
 
-- This filled-in prompt.
-- The complete assembled paper text.
+- This filled-in prompt (sterile — no framing, history, or assurances).
+- The path to the assembled paper on disk.
 
-No narrative arc, no prediction ledger, no rationale matrix, no Phase 1 literature map. Reviewers reason from the paper alone, the way a real peer reviewer does.
+No narrative arc, no prediction ledger, no rationale matrix, no Phase 1 literature map. Reviewers reason from the paper alone, the way a real peer reviewer does. The three dispatches + editor synthesis together count as ONE `paper_review_rounds` round, incremented at dispatch time.
 
 ## Reviewer Roles
 
@@ -28,7 +28,7 @@ Agent tool:
   subagent_type: general-purpose
   description: "Independent review ([REVIEWER_ROLE]): [PAPER_TITLE]"
   prompt: |
-    You are a senior reviewer at a top-tier scientific venue, assigned to review a paper from one specific angle. You are one of three independent reviewers. You will NOT see the other reviewers' outputs. Reason from the paper alone — do not invoke information that should not be visible to a peer reviewer.
+    You are a senior reviewer at a top-tier scientific venue, assigned to review a paper from one specific angle. You are one of three independent reviewers. You will NOT see the other reviewers' outputs. Reason from the paper alone — do not invoke information that should not be visible to a peer reviewer. You cannot ask questions mid-task: if the paper path does not exist, the file is truncated, or your role definition is missing, return Status: NEEDS_CONTEXT naming the problem — do not review a partial artifact.
 
     ## Your Role
 
@@ -69,6 +69,13 @@ Agent tool:
     - Independent reasoning. Do not hedge ("other reviewers may disagree"); state your judgment.
     - Be specific. Generic praise and generic criticism are both useless.
     - Be honest about uncertainty. If you cannot evaluate a claim because the paper does not give you enough to evaluate it, that itself is a finding.
+
+    ## Report
+
+    - **Status:** DONE / NEEDS_CONTEXT
+    - **Paper line count:** N (from the file you read)
+    - **Blind assessment** with your vote (as specified above)
+    - **Actionable coaching** (as specified above)
 ```
 
 ## Role Definitions (paste into the prompt)
@@ -120,15 +127,8 @@ After all three reviewers complete, the orchestrator runs a coarse text-similari
 - The same issues raised in the same order at the same severity.
 - Concept drift (the Methods Reviewer suddenly critiquing motivation; the Story Reviewer suddenly critiquing baseline tuning) — a signal that the reviewer leaked outside its role, which usually means the prompt was contaminated.
 
-If similarity is high or roles drifted, treat one or more reviews as compromised, re-dispatch with stricter prompts, and consider whether the orchestrator accidentally passed shared context.
+If similarity is high or roles drifted, treat one or more reviews as compromised, re-dispatch with stricter prompts, and consider whether the orchestrator accidentally passed shared context. **Cap: at most one contamination re-dispatch per role per round, and it does not consume an extra round — but every discarded review is still logged verbatim first, and an adverse review can never be discarded as "contaminated" on similarity grounds alone.**
 
 ## Editor Synthesis
 
-After three independent reviews are validated, a dedicated editor-synthesis subagent (`prompts/editor-synthesis.md`) merges them:
-
-- Aggregate the three votes. Two REJECT or three WEAK_REJECT = NEEDS_REVISION.
-- Deduplicate issues raised by multiple reviewers (these are higher confidence).
-- Surface issues raised by only one reviewer with that reviewer's role tag (these are role-specific, also valuable).
-- Combine the coaching into one actionable revision plan.
-
-The editor synthesis is what feeds the v2 draft decision, not any single reviewer's vote.
+After three independent reviews are validated, a dedicated editor-synthesis subagent (`prompts/editor-synthesis.md`) merges them: vote aggregation (decision rule lives in that template — all ACCEPT/WEAK_ACCEPT with no blocking issues → PUBLISH_READY, otherwise NEEDS_REVISION), issue deduplication with role tags preserved, the anti-shallow-revision audit on v2+, and one actionable revision plan. The editor synthesis is what feeds the draft decision, not any single reviewer's vote.

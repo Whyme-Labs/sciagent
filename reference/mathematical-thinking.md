@@ -1,6 +1,6 @@
 # Mathematical Thinking
 
-The Phase 2 justification gate is the spine of SciAgent: no experiment runs without mathematical/theoretical justification. But "justification" can degrade into mechanical citation — quoting a theorem number, applying a formula, producing symbols that look rigorous but carry no understanding. This reference exists to keep the justification *deep* rather than *decorative*.
+The Phase 2 justification gate is the spine of SciAgent: no confirmatory experiment runs without claim-type-appropriate justification. These lenses apply wherever that justification is mathematical (and decorative equations where it is not are a defect, not rigor). But "justification" can degrade into mechanical citation — quoting a theorem number, applying a formula, producing symbols that look rigorous but carry no understanding. This reference exists to keep the justification *deep* rather than *decorative*.
 
 The thesis: mathematics in research is not calculation. It is intuition about structure — seeing matrices as transformations of space, mapping a hard problem into a space where it is easy, controlling error rather than chasing exact solutions, and treating probability as a measure over a space rather than a frequency count. An agent that reaches for these lenses produces justifications that survive a skeptical reviewer; an agent that memorizes formulas produces justifications that collapse at the first "why?".
 
