@@ -219,6 +219,8 @@ Research loops fail the way optimizers fail: fixation (varying the same componen
 - **Escalation rule** — two stalled iterations on the same dimension forbid a third: the next hypothesis must vary an untouched dimension, or the path decision moves to pivot/conclude. Phase 2 gates on the constraint.
 - **Cycle retrospective** — the final task of every cycle mines the project's learnings, failure ledger, review history, and budget events for *process* defects and writes concrete, evidence-backed edit proposals against the skill files themselves — presented to the user, never self-applied.
 
+The escalation rule and the `kind` audit were adversarially pressure-tested (14 fresh-context agent runs under combined sunk-cost, deadline, authority, and last-iteration pressure, control vs. treatment arms): 14/14 complied, with treatment agents rejecting a renamed sub-slice hypothesis and an "understanding"-labeled metric run against their own stated incentives. The escalation constraint binds `kind: metric` hypotheses only — genuine understanding work on a stalled dimension stays legal — and a fired escalation trigger never overrides the diminishing-returns recommendation to conclude.
+
 ## Paper Architecture
 
 Phase 6 produces three planning artifacts *before* any prose is written:
