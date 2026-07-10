@@ -42,7 +42,7 @@ Project-type note: `theoretical` projects replace this phase with proof verifica
    - Baseline off-tolerance → stop, debug, or escalate. Do NOT proceed on a broken baseline.
    - Core succeeds → full ablation + generalization + scaling plan
    - Core partially succeeds → narrow ablations to the underperforming component, skip scaling
-   - Core fails → stop, log with analysis and `failure_class`, loop back to Phase 2 (consumes an iteration)
+   - Core fails → stop, log with analysis and `failure_class`, fill the current `search_log` entry's `outcome` (`refuted | inconclusive`), loop back to Phase 2 (consumes a research iteration — increment `iteration` AND `research_iterations.spent`; the new hypothesis appends a new `search_log` entry)
    - **Prune rule:** 3 cumulative failures on one approach → revert to `best_state`, record, return to the plan. Never keep patching a dying branch.
 
 7. **Checkpoint with user** after baseline + core experiment, before ablations. This blocks the *decision* on the remaining plan — while waiting you may clear verification debt and draft figures, but not start runs whose design depends on the pending decision. Generate comparison plots after each batch.

@@ -32,9 +32,9 @@ Agent tool:
 
     [FOR ROUND 2+: PASTE THE PREVIOUS REVIEW'S ISSUE LIST. For each listed issue, you must judge it RESOLVED / IMPROVED / UNCHANGED / WORSE in this revision — do not re-grade from scratch. THEN also check for new issues introduced by the revision. FOR ROUND 1: delete this section.]
 
-    ## Known pitfalls in this project
+    ## Escalation Constraint (only when the loop imposed one)
 
-    [PASTE THE learnings ARRAY FROM state.json, OR "None yet."]
+    [IF ACTIVE: PASTE THE CONSTRAINT — the stalled `varies` dimension(s) and the full list of dimensions already used by the search (from search_log's kind: metric entries). OTHERWISE: delete this section.]
 
     ## Output Contract — produce TWO separate outputs
 
@@ -56,6 +56,8 @@ Agent tool:
     **Assumption Completeness:** All assumptions listed? Any unrealistic for the target domain? Which, if violated, invalidate the hypothesis entirely?
 
     **Taxonomy Verification:** The hypothesis entry self-classifies on the two-axis idea taxonomy (opportunity pattern × method paradigm × dominant operation; definitions in `reference/idea-taxonomy.md`). Verify the classification against the hypothesis's actual gap-and-contribution structure — a mislabel chosen to dodge the tripwire is itself a defect. If the true classification is Bridge Opportunity × Synthesis/Unification, or the dominant operation is integrate/unify/merge: this is the statistically most likely LLM ideation template (produced at 4–7× the human base rate), so apply heightened scrutiny — the entry must document why a local move (replace, decouple, or formalize) on the strongest single prior work would not achieve the goal, and that argument must be substantive, not a formality. A missing or hollow local-move justification on a Bridge×Synthesis hypothesis is grounds for NEEDS_REVISION.
+
+    **Escalation Constraint Compliance (only if that section is present above):** The hypothesis declares the dimension it varies. Verify it is genuinely outside the used-dimension list — not a rename or a sub-slice of a listed dimension (e.g., `attention-sparsity` within `attention-pattern` is the same dimension). A violation is grounds for NEEDS_REVISION regardless of the hypothesis's other merits.
 
     **Anti-Stacking Check:** Apply the test matching the hypothesis type.
     - Reframing/extrapolation hypothesis: it must state a testable prediction that a plain combination of the same components would NOT make. Is that prediction genuinely distinguishing, or would the stacked version predict the same thing? Grand rewording of a combination is still stacking.

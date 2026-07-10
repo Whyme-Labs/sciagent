@@ -55,6 +55,10 @@ Agent tool:
     - Conclusion: complete research journey summary
     If a source file exceeds ~3,000 words, the orchestrator pastes only the parts relevant to this section.]
 
+    ## Known pitfalls in this project
+
+    [PASTE ONLY THE PROMOTED learnings ENTRIES (recurrences >= 2) FROM state.json, EACH AS "lesson — apply when: <apply_when>", OR "None yet."]
+
     ## Boundaries
 
     - Write ONLY this section. Do not draft other sections or restructure the outline.

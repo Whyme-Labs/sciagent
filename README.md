@@ -27,6 +27,10 @@ Key mechanisms:
 - **The Iteration Protocol** — every working turn is ORIENT → SELECT (one task) → EXECUTE → VERIFY → RECORD → ADVANCE. Survives context compaction: the files are always enough to resume.
 - **Fixed budgets** — iteration caps, debug-attempt limits, reviewer-round limits, and a diminishing-returns rule are set at Phase 0 and enforced, never renegotiated mid-run.
 - **Debug-then-prune** — failing experiment branches get a bounded number of fix attempts, then the loop reverts to the best known-good state instead of patching a dying branch.
+- **Search diagnosis & strategy escalation** — every Phase 5 pass computes mechanical process statistics (keep rates, prediction calibration by confidence tier, per-dimension tried/kept counts from a `search_log`); a stalled search cannot be answered with another variation of the same dimension — the next hypothesis must target an untouched dimension, or the path moves to pivot/conclude. Responses to a diagnosis are binary (nothing, or a structural move); config-level meta-tweaking is banned on ablation evidence.
+- **Structured learnings with promotion** — lessons carry `{lesson, apply_when, source, recurrences}`; only lessons that recur get injected into subagent dispatches, and never into reviewers.
+- **Candidate critique rubric** — every slate comparison (ideation candidates, next-step selection) records per-candidate failure mode, implementation trap, evidence check, and an impact × feasibility ÷ complexity score, plus one-line rejection reasons for the road not taken.
+- **Cycle retrospective** — the loop examines the loop: at cycle close, a retrospective mines the learnings/failure/review/budget history for process defects and proposes concrete skill-file edits to the user (never self-applied).
 - **Deterministic verification before LLM review** — citations checked against a verified database, paper numbers checked against the results ledger, figures checked on disk — so reviewer subagents spend judgment on science, not typos.
 - **Anti-rubber-stamp review gates** — reviewers must show evidence of scrutiny for a passing verdict; re-reviews judge the previous issue list item by item instead of re-grading from scratch.
 - **Subagents write files, return summaries** — heavy artifacts (paper lists, code, sections, figures) go to disk; the orchestrator's context stays lean.
@@ -205,6 +209,15 @@ LLM-generated research ideas are measurably template-bound: they propose bridge/
 ## Prediction Ledger
 
 `results.tsv` is more than a metrics dump — it is a prediction ledger. Each row is committed *before* a run with `predicted_value`, `predicted_direction`, and `confidence`, and updated *after* with `metric_value` and `signal`. Signals (`confirm` / `partial` / `disconfirm` / `null`) are the project's gradient; null-signal runs are flagged as design failures, not noise.
+
+## Meta-Optimization Layer
+
+Research loops fail the way optimizers fail: fixation (varying the same component for iterations), mis-calibrated confidence, and process rot nobody audits. SciAgent counters all three mechanically, adapting findings from bilevel meta-optimization research ([Bilevel-Autoresearch](https://github.com/EdwardOptimization/Bilevel-Autoresearch), arXiv:2603.23420 — whose controlled ablation showed config-level meta-tweaking *underperforms* no meta-loop, while structural changes to the search dominate):
+
+- **`search_log`** — each hypothesis declares the single dimension it varies (`varies` slug, recorded at Phase 2); Phase 5 fills the outcome.
+- **Search diagnosis** — a mechanical Phase 5 step producing a calibration table (confirm rate by stated confidence) and a per-dimension tried/kept table, ending in a binary verdict: healthy or stalled.
+- **Escalation rule** — two stalled iterations on the same dimension forbid a third: the next hypothesis must vary an untouched dimension, or the path decision moves to pivot/conclude. Phase 2 gates on the constraint.
+- **Cycle retrospective** — the final task of every cycle mines the project's learnings, failure ledger, review history, and budget events for *process* defects and writes concrete, evidence-backed edit proposals against the skill files themselves — presented to the user, never self-applied.
 
 ## Paper Architecture
 

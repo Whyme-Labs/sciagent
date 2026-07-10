@@ -7,6 +7,7 @@ Goal: a falsifiable hypothesis with complete, claim-type-appropriate justificati
 1. **Formulate the hypothesis** with all components:
    - **Claim** — precise, falsifiable ("We hypothesize that X will improve Y by Z because…"). For `analysis` projects: the explanation under test plus the enumerated rival explanations. For `reproduction` projects: the original's claims and the load-bearing assumptions you will stress.
    - **Independent variables** — what you're changing
+   - **`varies` slug** — the single component/dimension of the system this hypothesis changes (e.g., `attention-pattern`, `data-curriculum`, `loss-function`). Append `{iteration, varies, kind}` to `search_log` in `state.json` (`kind`: `metric` if the hypothesis targets the primary metric, `understanding` for error-analysis/rival-explanation work; `outcome` is filled at Phase 5). If Phase 5 handed this iteration an escalation constraint (SKILL.md — Search Diagnosis and Strategy Escalation), `varies` must be a dimension not yet present among `search_log`'s `kind: metric` entries — renaming or sub-slicing the stalled dimension does not satisfy the rule, and the theory reviewer verifies this.
    - **Dependent variables** — what you're measuring
    - **Controls** — what stays constant
    - **Expected effect** — directional prediction, with estimated magnitude if possible
@@ -39,7 +40,7 @@ Goal: a falsifiable hypothesis with complete, claim-type-appropriate justificati
 
 9. **Write the full hypothesis entry** to `research-log/[NNN]-hypothesis-iter-[X].md` BEFORE dispatching review. **Once the theory review is dispatched, this entry is immutable** — post-PoC or post-data revisions are NEW entries marked "Supersedes: [previous]", never edits in place. The predicted-vs-postdicted distinction must survive in the record; the paper will disclose how many hypothesis iterations were attempted.
 
-10. **Dispatch theory reviewer subagent** (most capable model available). Use `prompts/theory-reviewer.md`. The dispatch is **sterile** (SKILL.md Dispatch Contract): template content only, no framing or assurances. The reviewer reads the hypothesis entry **from disk** at the path you give it and reports the file's line count; VERIFY that count against `git show HEAD:<path> | wc -l`.
+10. **Dispatch theory reviewer subagent** (most capable model available). Use `prompts/theory-reviewer.md`. The dispatch is **sterile** (SKILL.md Dispatch Contract): template content only, no framing or assurances. If Phase 5 imposed an escalation constraint, fill the template's Escalation Constraint section with the stalled dimension and the used-dimension list — this is loop state the template defines a slot for, not a learning; the sterile rule is not violated. The reviewer reads the hypothesis entry **from disk** at the path you give it and reports the file's line count; VERIFY that count against `git show HEAD:<path> | wc -l`.
 
    **Accounting (hard rules):** increment `hypothesis_review_rounds.spent` at dispatch time, every dispatch, regardless of verdict. Log every verdict verbatim in the research log BEFORE any re-dispatch. An adverse verdict can never be declared invalid; a passing verdict without scrutiny evidence is invalid and may be re-dispatched at most once for that round.
 
@@ -51,6 +52,7 @@ Goal: a falsifiable hypothesis with complete, claim-type-appropriate justificati
 ## Gate (record evidence in `state.json.gates["2"]`)
 
 - [ ] Hypothesis falsifiable, with defined variables, controls, and the pre-specified primary comparison
+- [ ] `search_log` entry appended with this iteration's `varies` dimension (respecting any escalation constraint from Phase 5 — evidence: the entry, and the constraint it satisfied if one was active)
 - [ ] Concept named, stated in plain language, and formally defined
 - [ ] Claim-type-appropriate justification complete with citations (for engineering: profile artifact with numbers exists now)
 - [ ] Failure modes identified

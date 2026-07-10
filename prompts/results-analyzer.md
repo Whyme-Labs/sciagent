@@ -37,7 +37,7 @@ Agent tool:
 
     ## Known pitfalls in this project
 
-    [PASTE THE learnings ARRAY FROM state.json, OR "None yet."]
+    [PASTE ONLY THE PROMOTED learnings ENTRIES (recurrences >= 2) FROM state.json, EACH AS "lesson — apply when: <apply_when>", OR "None yet."]
 
     ## Your Job
 

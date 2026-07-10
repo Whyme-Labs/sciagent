@@ -36,7 +36,7 @@ Goal: convert the research idea into tracked state, a configured workspace, and 
 5. **Set up the workspace:**
    - Initialize git repo (or use existing — check `git status --porcelain` first; never absorb existing uncommitted work)
    - Create the directory structure (see SKILL.md)
-   - Create/complete `state.json` per the SKILL.md schema: `phase`, `cycle: 1`, `iteration: 1`, `entry_mode`, `project_type`, idea DNA, the three counted budgets with defaults + approved overrides, empty `tasks`/`parked_candidates`/`tried_and_failed`/`learnings`, `gates: {}`
+   - Create/complete `state.json` per the SKILL.md schema: `phase`, `cycle: 1`, `iteration: 1`, `entry_mode`, `project_type`, idea DNA, the three counted budgets with defaults + approved overrides, empty `tasks`/`parked_candidates`/`tried_and_failed`/`search_log`/`learnings`, `gates: {}`
    - Create `research-log/progress.md` containing only its header line
    - Create `results.tsv` with the prediction-ledger header: `run_id	metric	predicted_value	predicted_direction	confidence	metric_value	signal	memory_gb	runtime_s	status	description` (one row per run × metric; for `theoretical` projects this is instead the claims ledger: `claim_id	statement	status	log`)
    - Document the environment in `experiments/configs/environment.md`: OS, hardware, GPU model + VRAM, Python version, key library versions, CUDA/driver versions

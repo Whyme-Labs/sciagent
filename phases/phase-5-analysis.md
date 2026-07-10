@@ -19,13 +19,26 @@ Goal: statistically honest analysis, then a budgeted, evidence-based decision �
 
 4. **Freshness check (each iteration):** one narrow searcher query on the exact claim — has competing work appeared since Phase 1? New competing work → escalate as a potential pivot/invalidation trigger.
 
-5. **Check the budgets** (mechanical — read them from `state.json`, don't reason about whether they apply):
+5. **Search diagnosis (mechanical — SKILL.md: Search Diagnosis and Strategy Escalation).** Compute from `results.tsv` and `search_log`, and record the tables in the analysis log. Project-type substitutions: non-empirical types compute the ledger-derived rows only where a prediction ledger exists; for `theoretical` projects a proof-targeting entry counts as `kind: metric` and "`best_state` improvement" means a claims-ledger claim moving to proved or disproved.
+   - **`kind` audit first** — reclassify before computing anything: an iteration whose `results.tsv` rows include a primary-metric row predicted to beat the baseline, or that updated `best_state`, is `kind: metric` regardless of its label; log any reclassification.
+   - Keep / discard / crash / exploratory counts, this iteration and cumulative; the keep-rate trend.
+   - **Null-signal count** — from the ledger's `signal` column; each null is a design failure (the design fix is step 3's job; the count belongs in this table).
+   - **Calibration table** — confirm rate by stated `confidence` tier (high/medium/low). A `high` tier confirming below ~50% means the predictions are mis-calibrated — say so in the log and distrust the next round of confidence labels accordingly.
+   - **Per-dimension table** — for each `varies` value in `search_log` with `kind: metric`: iterations spent, `best_state` improvements produced.
+   - Fill this iteration's `outcome` in `search_log`: `improved | no_gain | refuted | inconclusive`.
+   - **Verdict: healthy or stalled.** Healthy = `best_state` improved within the work of the last 2 `kind: metric` entries; stalled = it didn't (fewer than 2 such entries = healthy by default). Record the verdict. A stalled verdict activates the escalation check in Path A. The response to any diagnosis is binary — nothing (healthy) or a structural move (stalled); never process tweaks.
+
+6. **Check the budgets** (mechanical — read them from `state.json`, don't reason about whether they apply):
    - `research_iterations.spent >= limit` → conclude (remember: ANY re-entry into Phases 1-4, iterate or pivot, consumes an iteration)
-   - Diminishing returns: last 2 *metric-targeting* iterations improved the primary metric by < 1% relative (in seed-std-dev units where available) → recommend conclude. Understanding-iterations (error analysis, rival-explanation elimination) don't count against this — they improve the paper, not the metric.
+   - Diminishing returns: last 2 *metric-targeting* iterations (= `kind: metric` in `search_log`, post-audit) improved the primary metric by < 1% relative (in seed-std-dev units where available) → recommend conclude. Understanding-iterations (`kind: understanding` — error analysis, rival-explanation elimination) don't count against this — they improve the paper, not the metric.
    - Validation-overfitting check: gains on the tuning signal not reflected on the validation tier → you are optimizing the proxy; flag it.
 
-6. **Decide the path:**
-   - **Path A: Iterate** — promising results with a clear evidence-based next step. State what you'll try AND why, citing this analysis — and how the next step serves `PROBLEM.md`'s core question, not just the metric. An iteration that only chases the proxy is drift; flag it instead of taking it. Increment `iteration`, enqueue Phase 2 tasks, loop back to Phase 2.
+7. **Decide the path:**
+   - **Path A: Iterate** — promising results with a clear evidence-based next step. State what you'll try AND why, citing this analysis — and how the next step serves `PROBLEM.md`'s core question, not just the metric. An iteration that only chases the proxy is drift; flag it instead of taking it. Two additional mechanical checks:
+     - **Escalation check (stalled verdict only):** if the last 2 `kind: metric` entries in `search_log` share the same `varies` dimension (the escalation trigger), the next hypothesis MUST target a dimension not yet present among `search_log`'s `kind: metric` entries (a `parked_candidate` attacking a fresh dimension counts; a sub-slice of the stalled dimension does not). Write the constraint — the stalled dimension and the full used-dimension list — into the enqueued Phase 2 task description; Phase 2 gates on it and the theory reviewer verifies it. If no untouched dimension is plausible, Path A is off the table; argue B or C instead. A stalled verdict without the same-dimension trigger imposes no dimension constraint.
+     - **Rubric when alternatives exist:** if more than one candidate next step is on the table (including retryable `implementation_defeated` entries and `parked_candidates`), apply the Candidate Critique Rubric (SKILL.md): failure mode, implementation trap, evidence check, and score per candidate; select citing the scores; log one-line rejection reasons.
+
+     Then increment `iteration`, enqueue Phase 2 tasks, loop back to Phase 2.
    - **Path B: Pivot** — hypothesis disproved but evidence reveals a new direction. Document what was learned; append the old direction to `tried_and_failed` (honest `failure_class`); propose the new direction with justification. Consumes an iteration. Requires user approval (quoted). Loop to Phase 1 or 2. If `PROBLEM.md` itself is invalidated, use the Invalidation procedure from SKILL.md instead.
    - **Path C: Conclude** — success criteria met, diminishing returns, or budget exhausted. Then:
      1. **Run the locked test set — exactly once** (empirical projects). Log it as an irreversible event in `state.json` with command + output. These become the paper's headline numbers; validation numbers become tuning history.
@@ -33,9 +46,10 @@ Goal: statistically honest analysis, then a budgeted, evidence-based decision �
         - (a) **Contribution paper** — the evidence supports the claims at venue standards.
         - (b) **Negative-result / lessons paper** — only if the negative result is statistically conclusive (well-powered, tuned baselines, seeds); an underpowered null is not a publishable negative result.
         - (c) **Internal technical report** — valuable learning, insufficient evidence for either paper type. No submission.
-     3. On (a) or (b) with user approval (quoted): proceed to Phase 6. On (c): write the report from the research logs and close the cycle.
+     3. On (a) or (b) with user approval (quoted): proceed to Phase 6. On (c): write the report from the research logs.
+     4. **Enqueue the cycle retrospective** (SKILL.md — Skill Retrospective): on (a)/(b) it runs as the final task after Phase 6 delivery; on (c) it runs immediately after the internal report. The cycle does not close without it.
 
-7. **Checkpoint with user** — present the analysis, budget status (iterations/compute/time remaining), retryable `implementation_defeated` entries from `tried_and_failed` (as options), and your recommended path. Wait for approval (quoted).
+8. **Checkpoint with user** — present the analysis, the search-diagnosis verdict and calibration table, budget status (iterations/compute/time remaining), retryable `implementation_defeated` entries from `tried_and_failed` (as options), and your recommended path. Wait for approval (quoted).
 
 ## Gate (record evidence in `state.json.gates["5"]`)
 
@@ -43,8 +57,12 @@ Goal: statistically honest analysis, then a budgeted, evidence-based decision �
 - [ ] Analyzer output verified (figures exist, numbers match, row count matches, exclusions respected)
 - [ ] Headline statistical claim recomputed by the orchestrator (evidence: the recomputation)
 - [ ] Freshness check done
+- [ ] Search diagnosis recorded: `kind` audit done, null-signal count, calibration table, per-dimension table, `search_log` outcome filled, healthy/stalled verdict
 - [ ] Budget check performed and recorded
-- [ ] If concluding: test set run exactly once (logged), publish decision made with the no-publish option steelmanned
+- [ ] If the escalation trigger fired (stalled + last 2 metric entries on one dimension) and Path A was taken: the enqueued Phase 2 task carries the constraint and names the fresh `varies` dimension
+- [ ] If alternatives were compared: rubric scores and rejection reasons logged (Candidate Critique Rubric)
+- [ ] If concluding: test set run exactly once (logged), publish decision made with the no-publish option steelmanned, retrospective task enqueued
+- [ ] If concluding via path (c): retrospective written and presented — evidence: the retrospective log path + the message presenting the proposals to the user
 - [ ] User approved the path decision (quoted verbatim)
 
 ## Outputs

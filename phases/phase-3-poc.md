@@ -20,7 +20,7 @@ Goal: the smallest possible experiment that tests the hypothesis's core assumpti
 4. **Interpret results against the pre-defined confirm/reject criteria:**
    - **Confirmed** — document the evidence; proceed toward Phase 4.
    - **Partially confirmed** — write a NEW superseding hypothesis entry accounting for what you learned (never edit the reviewed entry); re-run the Phase 2 self-critique. **Substantive is defined mechanically:** any change to the claim, assumptions, justification, or success thresholds is substantive and requires re-dispatching the theory reviewer (counted against `hypothesis_review_rounds`); only a change to the expected-effect-magnitude line may skip re-review.
-   - **Violated** — a valuable finding, not a failure. Document why. Add the assumption to `tried_and_failed` (choose the `failure_class` honestly: did a correctly-running probe contradict the prediction, or did we fail to probe it?) and loop back to Phase 2 with the new evidence.
+   - **Violated** — a valuable finding, not a failure. Document why. Add the assumption to `tried_and_failed` (choose the `failure_class` honestly: did a correctly-running probe contradict the prediction, or did we fail to probe it?), fill the current `search_log` entry's `outcome` (`refuted` if the probe contradicted it, else `inconclusive`), and loop back to Phase 2 with the new evidence (the superseding hypothesis appends a new `search_log` entry under the same iteration).
    - **Inconclusive at feasible scale** — escalate to the user with the transferability argument and options; do not silently loop.
 
 5. **Checkpoint with user** — present PoC results, your interpretation, and your recommendation: proceed / revise hypothesis / abandon direction. Wait for the go/no-go.

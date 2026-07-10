@@ -10,7 +10,7 @@ Goal: a literature map with verified papers, identified gaps, and exact baseline
 
 2. **Dispatch literature searcher subagents** — one per available source, in parallel. Budget: 3-5 searchers, ≤ 15 papers each; divide the intensity target across sources.
 
-   Use `prompts/literature-searcher.md`. Each searcher writes its findings to `research-log/lit/[source].json` and returns only a summary (counts, highlights, coverage). Include the `learnings` array from `state.json` if non-empty.
+   Use `prompts/literature-searcher.md`. Each searcher writes its findings to `research-log/lit/[source].json` and returns only a summary (counts, highlights, coverage). Include the promoted `learnings` entries (`recurrences >= 2`) from `state.json`, if any.
 
 3. **Verify before trusting (VERIFY step — mandatory):** fabricated citations are the most common failure of automated literature search — and they hide in plausible mid-tier entries, not famous papers. So the sample must not be yours to choose:
    - Select **at least 2 papers per source at random** with a logged command (e.g., `jq -r '.[].title' research-log/lit/arxiv.json | shuf -n 2`) — paste the command and its output as the gate evidence.
@@ -35,9 +35,9 @@ Goal: a literature map with verified papers, identified gaps, and exact baseline
    - **Mathematical foundations** — key theorems, proofs, bounds underpinning the field
    - **Baselines to beat** — current SOTA with exact metric values
 
-8. **Identify 2-3 research directions** from the gaps. For each: what gap it addresses, why existing work hasn't solved it, what prior evidence suggests it could work, and preliminary feasibility on our compute. **Novelty must be argued by synthesis, not keyword absence** — "no paper matched this phrase" is not evidence of novelty; compare against the closest existing work explicitly.
+8. **Identify 2-3 research directions** from the gaps. For each: what gap it addresses, why existing work hasn't solved it, what prior evidence suggests it could work, and preliminary feasibility on our compute — plus the Candidate Critique Rubric fields (SKILL.md): most likely failure mode, hardest implementation trap, evidence check (cite the mapped papers supporting the premise), and the impact × feasibility ÷ complexity score. **Novelty must be argued by synthesis, not keyword absence** — "no paper matched this phrase" is not evidence of novelty; compare against the closest existing work explicitly.
 
-9. **Check in with user** — present the literature map and proposed directions. Wait for the user to pick one (or suggest their own).
+9. **Check in with user** — present the literature map and proposed directions with your recommendation citing the rubric scores; non-recommended directions carry a one-line rejection reason in the log. Wait for the user to pick one (or suggest their own).
 
 ## Gate (record evidence in `state.json.gates["1"]`)
 
@@ -47,6 +47,7 @@ Goal: a literature map with verified papers, identified gaps, and exact baseline
 - [ ] Decision archaeology done on 2-3 exemplars, Exemplar Move Tables written
 - [ ] At least one gap identified with cited evidence
 - [ ] Baselines to beat identified with specific metric numbers
+- [ ] Directions compared with the Candidate Critique Rubric (scores + rejection reasons logged)
 - [ ] User approved a research direction
 
 ## Outputs

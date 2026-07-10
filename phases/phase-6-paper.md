@@ -36,7 +36,7 @@ Goal: a publication-quality paper — deterministically verified for internal co
    - **Group 2 (after 1):** Results, Discussion
    - **Group 3 (after 2):** Introduction, Abstract, Conclusion
 
-   Paste each writer's source material in full; if a source file exceeds ~3,000 words, paste only the parts relevant to that section. Include `learnings` from `state.json`.
+   Paste each writer's source material in full; if a source file exceeds ~3,000 words, paste only the parts relevant to that section. Include the promoted `learnings` entries (`recurrences >= 2`) from `state.json`, each with its `apply_when` condition.
 
 5. **Assemble and edit** — merge `paper/sections/` into a coherent paper: fix cross-references, unify notation, write transitions, verify the narrative follows the story arc and is anchored in the idea DNA — and that the paper answers `PROBLEM.md`'s core question, or honestly states how far it got. The introduction must pose the same problem `PROBLEM.md` does; if the paper has quietly become about something else, stop and resolve that with the user before review.
 
@@ -71,6 +71,8 @@ Goal: a publication-quality paper — deterministically verified for internal co
 
 10. **Present to user:** "Paper draft complete: [title]. [word count] words, [N] figures, [M] references. Saved to [path]. Please review."
 
+11. **Run the cycle retrospective** (SKILL.md — Skill Retrospective; the task Phase 5 Path C enqueued): after the user has reviewed the draft, write `research-log/[NNN]-retrospective.md` — domain lessons, then process-defect proposals, each naming the sciagent skill file + section, the concrete edit, and this cycle's evidence for it. Present the proposals to the user. Never apply skill-file edits yourself.
+
 ## Gate (record evidence in `state.json.gates["6"]`)
 
 - [ ] Test set was evaluated exactly once, and the paper's headline numbers are those numbers (empirical projects)
@@ -80,6 +82,7 @@ Goal: a publication-quality paper — deterministically verified for internal co
 - [ ] Disclosure requirements met (pre-specified vs post-hoc, iteration count, AI-assistance per venue policy, compute)
 - [ ] Paper reviewer verdict PUBLISH_READY with evidence of scrutiny, OR review budget exhausted with open issues disclosed to user; all dispatches counted, all verdicts logged
 - [ ] User has reviewed the draft
+- [ ] Cycle retrospective written and process-defect proposals presented to the user (skill files untouched)
 
 ## Outputs
 

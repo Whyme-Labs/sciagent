@@ -1,7 +1,7 @@
 ---
 name: sciagent
 description: Use when the user wants to conduct scientific research from an idea — literature investigation, hypothesis formation, running experiments, analyzing results, or writing a research paper.
-version: 2.0.0
+version: 2.1.0
 metadata:
   emoji: "🔬"
 ---
@@ -43,6 +43,7 @@ These thoughts mean STOP. Each is the precise voice of a gate about to be skippe
 | "The revision adds a few sentences, that's enough" | Apply the anti-shallow-revision metrics. A structural problem needs a structural fix. |
 | "This notation is dense, the gist is clear enough" | Unpack it (`reference/mathematical-thinking.md`, meta-rule 5). The gate does not pass on notation you have not read. |
 | "This run ID is out of fix attempts, but a new run ID testing the same fix is a new run" | The budget is keyed to the change being tested, not the name you mint. Set `parent` and count it. |
+| "The last two iterations stalled, but this next variation feels different" | Feelings don't satisfy the escalation rule. If it varies the same `varies` dimension, it is the same move — target an untouched dimension or change path. |
 | "Let me just run one quick experiment to see" | That is legal ONLY as a logged exploratory run within its budget — and it can seed a hypothesis, never confirm one. |
 
 When you catch one of these, name the gate you were about to skip, then satisfy it. Do not narrate your way past it.
@@ -94,7 +95,7 @@ Each phase has a playbook file you read **when entering that phase** (not before
 | 5 | `phases/phase-5-analysis.md` | Statistics, budget check, publish decision, iterate/pivot/conclude | Approve path |
 | 6 | `phases/phase-6-paper.md` | Assemble, verify, review, deliver paper | Review draft |
 
-Iteration loops: Phase 5 may loop back to Phase 2 (iterate) or Phase 1 (pivot), within budget. **Any re-entry into Phases 1-4 after a Phase 5 analysis consumes one research iteration, whatever it is called** — a pivot is not a free iteration. At budget exhaustion, only the user may grant more (their approval quoted verbatim in the log).
+Iteration loops: Phase 5 may loop back to Phase 2 (iterate) or Phase 1 (pivot), within budget. **Any re-entry into Phases 1-4 after a Phase 5 analysis consumes one research iteration, whatever it is called** — a pivot is not a free iteration; the Phase 4 core-fail loop-back to Phase 2 also consumes one. At budget exhaustion, only the user may grant more (their approval quoted verbatim in the log).
 
 ### The Iteration Protocol
 
@@ -150,7 +151,12 @@ Machine-checkable project state at the workspace root. Created at first entry (P
   "tried_and_failed": [
     { "approach": "...", "failure_class": "refuted | implementation_defeated | resource_limited", "why": "...", "log": "research-log/007-exp-x.md" }
   ],
-  "learnings": [],
+  "search_log": [
+    { "iteration": 1, "varies": "attention-pattern", "kind": "metric | understanding", "outcome": "no_gain" }
+  ],
+  "learnings": [
+    { "lesson": "...", "apply_when": "...", "source": "research-log/009-exp-x.md", "recurrences": 1 }
+  ],
   "best_state": { "run_id": "core-1", "metric": 0.4312, "commit": "abc1234" },
   "gates": {
     "0": { "problem_md": "user approval quoted in research-log/000-setup.md §Gate Check" }
@@ -167,7 +173,8 @@ Notes: `phase` is a string (`"0a"`, `"0"`…`"6"`). `budgets` holds the three co
 - Never raise a budget `limit` mid-run. Only the user may change budgets (quote their approval).
 - Before retrying any approach, check `tried_and_failed`. Entries with `failure_class: refuted` are never retried without new evidence. `implementation_defeated` and `resource_limited` entries MAY be retried with a different strategy — surface them as options at Phase 5 checkpoints.
 - Only one hypothesis is active at a time. Competing hypotheses go into `parked_candidates` and are taken up as separate iterations or pivots — never interleaved.
-- Add to `learnings` when a reviewer critique or failure pattern recurs; paste the `learnings` array into every subsequent subagent dispatch under "Known pitfalls in this project."
+- `search_log` is append-only, one entry per hypothesis (normally one per research iteration): `varies` names the single component/dimension the hypothesis changes (recorded at Phase 2), `kind` marks it `metric` (targets the primary metric; for `theoretical` projects: targets proving/disproving a ledger claim) or `understanding` (error analysis, rival-explanation elimination — the same distinction the diminishing-returns budget uses), and `outcome` is filled at Phase 5 (`improved | no_gain | refuted | inconclusive`). When a hypothesis is abandoned before Phase 5 (PoC assumption violated, core experiment failed → loop back to Phase 2), fill its entry's `outcome` at the moment of the loop-back; the superseding hypothesis appends a new entry (same `iteration` number, unless the phase file says the loop-back consumes a research iteration — then increment). The `kind` label is audited mechanically at Phase 5: an iteration whose `results.tsv` rows include a primary-metric row predicted to beat the baseline, or that updated `best_state`, is `metric` whatever it was labeled — reclassify and log. The diagnosis, the escalation rule, and the diminishing-returns check all read the `kind: metric` entries in append order.
+- `learnings` entries are structured: `{lesson, apply_when, source, recurrences}`. Record a lesson at its first occurrence with `recurrences: 1`; when the same critique or failure pattern recurs, increment `recurrences` on the existing entry — never add a duplicate. Only **promoted** entries (`recurrences >= 2`) are pasted into subagent dispatches under "Known pitfalls in this project", each with its `apply_when` condition; unpromoted entries stay in the file. Two lessons are the same pattern when they share the `apply_when` trigger and the same failure surface (phase + artifact type); when unsure, increment the existing entry rather than minting a near-duplicate (the cycle retrospective audits `learnings` for unmerged near-duplicates). Reviewer dispatches get none of them, ever (sterile rule) — lessons influence proposals, never judgments.
 
 ### `research-log/progress.md`
 
@@ -204,8 +211,8 @@ Fixed defaults, recorded into `state.json` at Phase 0 (user may override there �
 
 | Budget | Default | On exhaustion |
 |--------|---------|---------------|
-| Research iterations (ANY Phase 5 → Phase 1-4 re-entry, iterate or pivot) | 5 | Conclude with best result |
-| Diminishing returns | last 2 metric-targeting iterations < 1% relative improvement (in units of measured seed std-dev where available) | Recommend conclude. Understanding-iterations (error analysis, rival-explanation elimination) do not count against this |
+| Research iterations (ANY Phase 5 → Phase 1-4 re-entry, iterate or pivot, plus the Phase 4 core-fail loop-back to Phase 2) | 5 | Conclude with best result |
+| Diminishing returns | last 2 metric-targeting iterations (`kind: metric` in `search_log`, post-audit) < 1% relative improvement (in units of measured seed std-dev where available) | Recommend conclude. Understanding-iterations (`kind: understanding`) do not count against this |
 | Literature searchers per round | 3-5, ≤ 15 papers each | Synthesize what you have |
 | Targeted literature query (any phase, on surprise/anomaly) | 1 searcher, ≤ 5 papers | — |
 | Ideation sweep (Phase 0a) | 2-3 searchers, ≤ 10 papers each | Propose candidates from what you have |
@@ -232,7 +239,7 @@ Every dispatch must specify four things (the templates enforce this):
 
 Additional rules:
 - **Full context in, files + summary out.** Paste relevant content into the prompt. Subagents write heavy artifacts to files and return a summary of at most ~2,000 tokens.
-- **Reviewer dispatches are sterile.** A reviewer dispatch contains NOTHING beyond the template's placeholder content — no framing, no history, no assurances, no "this was already checked." (The only exception: the round-2 previous-issue list the template itself defines.) Reviewers read the artifact under review **from disk at the given path** and report its line count; you verify that count matches `git show HEAD:<path> | wc -l` in your VERIFY step. Every reviewer verdict — including ones you consider invalid — is logged verbatim and `spent` incremented BEFORE any re-dispatch. An adverse verdict (NEEDS_REVISION / FUNDAMENTALLY_FLAWED) can never be declared invalid — only a passing verdict can lack scrutiny evidence, and an invalid-scrutiny re-dispatch is allowed at most once per round.
+- **Reviewer dispatches are sterile.** A reviewer dispatch contains NOTHING beyond the template's placeholder content — no framing, no history, no assurances, no "this was already checked." (Exceptions: only the loop-state slots a template itself defines — the round-2 previous-issue list, and the theory reviewer's Escalation Constraint section.) Reviewers read the artifact under review **from disk at the given path** and report its line count; you verify that count matches `git show HEAD:<path> | wc -l` in your VERIFY step. Every reviewer verdict — including ones you consider invalid — is logged verbatim and `spent` incremented BEFORE any re-dispatch. An adverse verdict (NEEDS_REVISION / FUNDAMENTALLY_FLAWED) can never be declared invalid — only a passing verdict can lack scrutiny evidence, and an invalid-scrutiny re-dispatch is allowed at most once per round.
 - **Model choice:** do not hardcode model names. Default: omit the model parameter. If the session allows choosing: reviewer roles get the most capable available model; mechanical search the fastest. If no model stronger than the session default is available for reviewer roles, record that at Phase 0 and state it as a limitation in the paper — the deterministic machinery survives any model; judgment gates are only as strong as the strongest reviewer.
 - **Parallel** only for independent work. **Sequential** for dependent work: no dependent run starts before its predecessor's metrics are verified. Keep orchestration synchronous.
 - **Status protocol** — subagents report exactly one of: `DONE` (verify, then proceed), `DONE_WITH_CONCERNS` (each correctness/scope concern must be resolved as fixed-with-evidence, refuted-with-evidence, or escalated — recorded per concern before the task closes), `NEEDS_CONTEXT` (provide missing info, re-dispatch), `BLOCKED` (assess: more context, stronger model, smaller pieces, or escalate).
@@ -263,10 +270,11 @@ The most common failure of long research loops is forgetting the problem: after 
 
 When `PROBLEM.md` is invalidated (scooped, wrong, or the user redirects) or a concluded project restarts:
 1. Get the user's explicit sign-off (quoted in the log).
-2. Write `PROBLEM.md` v2 with a "Supersedes:" header; never silently overwrite.
-3. Increment `cycle` in `state.json`; new gate evidence goes under versioned keys (`"2.c2"`) — append-only stays intact.
-4. Re-record budgets for the new cycle; carry `tried_and_failed` and `learnings` forward — they are the most valuable assets.
-5. Set the phase pointer explicitly and log the transition.
+2. Run the Skill Retrospective for the closing cycle (see Skill Retrospective below — every cycle's final task, invalidated cycles included; they are often the richest in process defects).
+3. Write `PROBLEM.md` v2 with a "Supersedes:" header; never silently overwrite.
+4. Increment `cycle` in `state.json`; new gate evidence goes under versioned keys (`"2.c2"`) — append-only stays intact.
+5. Re-record budgets for the new cycle; carry `tried_and_failed`, `learnings`, and `search_log` forward — they are the most valuable assets. The escalation trigger and constraint read only `search_log` entries from the current cycle and direction; earlier entries remain as history and do not block dimensions.
+6. Set the phase pointer explicitly and log the transition.
 
 ### Idea DNA
 
@@ -299,12 +307,31 @@ A combination that cannot pass all three is stacking, whatever it is called.
 
 If you catch yourself stacking, stop and rethink.
 
+### Candidate Critique Rubric
+
+Whenever a slate of alternatives is compared — Phase 0a candidates, Phase 1 direction proposals, Phase 5 Path A next steps, competing `parked_candidates` — each candidate gets, BEFORE any is selected:
+
+1. **Most likely failure mode** — how this makes things *worse*, not just "might not work".
+2. **Hardest implementation trap** — the part most likely to be got wrong in practice.
+3. **Evidence check** — does the recorded evidence (results.tsv rows, literature, trace) actually support this candidate's premise? Cite the rows/papers.
+4. **Score** — impact (1–5) × feasibility (1–5) ÷ complexity (1–5), recorded per candidate.
+
+The selection cites the scores, and every rejected candidate gets a one-line rejection reason in the log. "We picked the best one" without recorded rejection reasons is not a comparison.
+
 ### Exploratory Mode
 
 Discovery is often experiment-led: you see an anomaly, then form the hypothesis. Bounded exploratory runs are legal in any phase (budget: 2 per iteration):
 - Logged as `exploratory` in `results.tsv` status and in the research log — never `keep`.
 - Their findings may seed or revise hypotheses, and may trigger a targeted literature query.
 - They may NEVER be reported as confirmatory evidence. Confirmation requires a subsequent pre-specified run under the evaluation contract on data the exploration did not touch.
+
+### Search Diagnosis and Strategy Escalation
+
+The research loop can get stuck the way any optimizer does: proposing variations of the same idea while the metric flatlines. Two mechanical defenses:
+
+- **Search diagnosis (Phase 5, before any path decision):** compute process statistics from `results.tsv` and `search_log` — keep/discard rates, null-signal count, prediction calibration (confirm rate by stated `confidence` tier), and a per-dimension table (for each `varies` value among `kind: metric` entries: iterations spent, `best_state` improvements produced). The verdict is binary: **healthy** (`best_state` improved within the work of the last 2 `kind: metric` entries; fewer than 2 such entries = healthy by default) or **stalled**.
+- **The escalation rule (trigger and constraint, both mechanical):** the rule triggers when the last 2 `kind: metric` entries in `search_log` share the same `varies` value and neither produced a `best_state` improvement. When triggered, the next hypothesis MUST target a dimension not yet present among `search_log`'s `kind: metric` entries — or the path decision moves to pivot/conclude. A sub-slice of the stalled dimension (`attention-sparsity` inside `attention-pattern`) is the same dimension; "this tweak feels different" does not satisfy the rule — a genuinely new dimension does. A stalled verdict whose last 2 metric entries varied *different* dimensions imposes no dimension constraint (the structural-response requirement below still applies).
+- **Do nothing, or change structure.** A healthy diagnosis changes nothing. A stalled diagnosis is answered structurally (an untouched dimension, a pivot, or concluding) — never with small process adjustments (reordering tasks, tweaking review emphasis, adjusting thresholds). Controlled ablation evidence from bilevel meta-optimization (Bilevel-Autoresearch, arXiv:2603.23420) found config-level meta-tweaking performed *worse* than no meta-loop at all (0.7× baseline), while structural changes to the search achieved 5× — a meta-layer that fiddles adds noise; one that restructures adds signal.
 
 ### Simplicity Criterion
 
@@ -386,6 +413,17 @@ Standing rule, not budget-gated: on encountering personal data, restrictively-li
 ### Scoring vs. Coaching Separation
 
 All reviewer subagents produce two separate outputs: a **blind assessment** (pass/fail with evidence — determines gate decisions) and **actionable coaching** (specific fixes — advisory only). Reviewers must show scrutiny: a passing verdict with no evidence of what was checked is invalid — re-dispatch (once per round, counted). An adverse verdict is its own evidence and stands.
+
+### Skill Retrospective (cycle close)
+
+The final task of every cycle — after Phase 6 delivery, or immediately after a Path C internal report — is a process retrospective: the loop examining the loop. Mine four sources for **process defects** (not domain findings):
+
+1. `learnings` — what recurred, and which promoted lessons a gate should have caught earlier.
+2. `tried_and_failed` — the `failure_class` distribution (many `implementation_defeated` entries = a Phase 3 PoC-process gap, not bad luck).
+3. Reviewer history — verdicts, rounds consumed, and critique types that recurred across rounds or phases.
+4. Budget and gate events — budgets that exhausted, gates that never caught anything, and the Phase 5 calibration table.
+
+Write `research-log/[NNN]-retrospective.md` with two sections: **Domain lessons** (stay with the project) and **Process-defect proposals** — each proposal names the sciagent skill file + section, the concrete edit, and the evidence from this cycle that motivates it. Present the proposals to the user. **Never edit the skill files yourself** — skill changes are the user's decision, outside the research workspace; the retrospective's deliverable is the proposal document. This is the outer loop of the research loop: the mechanism by which each project makes the next one better.
 
 ## Research Workspace Structure
 
