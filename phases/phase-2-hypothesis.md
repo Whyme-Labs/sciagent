@@ -29,15 +29,17 @@ Goal: a falsifiable hypothesis with complete, claim-type-appropriate justificati
 
 5. **Define metrics:** primary metric, secondary metrics, baseline numbers to beat (from Phase 1), and concrete thresholds — what number = success, what number = failure — in units of the measured seed variance where available.
 
-6. **Anti-stacking check** (empirical projects only; the tests from SKILL.md):
+6. **Classify on the idea taxonomy** (`reference/idea-taxonomy.md`): record `(opportunity pattern, method paradigm, dominant operation)` in the hypothesis entry. **Default-template tripwire:** if the hypothesis lands Bridge Opportunity × Synthesis/Unification, or its dominant operation is integrate/unify/merge, it matches the statistically most likely LLM ideation template (~4–7× the human base rate). Not banned — but the entry must additionally document why a local move (**replace**, **decouple**, or **formalize**) on the strongest single prior work would not achieve the goal. The theory reviewer verifies the classification and this justification.
+
+7. **Anti-stacking check** (empirical projects only; the tests from SKILL.md):
    - **Reframing/extrapolation hypothesis:** state at least one testable prediction this framing makes that a plain combination of the same components would NOT make. Write it down — it becomes an experiment in Phase 4. No differing prediction = stacking; go back to step 1.
    - **Engineering hypothesis:** all three engineering tests documented — a named bottleneck per component *with its measured number and source*, a planned per-component ablation, and a contribution claim that is the end-to-end system result under a stated constraint. Any test unmet = stacking; go back to step 1.
 
-7. **Self-critique** (advisory — the theory reviewer is the real gate, but fix what you can first): Is it falsifiable? Is the justification sound (re-derive the math / re-walk the causal chain)? Any logical leaps? Does it still serve `PROBLEM.md`, or has it drifted?
+8. **Self-critique** (advisory — the theory reviewer is the real gate, but fix what you can first): Is it falsifiable? Is the justification sound (re-derive the math / re-walk the causal chain)? Any logical leaps? Does it still serve `PROBLEM.md`, or has it drifted?
 
-8. **Write the full hypothesis entry** to `research-log/[NNN]-hypothesis-iter-[X].md` BEFORE dispatching review. **Once the theory review is dispatched, this entry is immutable** — post-PoC or post-data revisions are NEW entries marked "Supersedes: [previous]", never edits in place. The predicted-vs-postdicted distinction must survive in the record; the paper will disclose how many hypothesis iterations were attempted.
+9. **Write the full hypothesis entry** to `research-log/[NNN]-hypothesis-iter-[X].md` BEFORE dispatching review. **Once the theory review is dispatched, this entry is immutable** — post-PoC or post-data revisions are NEW entries marked "Supersedes: [previous]", never edits in place. The predicted-vs-postdicted distinction must survive in the record; the paper will disclose how many hypothesis iterations were attempted.
 
-9. **Dispatch theory reviewer subagent** (most capable model available). Use `prompts/theory-reviewer.md`. The dispatch is **sterile** (SKILL.md Dispatch Contract): template content only, no framing or assurances. The reviewer reads the hypothesis entry **from disk** at the path you give it and reports the file's line count; VERIFY that count against `git show HEAD:<path> | wc -l`.
+10. **Dispatch theory reviewer subagent** (most capable model available). Use `prompts/theory-reviewer.md`. The dispatch is **sterile** (SKILL.md Dispatch Contract): template content only, no framing or assurances. The reviewer reads the hypothesis entry **from disk** at the path you give it and reports the file's line count; VERIFY that count against `git show HEAD:<path> | wc -l`.
 
    **Accounting (hard rules):** increment `hypothesis_review_rounds.spent` at dispatch time, every dispatch, regardless of verdict. Log every verdict verbatim in the research log BEFORE any re-dispatch. An adverse verdict can never be declared invalid; a passing verdict without scrutiny evidence is invalid and may be re-dispatched at most once for that round.
 
@@ -53,6 +55,7 @@ Goal: a falsifiable hypothesis with complete, claim-type-appropriate justificati
 - [ ] Claim-type-appropriate justification complete with citations (for engineering: profile artifact with numbers exists now)
 - [ ] Failure modes identified
 - [ ] Metrics defined with concrete thresholds
+- [ ] Taxonomy classification recorded; if Bridge×Synthesis or integrate/unify/merge, the local-move justification is documented
 - [ ] Anti-stacking check passed: distinguishing prediction written down, OR all three engineering tests evidenced (empirical projects; N/A for other project types)
 - [ ] Problem alignment: one line stating how confirming this hypothesis would answer `PROBLEM.md`'s core question
 - [ ] Theory reviewer verdict RIGOROUS with evidence of scrutiny; all dispatches counted and all verdicts logged

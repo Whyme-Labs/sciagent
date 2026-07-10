@@ -124,5 +124,6 @@ When this protocol is used during literature review rather than writing, only Ta
 
 - The paragraph-level moves the authors used in the section job you are studying.
 - The Notes column captures *why* those moves worked given the authors' constraints — this is the "why did the authors arrive here" probe that taste depends on.
+- A one-line taxonomy tag per exemplar — `(opportunity pattern, method paradigm, dominant operation)` per `reference/idea-taxonomy.md` — recording how the humans at this venue actually framed the gap and built the contribution.
 
 The output of Phase-1 deep imitation is a populated Table 1 per section job, stored under `research-log/[NNN]-decision-archaeology.md` (next unused sequence number). It feeds directly into the Phase 6 Target Section Blueprint without re-derivation.

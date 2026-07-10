@@ -61,6 +61,7 @@ prompts/
 └── editor-synthesis.md         # Merges the three reviews into one decision (Deep)
 reference/
 ├── mathematical-thinking.md    # Depth lenses for the justification gate
+├── idea-taxonomy.md            # Opportunity×paradigm taxonomy + LLM ideation-bias countermeasures
 ├── thinking-frameworks.md      # First principles, Socratic, Occam, research taste
 ├── deep-imitation-protocol.md  # Decision archaeology for reading; closed-book redo for writing
 ├── motivation-surface-map.md   # Reader-touchpoint planning for Phase 6
@@ -171,6 +172,7 @@ your-research-project/
 - **Strong baselines only** — improvements over weak or untuned baselines are fictional; baselines are audited and given tuning parity before being targeted
 - **Reframe, don't stack** — every hypothesis must make a testable prediction that a plain combination of techniques would not
 - **Extrapolate and engineer** — question structures the field assumes necessary (what property do they actually provide?), and treat composition as engineering: every component justified against a measured bottleneck, ablated, and claimed only through its end-to-end impact
+- **Escape the synthesis template mechanically** — LLM-generated ideas collapse onto bridge/synthesis framings at 4–7× the human rate, and more thinking makes it worse; every candidate slate and hypothesis is classified on a two-axis idea taxonomy, slates must pass a diversity gate, and bridge×synthesis hypotheses trip extra justification
 - **Mathematical depth, not decoration** — matrices as transformations of space, problems mapped into easier spaces, error controlled rather than exact solutions chased; validity domains stated, key steps re-derived, dense notation unpacked
 - **Read for motivation, write the whole story** — extract the decisions and constraints behind others' papers, not just the method; tell our own actual story (predictions, surprises, dead ends), never a sanitized post-hoc narrative
 - **Simplicity over cleverness** — prefer elegant solutions
@@ -195,6 +197,10 @@ Four cross-cutting reasoning frameworks are woven throughout all phases:
 - **Occam's Razor** — prefer the simplest hypothesis, experiment design, and explanation that accounts for the evidence
 - **Research Taste & Signals** — every experiment is a gradient step: predict before running, compare after, treat disconfirmations as the strongest signal; dig beneath the surface of papers to the substantive decisions that produced them
 
+
+## Idea Taxonomy & Diversity Gate
+
+LLM-generated research ideas are measurably template-bound: they propose bridge/synthesis framings at 4–7× the rate of human researchers, under-use the targeted local operations humans favor (replace a component, decouple two things assumed to co-occur, formalize a fuzzy notion), and — critically — extended reasoning and richer context make the bias *worse*, not better (Chen, Zhao & Cohan, arXiv:2607.01233). Since no prompt phrasing removes the bias, SciAgent counters it mechanically via `reference/idea-taxonomy.md`: every Phase 0a candidate and every Phase 2 hypothesis is classified on a two-axis taxonomy (seven opportunity patterns × seven method paradigms, plus a dominant operation). Candidate slates must pass a diversity gate (at most one Bridge×Synthesis candidate, ≥3 distinct opportunity patterns, ≥1 replace/decouple/formalize candidate); a Bridge×Synthesis hypothesis trips a default-template tripwire requiring a documented argument for why a local move would not suffice, verified by the theory reviewer. Phase 1 decision archaeology tags each exemplar on the same taxonomy, grounding the gate in the venue's actual human distribution.
 
 ## Prediction Ledger
 

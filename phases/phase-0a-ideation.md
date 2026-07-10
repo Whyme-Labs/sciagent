@@ -24,10 +24,13 @@ Skip this phase entirely when the user arrives with a concrete idea (Entry Triag
    - **The gap it exploits** — with cited evidence from the sweep
    - **Benchmark + baseline** — which benchmark it would be evaluated on, which baseline it would innovate on, the SOTA number to beat
    - **Sketch of the distinguishing prediction** — what this idea predicts that existing approaches don't (the anti-stacking test starts here, not at Phase 2)
+   - **Taxonomy tag** — `(opportunity pattern, method paradigm, dominant operation)` per `reference/idea-taxonomy.md`. The tag must match the candidate's actual gap-and-contribution structure, not be chosen to satisfy the gate below.
    - **Feasibility** — honest compute estimate vs. the user's budget
    - **Risk/impact** — what makes it publishable if it works; what kills it
 
    Candidates must be genuinely distinct directions, not variations of one idea. Aim for a mix of idea moves (see Idea Moves in SKILL.md): at least one **extrapolation** candidate (questions a structure the field assumes necessary — name the structure, the property it provides, and the cheaper mechanism that could provide it) alongside **reframing** or **engineering** candidates (engineering candidates must name the measured bottleneck each component would attack). Discard any candidate whose novelty rests on "no paper matched this keyword" — novelty is argued by comparison to the closest existing work.
+
+   **Slate diversity gate (mechanical — LLM ideation collapses onto bridge/synthesis templates at 4–7× the human rate, and more thinking makes it worse; see `reference/idea-taxonomy.md`):** across the slate, at most ONE candidate may be Bridge Opportunity × Synthesis/Unification; the slate spans ≥ 3 distinct opportunity patterns (≥ 2 if only two candidates); and ≥ 1 candidate's dominant operation is **replace**, **decouple**, or **formalize**. A failing slate is regenerated targeting the missing cells by name — never fixed by relabeling.
 
 6. **Present to user and wait.** Show the landscape summary, the SOTA table, and the candidates side by side with your recommendation and why. The user picks one (or redirects — that's cheap at this stage; another ideation round costs one sweep, not a research project). Budget: 2 ideation rounds total; after that, ask the user to narrow the topic themselves.
 
@@ -37,7 +40,8 @@ Skip this phase entirely when the user arrives with a concrete idea (Entry Triag
 
 - [ ] Topic landscape documented with citation spot-checks passed
 - [ ] SOTA table with exact numbers per active benchmark
-- [ ] At least 2 candidate ideas, each with benchmark + reproducible baseline + provisional DNA + distinguishing-prediction sketch
+- [ ] At least 2 candidate ideas, each with benchmark + reproducible baseline + provisional DNA + distinguishing-prediction sketch + taxonomy tag
+- [ ] Slate diversity gate passed: ≤ 1 Bridge×Synthesis candidate, ≥ 3 distinct opportunity patterns (≥ 2 if two candidates), ≥ 1 replace/decouple/formalize candidate
 - [ ] User selected a candidate
 
 ## Outputs

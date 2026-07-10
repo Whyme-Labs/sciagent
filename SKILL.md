@@ -289,6 +289,8 @@ Two disciplined ways to generate strong ideas, each with tests that keep it hone
 
 A combination that cannot pass all three is stacking, whatever it is called.
 
+**The measured bias these moves fight** (`reference/idea-taxonomy.md` — two-axis idea taxonomy + evidence): LLM-generated research ideas collapse onto one template — Bridge Opportunity × Synthesis/Unification at 4–7× the human base rate (47–64% vs 12%; "integrate" as the operation at 34% vs 2%) — while human ideas favor targeted local operations: **replace** a component (the Extrapolation move), **decouple** two things assumed to co-occur, **formalize** a fuzzy notion. Critically, *more thinking and more context make the bias worse, not better*, and no prompt phrasing removes it — so the defense is mechanical: every candidate slate (Phase 0a) and every hypothesis (Phase 2) is classified on the taxonomy, slates must satisfy the diversity gate, and a Bridge×Synthesis hypothesis trips extra justification. Never rely on "being creative" to escape the template; rely on the gate.
+
 ### Anti-Stacking Rule
 
 (Applies to `empirical` projects.) Never just combine existing techniques. Principled engineering composition (above, all three tests passed) is the one legitimate form of combination. For everything else the test is **not** vocabulary — a stacked idea reworded grandly is still stacked. The test is predictive:
