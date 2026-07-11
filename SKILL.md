@@ -110,7 +110,7 @@ Every working turn follows the same six steps, regardless of phase:
    - Phase 4+: smoke check — re-extract metrics from the last kept run (`grep "^[a-z_]*:" <run>/run.log`).
 2. **SELECT** — Take exactly **one** open task from `state.json` (highest priority first). Never batch two tasks into one step.
 3. **EXECUTE** — Do the task inline, or dispatch a subagent (see Dispatch Contract). Subagents write artifacts to files and return short summaries.
-4. **VERIFY** — Run the check attached to the task type (see phase files). A task status may only change with recorded evidence: **the command you ran and one line of its output, inline in the evidence field** — never only a pointer to prose you wrote. For consent items, evidence is the user's message quoted verbatim. Never mark work done on self-assessment or a subagent's say-so.
+4. **VERIFY** — Run the check attached to the task type (see phase files), choosing it per the Verification Ladder (deterministic → execution-based → LLM judgment; see Cross-Cutting Rules). A task status may only change with recorded evidence: **the command you ran and one line of its output, inline in the evidence field** — never only a pointer to prose you wrote. For consent items, evidence is the user's message quoted verbatim. Never mark work done on self-assessment or a subagent's say-so.
 5. **RECORD** — Append one line to `research-log/progress.md`, update `state.json`, write any research-log entry due, and `git commit` (explicit paths).
 6. **ADVANCE** — If all gate items for the current phase have evidence in `state.json`, move the phase pointer and read the next phase file. Otherwise, return to step 1.
 
@@ -411,18 +411,29 @@ A metrics grep proves a log contains lines, not that a run happened. Before any 
 
 Standing rule, not budget-gated: on encountering personal data, restrictively-licensed datasets or code, human-subjects material, or a plausibly hazardous capability direction — at any phase — **stop, do not download or run it, escalate to the user.** Phase 0 records data/code provenance and licenses, a PII/human-subjects assessment, a benchmark-contamination consideration (for LLM-based work), and a one-line dual-use consideration.
 
+### The Verification Ladder
+
+Order every VERIFY check by cost, and climb only as high as the check requires:
+
+1. **Deterministic** (zero judgment) — `grep`, `wc`, `git diff`, file existence, schema and count checks.
+2. **Execution-based** — run the command and read its output: re-run the eval, re-execute the snippet, rebuild.
+3. **LLM judgment** — reviewer subagents: the most expensive rung, and the only budget-counted one. Dispatched only after the lower rungs pass.
+
+Never spend a budgeted review round to catch what a grep would have caught. Phase 6's deterministic-checks-before-reviewer-dispatch is this ladder applied to the paper; apply the same ordering to every phase's gate evidence.
+
 ### Scoring vs. Coaching Separation
 
 All reviewer subagents produce two separate outputs: a **blind assessment** (pass/fail with evidence — determines gate decisions) and **actionable coaching** (specific fixes — advisory only). Reviewers must show scrutiny: a passing verdict with no evidence of what was checked is invalid — re-dispatch (once per round, counted). An adverse verdict is its own evidence and stands.
 
 ### Skill Retrospective (cycle close)
 
-The final task of every cycle — after Phase 6 delivery, or immediately after a Path C internal report — is a process retrospective: the loop examining the loop. Mine four sources for **process defects** (not domain findings):
+The final task of every cycle — after Phase 6 delivery, or immediately after a Path C internal report — is a process retrospective: the loop examining the loop. Mine five sources for **process defects** (not domain findings):
 
 1. `learnings` — what recurred, and which promoted lessons a gate should have caught earlier.
 2. `tried_and_failed` — the `failure_class` distribution (many `implementation_defeated` entries = a Phase 3 PoC-process gap, not bad luck).
 3. Reviewer history — verdicts, rounds consumed, and critique types that recurred across rounds or phases.
 4. Budget and gate events — budgets that exhausted, gates that never caught anything, and the Phase 5 calibration table.
+5. The correction record — user redirections and re-review judgments of UNCHANGED/WORSE, scanned for repeated correction patterns ("did you check…", "still wrong", the same issue re-flagged across rounds). Each recurring pattern marks a missing unprompted action or a broken verification step; the evidence is the pattern's frequency plus the exact instances.
 
 Write `research-log/[NNN]-retrospective.md` with two sections: **Domain lessons** (stay with the project) and **Process-defect proposals** — each proposal names the sciagent skill file + section, the concrete edit, and the evidence from this cycle that motivates it. Present the proposals to the user. **Never edit the skill files yourself** — skill changes are the user's decision, outside the research workspace; the retrospective's deliverable is the proposal document. This is the outer loop of the research loop: the mechanism by which each project makes the next one better.
 
