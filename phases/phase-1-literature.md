@@ -8,14 +8,17 @@ Goal: a literature map with verified papers, identified gaps, and exact baseline
 
 1. **Generate search queries through perspectives, not one flat list.** Adopt distinct researcher personas — at minimum: theorist (foundations, proofs, bounds), experimentalist (methods, benchmarks, reproductions), statistician (evaluation validity, significance practices), skeptical reviewer (known failure modes, negative results, critiques), practitioner (deployment constraints, real-world gaps). Generate 2-3 queries per perspective (5-15 total) covering the problem from `PROBLEM.md`, key techniques, baselines and benchmarks, and recent surveys. Different perspectives ask questions a single viewpoint never would — this is how unknown unknowns get found.
 
-2. **Dispatch literature searcher subagents** — one per available source, in parallel. Budget: 3-5 searchers, ≤ 15 papers each; divide the intensity target across sources.
+2. **Dispatch literature searcher subagents** — one per available source, in parallel. Budget: 3-5 searchers, ≤ 15 papers each; divide the intensity target across sources. Route sources by tier (`reference/citation-integrity.md` §1): authoritative APIs first, aggregators on thin coverage, scraped sources last and flagged.
 
-   Use `prompts/literature-searcher.md`. Each searcher writes its findings to `research-log/lit/[source].json` and returns only a summary (counts, highlights, coverage). Include the promoted `learnings` entries (`recurrences >= 2`) from `state.json`, if any.
+   Use `prompts/literature-searcher.md`. Each searcher writes its findings to `research-log/lit/[source].json` — including its `search_record` (verbatim query, platform, date, result count per batch query; §2 of the same reference) — and returns only a summary (counts, highlights, coverage). Include the promoted `learnings` entries (`recurrences >= 2`) from `state.json`, if any.
+
+   On the FIRST search round of a project, stage the parallelism: dispatch ONE searcher first and treat its first 2 papers as an extraction-schema pilot — check them against the JSON schema (two differently-structured papers ideally); only then dispatch the remaining searchers in parallel. A schema mismatch found now costs minutes; found at synthesis it costs the round. Later rounds dispatch fully in parallel. For `reproduction` projects and Deep intensity, fix inclusion/exclusion criteria in the log BEFORE this step (§2 of the reference).
 
 3. **Verify before trusting (VERIFY step — mandatory):** fabricated citations are the most common failure of automated literature search — and they hide in plausible mid-tier entries, not famous papers. So the sample must not be yours to choose:
-   - Select **at least 2 papers per source at random** with a logged command (e.g., `jq -r '.[].title' research-log/lit/arxiv.json | shuf -n 2`) — paste the command and its output as the gate evidence.
+   - Select **at least 2 papers per source at random** with a logged command (e.g., `jq -r '.papers[].title' research-log/lit/arxiv.json | shuf -n 2`) — paste the command and its output as the gate evidence.
    - For each selected paper, fetch the URL and confirm title/authors match **and that at least one number in `key_results` actually appears in the paper's abstract or tables** — a real paper with hallucinated numbers poisons the SOTA table just as badly as a fake paper.
    - Additionally verify (non-random, always) every paper the hypothesis's evidence chain will lean on.
+   - Mark every paper you verified `reviewed: yes` in its JSON entry (searchers always write `no`); an `extraction_confidence: low` entry that is still unreviewed never feeds the SOTA table or a baseline choice.
    - If any paper fails, discard that source's entire batch, record the failure in `learnings`, and re-dispatch that searcher (most capable available model this time).
 
 4. **Synthesize:** deduplicate across sources, resolve conflicting relevance assessments, merge into a unified collection (keep the per-source JSON files as the citation database for Phase 6).
@@ -29,7 +32,9 @@ Goal: a literature map with verified papers, identified gaps, and exact baseline
 7. **Build the literature map:**
    - **What's been tried** — grouped by technique family
    - **What works** — strongest results with specific numbers on specific benchmarks
-   - **What's missing** — gaps, contradictions, unexplored territory
+   - **What's missing** — gaps and contradictions, with discipline on both:
+     - **Contradictions:** when two papers disagree, decompose before adjudicating — check population/data, design, measurement, analysis, and time-period differences first; venue prestige is not a tiebreaker. Record the likely cause and what evidence would resolve it.
+     - **Gaps:** distinguish `no study exists` / `study exists, full text inaccessible` / `studied, result not reported` — three different gaps; only the first is open territory, and claiming it requires having looked (cite the search_record queries that came up empty).
    - **Assumed-necessary structures** — what every approach keeps, what property it actually provides, and any work that questions it (extrapolation fuel: the biggest ideas replace these structures, not tune them)
    - **Measured bottlenecks** — where time/memory/cost actually goes according to published profiles (engineering fuel: components target these)
    - **Mathematical foundations** — key theorems, proofs, bounds underpinning the field
@@ -41,8 +46,9 @@ Goal: a literature map with verified papers, identified gaps, and exact baseline
 
 ## Gate (record evidence in `state.json.gates["1"]`)
 
-- [ ] Literature map documented, papers grouped by technique
+- [ ] Literature map documented, papers grouped by technique; contradictions decomposed, gaps typed (no-study / no-access / not-reported)
 - [ ] Citation spot-checks passed (list which papers were verified)
+- [ ] `search_record` present in every source's JSON (verbatim queries, platform, date, counts)
 - [ ] Unused-paper sweep done — every high-relevance paper placed or dismissed with a reason
 - [ ] Decision archaeology done on 2-3 exemplars, Exemplar Move Tables written
 - [ ] At least one gap identified with cited evidence

@@ -33,6 +33,14 @@ Agent tool:
 
     These are the reader touchpoints the orchestrator has already committed to. Use the planned wording verbatim where it is concrete; respect the strategy where it is abstract.
 
+    ## Claim-to-Source Rows (the evidential warrant for your claims)
+
+    [PASTE THE ROWS FROM paper/claim-to-source.md THAT FALL IN THIS SECTION — claim, type, evidence, support grade, fact/interpretation/inference label]
+
+    Two rules bind you here:
+    - **Narrow the sentence to the source.** A `partial` support grade means the source supports LESS than the natural sentence — write the narrower sentence. A `background` grade motivates but never substantiates: no mechanism, method, or quantitative claim may rest on it.
+    - **Match the hedge to the label.** `fact` states; `author-interpretation` attributes ("X et al. interpret this as…"); `our-inference` hedges ("we conjecture", "one interpretation is"). Results, interpretations, inferences, and recommendations each carry their own evidence strength — never flatten them into one confident register.
+
     ## Exemplar Move Tables (from Phase 1 decision archaeology)
 
     [PASTE THE MOVE-TABLE ROWS FROM THE DECISION-ARCHAEOLOGY LOG ENTRY THAT COVER THIS SECTION'S JOB]
@@ -71,6 +79,8 @@ Agent tool:
     - Academic tone, third person ("we propose", "the results show")
     - Precise: specific numbers, never "significant improvement" without the number
     - Honest: limitations stated plainly, no overselling
+    - **Overclaim lexicon** — these words are banned unless literally earned: `prove` (unless a theorem is proved), `conclusively`, `unprecedented`, `best`, `superior`, `first`, `novel`, `paradigm`. Write `show/suggest`, `to our knowledge`, `stronger on [benchmark]` instead. Never upgrade an association into a causal verb; "significant" is a statistical statement, never a synonym for large or important
+    - Figure references in your text must be interpretable from the legend alone — if your sentence relies on a mapping (color, marker, n) the legend doesn't carry, flag it
     - Notation defined on first use
     - **Resist the post-hoc narrative.** Do NOT rewrite the story so the conclusion looks inevitable. If the narrative arc says we predicted X and observed ¬X, the paper should reflect that — most explicitly in the Discussion, but the Introduction's framing must also be consistent with the actual journey.
 

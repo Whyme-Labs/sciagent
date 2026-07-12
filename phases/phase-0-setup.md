@@ -13,6 +13,8 @@ Goal: convert the research idea into tracked state, a configured workspace, and 
    - **What success looks like** — measurable, and beyond the metric: what would change if this worked?
    - **Non-goals** — what this project explicitly does not attempt
    - **Proxy caveat** — "[metric] on [benchmark] is our proxy for [the real thing]; improving the metric without the real thing is failure."
+   - **Question type** — classify the core question: `descriptive | associational | causal | predictive | diagnostic | evidence-synthesis`. The type constrains the claims: a descriptive question must not silently become a causal claim in later phases — Phase 2's justification step checks against it, the theory-reviewer template receives it in its `[QUESTION_TYPE]` slot, and the Phase 6 overclaim lint enforces it on the prose. Choose the type first; only then choose how to frame it.
+   - **Construct table** — for each core construct the question uses (the thing being improved, the property being measured): its **operational definition**, the **observable indicator** that stands for it, and the **unacceptable proxies** — definitions that would technically fit but must not be substituted (e.g., "reasoning ability — operationalized as accuracy on held-out GSM-hard; unacceptable: accuracy on the training distribution, or on benchmarks the base model plausibly memorized"). An ill-defined construct cannot be rescued downstream by sample size or statistics; the unacceptable-proxies column is what the drift checks bite on.
 
    Read it back to the user and get agreement — **quote their approval verbatim in the log**. This file is the contract the whole project is checked against; it only changes via the Invalidation procedure in SKILL.md.
 
@@ -31,6 +33,7 @@ Goal: convert the research idea into tracked state, a configured workspace, and 
    - **Target venue** (or "undecided" — then default to the domain's top venue for norm purposes). Recorded as `target_venue` in `state.json`; its conventions are captured from the exemplars during Phase 1 decision archaeology and drive the Venue Norm column of the Phase 6 rationale matrix and the AI-disclosure check.
    - **Data governance:** what datasets will be used, under what licenses; any personal/human-subjects data (if yes: stop — user must confirm approvals exist); for LLM-based work, is the benchmark plausibly contaminated in the models used?
    - **Checkpoint defaults (optional):** pre-recorded decisions if the user is unavailable ("if I don't respond in N days, proceed with your recommendation") — stored in `state.json`.
+   - **Tacit knowledge:** what does the user know about this problem that the literature won't say? Practitioner constraints, failure stories from their own attempts, domain folklore ("everyone in the lab knows X never works below scale Y"), datasets or tools they have privileged access to. Record it in the log labeled as user-supplied knowledge — it is first-class idea-DNA input, and checkpoints throughout the project are elicitation opportunities for more of it, not just approval gates.
    Record all answers; compute answers become the paper's Experimental Setup section.
 
 5. **Set up the workspace:**
@@ -59,7 +62,7 @@ Goal: convert the research idea into tracked state, a configured workspace, and 
 
 ## Gate (record evidence in `state.json.gates["0"]` and the log's Gate Check)
 
-- [ ] `PROBLEM.md` written; user approval quoted verbatim
+- [ ] `PROBLEM.md` written — including question type and the construct table (definition + indicator + unacceptable proxies per core construct); user approval quoted verbatim
 - [ ] Idea DNA + `project_type` recorded in `state.json`
 - [ ] Success criteria with specific metrics and thresholds
 - [ ] Compute environment documented (`experiments/configs/environment.md`)

@@ -4,9 +4,9 @@ Goal: statistically honest analysis, then a budgeted, evidence-based decision �
 
 ## Steps
 
-1. **Dispatch results analyzer subagent.** Use `prompts/results-analyzer.md`. The analyzer reads `results.tsv` from disk (and reports its row count — VERIFY against `wc -l results.tsv`), excludes `status=crash`, `status=discard`, and `status=exploratory` rows from all rankings and statistics, computes effect sizes and discloses the comparison family, writes tables to `research-log/[NNN]-analysis-iter-[X]-tables.md` and figures to `paper/figures/`, and returns a summary.
+1. **Dispatch results analyzer subagent.** Use `prompts/results-analyzer.md`. The analyzer reads `results.tsv` from disk (and reports its row count — VERIFY against `wc -l results.tsv`), excludes `status=crash`, `status=discard`, and `status=exploratory` rows from all rankings and statistics, opens with the **statistical declaration block** (`reference/statistical-rigor.md`: independent unit, n, comparison family, correction), computes effect sizes, writes tables to `research-log/[NNN]-analysis-iter-[X]-tables.md` and figures (to the `reference/figure-spec.md` house spec) to `paper/figures/`, and returns a summary.
 
-2. **VERIFY the analyzer's output:** figures exist on disk at the reported paths; headline numbers match `results.tsv`; no crashed/discarded/exploratory run appears in any ranking; row count matches. **Recompute the statistical claim attached to the headline comparison yourself** (not one of your choosing — THE headline one) and paste the recomputation as evidence.
+2. **VERIFY the analyzer's output:** figures exist on disk at the reported paths and pass the figure QA contract (`reference/figure-spec.md` §7 — SVG+PNG+source-csv present, editable text, legend carries n/error-type/test); headline numbers match `results.tsv`; no crashed/discarded/exploratory run appears in any ranking; row count matches; **the declaration block is present and its `n_units` matches the seed rows actually in the ledger** — an analysis whose n counts anything other than independent units (seeds/folds) is rejected, not corrected in place. **Recompute the statistical claim attached to the headline comparison yourself** (not one of your choosing — THE headline one) and paste the recomputation as evidence. Run the `reference/statistical-rigor.md` final checklist; any P0 item failing (pseudoreplication, undeclared family, significance-difference-as-difference inference, unpaired test on a paired design) blocks this phase's gate.
 
 3. **Deep analysis — answer each question explicitly (all seven required to conclude):**
    - **Did it work?** Does the pre-specified primary comparison meet the success threshold, at N ≥ 3 seeds, with the effect size in units of seed variance?
@@ -54,7 +54,8 @@ Goal: statistically honest analysis, then a budgeted, evidence-based decision �
 ## Gate (record evidence in `state.json.gates["5"]`)
 
 - [ ] All seven analysis questions answered explicitly (including error analysis and problem alignment)
-- [ ] Analyzer output verified (figures exist, numbers match, row count matches, exclusions respected)
+- [ ] Analyzer output verified (figures exist and pass the figure QA contract, numbers match, row count matches, exclusions respected)
+- [ ] Statistical declaration block present (independent unit, n, comparison family, correction) and the `reference/statistical-rigor.md` checklist passed — no P0 item open
 - [ ] Headline statistical claim recomputed by the orchestrator (evidence: the recomputation)
 - [ ] Freshness check done
 - [ ] Search diagnosis recorded: `kind` audit done, null-signal count, calibration table, per-dimension table, `search_log` outcome filled, healthy/stalled verdict

@@ -49,7 +49,15 @@ Agent tool:
 
     The orchestrator wants more than a method summary — it reads each paper for **motivation and decisions**, the substantive research behind the surface artifact. Extract both layers (see the decision-archaeology fields below).
 
-    Write your findings to `research-log/lit/[SOURCE_NAME].json` as a JSON array. For each paper:
+    Write your findings to `research-log/lit/[SOURCE_NAME].json` as a JSON object with three keys: `tier` (the number [SOURCE_TIER — 1 authoritative API | 2 aggregator | 3 scraped/manual, supplied by the orchestrator]), `search_record`, and `papers`.
+
+    `search_record` — one entry per batch query you ran (reproducibility record; follow-up exploratory digging is narrated in your report instead):
+
+    ```json
+    {"query": "<the query string, verbatim>", "platform": "[SOURCE_NAME]", "date": "YYYY-MM-DD", "result_count": 0}
+    ```
+
+    `papers` — a JSON array. For each paper:
 
     ```json
     {
@@ -61,6 +69,9 @@ Agent tool:
       "core_contribution": "1-2 sentence summary",
       "methodology": "Brief description of the approach",
       "key_results": "Specific metric values on specific benchmarks",
+      "key_results_location": "Where each number lives in the paper — 'Table 2', 'Fig. 3b', '§5.1' — so verification is a lookup, not a re-read. Use 'not_reported' for a quantity the paper does not give (never 0, never omit silently).",
+      "extraction_confidence": "high | low — your confidence that the numbers in key_results are transcribed correctly from the paper (low if read from an image, a dense table, or a source you could only partially open)",
+      "reviewed": "no — always 'no' from you; the orchestrator flips it to 'yes' when it verifies the entry",
       "limitations": "Limitations acknowledged by the AUTHORS",
       "math_foundations": "Key theorems, proofs, or frameworks used",
       "motivation": "What did the authors actually care about? Infer from the framing, chosen benchmark, and highlighted failure cases — NOT just the abstract's stated motivation. One paragraph.",

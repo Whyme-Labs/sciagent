@@ -49,7 +49,7 @@ Agent tool:
 
     ### 2. Consolidated Issues
 
-    Merge issues across the three reviews into one ordered list by severity (blocking → major → minor). For each: **Issue** (one line), **Raised by** (Methods/Results/Story/multiple), **Location** (section, paragraph, sentence), **Severity**, **Why it matters** (what claim it undermines), **Fix** (concrete action from the reviewers' coaching). Multi-reviewer issues rank first within their tier — higher confidence. Role-specific catches are preserved with the reviewer's tag.
+    Merge issues across the three reviews into one ordered list by severity (blocking → major → minor). For each: **Issue** (one line), **Raised by** (Methods/Results/Story/multiple), **Location** (section, paragraph, sentence), **Severity**, **Why it matters** (what claim it undermines), **Fix** (concrete action from the reviewers' coaching — preserving any `downgrade` fix type: where a reviewer judged the limitation unfixable, the plan item is a claim-narrowing edit to the abstract/introduction/conclusion, never only a limitations-section mention). Multi-reviewer issues rank first within their tier — higher confidence. Role-specific catches are preserved with the reviewer's tag.
 
     ### 3. Anti-Shallow-Revision Audit (v2+ only — skip for first draft)
 
@@ -70,8 +70,9 @@ Agent tool:
 
     1. Which sections require substantive revision (= rebuild rationale-matrix rows + closed-book redo)
     2. Which sections require surface-level fixes only (direct edits, no matrix rebuild)
-    3. Which Phase each issue routes to (Branch-of-Origin Routing — see SKILL.md): e.g., "Methodology unclear" → Phase 2; "baselines weak" → Phase 4; "Discussion ignores disconfirmations" → Phase 5, not a Phase 6 prose patch
-    4. The minimal set of section-writer dispatches needed
+    3. Which issues are claim downgrades (unfixable limitation → the claim itself is narrowed wherever it appears: abstract, introduction, conclusion — not patched with a limitations sentence)
+    4. Which Phase each issue routes to (Branch-of-Origin Routing — see SKILL.md): e.g., "Methodology unclear" → Phase 2; "baselines weak" → Phase 4; "Discussion ignores disconfirmations" → Phase 5, not a Phase 6 prose patch
+    5. The minimal set of section-writer dispatches needed
 
     ### 5. Story Integrity Verdict
 

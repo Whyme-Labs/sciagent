@@ -50,7 +50,9 @@ Agent tool:
 
     **Reproducibility:** Could a competent researcher reproduce the experiments from the Experimental Setup section? All hyperparameters, seeds, evaluation details specified?
 
-    **Statistical Discipline:** Are headline numbers from a once-run held-out test set (not the tuning signal)? Multiple seeds with variance reported? Effect sizes? Is the pre-specified primary comparison distinguished from secondary/exploratory findings, with the number of hypothesis iterations disclosed? Would a skeptic call any claim a survivor of many adaptive comparisons?
+    **Statistical Discipline:** Are headline numbers from a once-run held-out test set (not the tuning signal)? Multiple seeds with variance reported? Effect sizes? Is the pre-specified primary comparison distinguished from secondary/exploratory findings, with the number of hypothesis iterations disclosed? Would a skeptic call any claim a survivor of many adaptive comparisons? **What is n in each statistic** — independent units (seeds/folds), or pseudoreplication (eval examples, checkpoints counted as n)? Are error bars named (s.d./s.e.m./CI)? Is any conclusion drawn from a difference in significance rather than a tested difference ("ours is significant, theirs isn't" without an interaction test)?
+
+    **Design Validity & Leakage:** Walk the bias surface — selection, confounding, assignment, protocol deviation, missing data, measurement, analysis flexibility, selective reporting. Could split contamination (entity/temporal overlap, preprocessing fit on the full data) explain the gain? Do claims exceed the operating envelope actually evaluated (scales, domains, conditions)? Statistical significance cannot cure design bias.
 
     **Baseline Fairness:** Did the strongest baseline receive a tuning budget equivalent to the proposed method's total tuning history? Are comparisons compute-matched (check the compute disclosure)? "Our tuned method vs. their default settings" is a rejection.
 
@@ -59,7 +61,7 @@ Agent tool:
     **Overall:** PUBLISH_READY / NEEDS_REVISION
 
     - PUBLISH_READY means you would vote "accept" at a top venue. It is valid ONLY if you include (a) what you checked per dimension above and (b) the strongest reason to reject you considered, and why it does not hold. A pass without this evidence of scrutiny is invalid and will be discarded.
-    - If NEEDS_REVISION: list every issue, ordered by severity, with specific location (section, paragraph, or sentence).
+    - If NEEDS_REVISION: list every issue, ordered by severity, with specific location (section, paragraph, or sentence), its **conclusion impact** (how it changes the conclusion or a reader's decision if unaddressed — an issue that changes nothing is coaching, not a finding), and its **fix type**: `fixable`, or `downgrade` — the limitation cannot be repaired by revision, so the honest fix is narrowing the claim (scope it, weaken the verb, drop it); a limitations-section mention under an unchanged strong abstract does not resolve a `downgrade` issue.
 
     ### 2. Actionable Coaching (advisory — does NOT affect assessment)
 

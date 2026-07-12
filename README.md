@@ -12,7 +12,8 @@ SciAgent encodes a complete scientific research methodology that Claude follows.
 3. **Validate with PoC** — run quick probes before committing to full experiments
 4. **Run experiments** — baseline reproduction first, adversarial code review before results are believed, then predict-then-run adaptive plans with ablations, tuned-baseline parity, and multi-seed robustness
 5. **Analyze & iterate** — statistical analysis with effect sizes, prediction-vs-reality signals, budgeted iteration, evidence-based pivots, and an explicit publish decision (contribution paper / conclusive negative result / internal report)
-6. **Write the paper** — narrative arc + motivation surface map + writing rationale matrix as the execution plan; deterministic consistency and citation-faithfulness checks; three independent reviewers in parallel + editor synthesis at Deep intensity; anti-shallow-revision metrics on every revision
+6. **Write the paper** — narrative arc + motivation surface map + writing rationale matrix + claim-to-source table as the execution plan; deterministic consistency, citation-faithfulness, reference field-verification, overclaim-lint, and figure-QA checks; three independent reviewers in parallel + editor synthesis at Deep intensity; anti-shallow-revision metrics on every revision
+7. **Submit & rebut** (optional, user-triggered) — venue requirements verified from the official page, separated disclosures, a data-availability audit with blocking conditions, and a tracked rebuttal loop: every external reviewer comment becomes a ledger entry with an action label and readiness state, and every response points to the exact change or explains why none was made
 
 Every experiment is gated by scientific reasoning. No blind hyperparameter tweaking. Every paragraph of the paper is gated by a rationale-matrix row. No generic academic prose.
 
@@ -35,6 +36,10 @@ Key mechanisms:
 - **Anti-rubber-stamp review gates** — reviewers must show evidence of scrutiny for a passing verdict; re-reviews judge the previous issue list item by item instead of re-grading from scratch.
 - **Subagents write files, return summaries** — heavy artifacts (paper lists, code, sections, figures) go to disk; the orchestrator's context stays lean.
 - **Scientific-integrity machinery** — three-tier data discipline with a locked test set run exactly once; N ≥ 3 seeds for paper-bound comparisons; baseline tuning-parity budgets; adversarial code review for leakage before results count; immutable hypothesis entries (revisions supersede, never overwrite — pre-specified vs. post-hoc survives in the record); run provenance checks so a fabricated log can't enter the ledger.
+- **Statistical-rigor gates** — every analysis opens with a declaration block (independent unit, n = seeds/folds never eval examples, comparison family, correction); pseudoreplication, uncorrected families, unpaired tests on paired designs, and "significant here, not there, therefore different" inferences are P0 blockers (`reference/statistical-rigor.md`).
+- **Publication figure spec** — a machine-checkable house style (`reference/figure-spec.md`): mandatory rcParams with editable-text SVG output, journal column sizes, per-figure source-data CSVs, a self-contained legend skeleton carrying n/error-type/test/exact-p, and a QA contract every figure passes before acceptance.
+- **Citation integrity** — tiered source routing with a reproducible search record (verbatim query + platform + date + count); field-level reference verification against authoritative records with severity grading (a DOI resolving to a different paper is a critical defect); and claim-support grading — no mechanism/method/quantitative claim may rest on a background-grade or unread citation, and partial support narrows the sentence.
+- **Design-validity review gates** — reviewers walk a fixed bias surface (selection, confounding, assignment, protocol deviation, missing data, measurement, analysis flexibility, selective reporting) with design-typed framings (`reference/bias-frameworks.md`), ML leakage/split-independence/operating-envelope stress checks, per-issue conclusion-impact statements, and a **downgrade route**: an unfixable limitation narrows the claim itself — it is never discharged by a limitations-section mention.
 - **Project-type awareness** — empirical, theoretical, dataset, reproduction, and analysis projects get type-appropriate gates instead of being forced into the method-paper mold; justification currency matches the claim type (derivations for theory, measurement design for empirical/systems, construct validity for datasets).
 - **Ethics & governance** — data licensing, PII/human-subjects, contamination, and dual-use checks at setup, plus a standing stop-and-escalate rule.
 
@@ -52,7 +57,8 @@ phases/
 ├── phase-3-poc.md              # Minimal probe of core assumptions
 ├── phase-4-experiments.md      # Baseline, core, ablations, keep/prune protocol
 ├── phase-5-analysis.md         # Statistics, budget check, iterate/pivot/conclude
-└── phase-6-paper.md            # Assembly, consistency checks, review gate, delivery
+├── phase-6-paper.md            # Assembly, consistency checks, review gate, delivery
+└── phase-7-submission.md       # (Optional) venue prep, disclosures, data audit, rebuttal loop
 prompts/
 ├── literature-searcher.md      # Parallel search + structured extraction to JSON
 ├── theory-reviewer.md          # Skeptical claim-type-appropriate review of hypotheses
@@ -69,7 +75,11 @@ reference/
 ├── thinking-frameworks.md      # First principles, Socratic, Occam, research taste
 ├── deep-imitation-protocol.md  # Decision archaeology for reading; closed-book redo for writing
 ├── motivation-surface-map.md   # Reader-touchpoint planning for Phase 6
-└── writing-rationale-matrix.md # Row-per-unit execution plan for Phase 6
+├── writing-rationale-matrix.md # Row-per-unit execution plan for Phase 6
+├── figure-spec.md              # Publication figure house style + machine-checkable QA contract
+├── statistical-rigor.md        # Unit-of-analysis, comparison-family, interaction-inference gates
+├── bias-frameworks.md          # Design-typed bias routing, fixed bias surface, claim-downgrade route
+└── citation-integrity.md       # Source tiers, search record, field verification, claim-support grading
 ```
 
 Phase files are loaded just-in-time when the loop enters that phase — the always-loaded core stays small.
@@ -129,7 +139,7 @@ I'm fascinated by [topic]. Find me something worth researching in this space.
 
 From an inspiration, SciAgent first surveys the field, builds a SOTA table over the active benchmarks, identifies a reproducible baseline worth innovating on, and presents 2-4 concrete candidate ideas — you pick one, and the pipeline continues from there.
 
-Claude follows the SciAgent loop through Phases 0-6, checking in with you at fixed decision points: candidate selection (inspiration entry), setup questions, research-direction approval, PoC go/no-go, after baseline + core experiment, path decisions (iterate/pivot/conclude), and final draft review.
+Claude follows the SciAgent loop through Phases 0-6, checking in with you at fixed decision points: candidate selection (inspiration entry), setup questions, research-direction approval, PoC go/no-go, after baseline + core experiment, path decisions (iterate/pivot/conclude), and final draft review. Checkpoints are also elicitation points: what you know that the literature doesn't (practitioner constraints, failure stories, local domain knowledge) is recorded as first-class input. An optional Phase 7 (submission prep + rebuttal loop) runs only when you ask for it.
 
 ## Research Intensity & Budgets
 

@@ -1,7 +1,7 @@
 ---
 name: sciagent
 description: Use when the user wants to conduct scientific research from an idea — literature investigation, hypothesis formation, running experiments, analyzing results, or writing a research paper.
-version: 2.1.0
+version: 2.2.0
 metadata:
   emoji: "🔬"
 ---
@@ -94,6 +94,7 @@ Each phase has a playbook file you read **when entering that phase** (not before
 | 4 | `phases/phase-4-experiments.md` | Baseline, code review, core experiment, ablations, robustness | After baseline + core |
 | 5 | `phases/phase-5-analysis.md` | Statistics, budget check, publish decision, iterate/pivot/conclude | Approve path |
 | 6 | `phases/phase-6-paper.md` | Assemble, verify, review, deliver paper | Review draft |
+| 7 | `phases/phase-7-submission.md` | (Optional — never auto-entered) Venue prep, separated disclosures, data-availability audit; tracked rebuttal loop when external reviews arrive | Approve package / responses |
 
 Iteration loops: Phase 5 may loop back to Phase 2 (iterate) or Phase 1 (pivot), within budget. **Any re-entry into Phases 1-4 after a Phase 5 analysis consumes one research iteration, whatever it is called** — a pivot is not a free iteration; the Phase 4 core-fail loop-back to Phase 2 also consumes one. At budget exhaustion, only the user may grant more (their approval quoted verbatim in the log).
 
@@ -164,7 +165,7 @@ Machine-checkable project state at the workspace root. Created at first entry (P
 }
 ```
 
-Notes: `phase` is a string (`"0a"`, `"0"`…`"6"`). `budgets` holds the three counted-spent budgets; all other budget numbers in the Budgets table are constants you enforce inline. Retry tasks must set `parent` to the task they retry.
+Notes: `phase` is a string (`"0a"`, `"0"`…`"7"`). `budgets` holds the three counted-spent budgets; all other budget numbers in the Budgets table are constants you enforce inline. Retry tasks must set `parent` to the task they retry.
 
 **Rules for `state.json` — these are hard rules:**
 - Read it at the start of every working turn. Update it at the end of every iteration step.
@@ -261,7 +262,7 @@ Additional rules:
 
 The most common failure of long research loops is forgetting the problem: after a few iterations, the work optimizes the benchmark metric and nobody remembers what it was a proxy for. Structural defense:
 
-- **`PROBLEM.md`** at the workspace root is the pinned problem formulation, written in Phase 0 (drafted per candidate in Phase 0a). It contains: the **core question** (one sentence), **who has this problem and why it matters**, **why current approaches fall short**, **what success looks like** (measurable, beyond the metric), **explicit non-goals**, and the **proxy caveat** — "[metric] on [benchmark] is our proxy for [the real thing]; improving the metric without the real thing is failure."
+- **`PROBLEM.md`** at the workspace root is the pinned problem formulation, written in Phase 0 (drafted per candidate in Phase 0a). It contains: the **core question** (one sentence), **who has this problem and why it matters**, **why current approaches fall short**, **what success looks like** (measurable, beyond the metric), **explicit non-goals**, the **proxy caveat** — "[metric] on [benchmark] is our proxy for [the real thing]; improving the metric without the real thing is failure" — the **question type** (`descriptive | associational | causal | predictive | diagnostic | evidence-synthesis`; claims must never exceed it), and the **construct table** (per core construct: operational definition, observable indicator, and the unacceptable proxy definitions — Phase 0 defines these).
 - ORIENT re-reads `PROBLEM.md` every turn.
 - Every **gate-closing log entry** includes a one-line **Problem alignment** statement. If you cannot write it honestly, that IS drift — stop and surface it to the user.
 - `PROBLEM.md` changes only with explicit user agreement (quoted verbatim in the log). Silent reframing of the problem to fit the results is the failure mode, not a fix.
@@ -391,6 +392,8 @@ When any reviewer flags a problem, route the fix to the phase that OWNS the weak
 
 Patching at the surface is faster but leaves the upstream gap — which resurfaces in the next iteration or, worse, in peer review.
 
+**The downgrade route:** some flagged limitations have no owning phase to fix them in — the design constraint is real and the budget is spent (the confound can't be isolated, the external validation can't be run). For these, the fix is **narrowing the claim** to what the evidence supports — scope it, weaken the verb, or drop it — applied wherever the claim appears (abstract and introduction included), never discharged by a limitations-section mention under an unchanged strong claim (`reference/bias-frameworks.md` §5). Reviewers tag such issues `downgrade`; routing them to a fix-the-artifact phase that cannot succeed is budget burn.
+
 ### Keep / Prune Protocol
 
 After each experiment run, in this exact order:
@@ -463,7 +466,7 @@ Each entry in `research-log/`:
 ```markdown
 # [Entry Title]
 
-**Date:** YYYY-MM-DD · **Phase:** [0a-6] · **Cycle:** [C] · **Iteration:** [N] · **Status:** [in-progress / completed / superseded]
+**Date:** YYYY-MM-DD · **Phase:** [0a-7] · **Cycle:** [C] · **Iteration:** [N] · **Status:** [in-progress / completed / superseded]
 
 ## Context
 [What led to this — link previous entries]

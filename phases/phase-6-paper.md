@@ -30,13 +30,14 @@ Goal: a publication-quality paper — deterministically verified for internal co
 3b. **Build the writing execution plan** (before any writer is dispatched — these are what keep the sections from collapsing into generic prose):
    - **`paper/motivation-surface-map.md`** (`reference/motivation-surface-map.md`) — the reader touchpoints where the story surfaces: title, abstract opening, Introduction topic sentences, headings, figure callouts, Discussion opening and closing. Draft real sentences for the highest-leverage rows, not strategy notes.
    - **`paper/writing-rationale-matrix.md`** (`reference/writing-rationale-matrix.md`) — one row per manuscript unit: planned function, Idea-DNA link, exemplar pattern (from the Phase 1 Exemplar Move Tables), venue norm, evidence anchor, operation, and Final Text Check. If most rows say "improve clarity," the blueprint is shallow — redo it.
+   - **`paper/claim-to-source.md`** — one row per substantive claim the paper will make: the claim, its type (`mechanism | association | method | quantitative | background`), its evidence (citation from the lit database, or our `results.tsv` rows), and the **support grade** per `reference/citation-integrity.md` §4 (strong / partial / background / contradictory / metadata-only). Two gates live here: a `metadata-only` grade is not citable at all — read the source (upgrading the grade) or cut the claim before any writer is dispatched — and no mechanism/method/quantitative claim may rest on `background`-grade support; every `partial` grade narrows the sentence to what the source supports. Interpretive claims are labeled fact / author-interpretation / our-inference — the writers carry these labels into hedging.
 
 4. **Dispatch section writer subagents in parallel** for independent sections (`prompts/section-writer.md`). Each writer receives the story arc alongside its source material, writes to `paper/sections/[NN]-[name].md` (**NN = the section's position in the outline, 01-09**), and returns a summary. The Discussion and Conclusion writers ALWAYS receive the full `tried_and_failed` array and every `results.tsv` row (all statuses) — the 3,000-word trimming rule never applies to failure evidence. Groups:
    - **Group 1 (parallel):** Related Work, Methodology, Experimental Setup
    - **Group 2 (after 1):** Results, Discussion
    - **Group 3 (after 2):** Introduction, Abstract, Conclusion
 
-   Paste each writer's source material in full; if a source file exceeds ~3,000 words, paste only the parts relevant to that section. Include the promoted `learnings` entries (`recurrences >= 2`) from `state.json`, each with its `apply_when` condition.
+   Paste each writer's source material in full; if a source file exceeds ~3,000 words, paste only the parts relevant to that section. Each writer also receives its section's slice of `paper/claim-to-source.md` (the template has a slot for it). Include the promoted `learnings` entries (`recurrences >= 2`) from `state.json`, each with its `apply_when` condition.
 
 5. **Assemble and edit** — merge `paper/sections/` into a coherent paper: fix cross-references, unify notation, write transitions, verify the narrative follows the story arc and is anchored in the idea DNA — and that the paper answers `PROBLEM.md`'s core question, or honestly states how far it got. The introduction must pose the same problem `PROBLEM.md` does; if the paper has quietly become about something else, stop and resolve that with the user before review.
 
@@ -51,6 +52,10 @@ Goal: a publication-quality paper — deterministically verified for internal co
    - [ ] Every result number in the paper appears in `results.tsv` or the analyzer tables — check at minimum every number in the abstract and results tables
    - [ ] Every citation exists in `research-log/lit/*.json` (the verified citation database). A citation not in the database is presumed fabricated — remove it or verify it by fetching the source
    - [ ] No placeholder text: `grep -niE "TODO|PLACEHOLDER|\[CITATION\]|lorem|conclusions here" paper/`
+   - [ ] **Reference field verification:** every reference-list entry checked field-level against its authoritative record (Crossref by DOI first) and graded per `reference/citation-integrity.md` §3 — every 🔴-critical mismatch (DOI resolving to a different paper, wrong authors/title) fixed; 🟡 warnings checked; per-reference status recorded in the lit database
+   - [ ] **Overclaim lint:** `grep -niE "\bprove[sd]?\b|conclusively|unprecedented|\bbest\b|\bsuperior\b|\bfirst\b|\bnovel\b|paradigm" paper/` — each hit is either justified in place (a theorem IS proved; being first IS documented with the search_record) or softened (prove→show, unprecedented→to our knowledge, superior→stronger on [benchmark]). Never upgrade association to causation; the claim verbs must match the question type recorded in `PROBLEM.md`
+   - [ ] **Figure QA:** every figure passes the `reference/figure-spec.md` §7 contract (SVG+PNG+source-csv, editable text, legend skeleton with n / error-bar type / test / exact p); every legend is self-contained
+   - [ ] `paper/claim-to-source.md` complete; its gates hold (no metadata-only citation anywhere; no mechanism/method/quantitative claim on background-grade support; partial-support sentences narrowed)
    - [ ] No results claimed for experiments that don't have a `results.tsv` row
    - [ ] Crashed/discarded runs are not presented as findings (negative results ARE presented, honestly labeled)
    - [ ] **Citation faithfulness spot-check:** number all citation-bearing sentences and select 5 **at random with a logged `shuf` command** (paste command + selection as evidence); open each source (from `research-log/lit/*.json`) and confirm the sentence actually follows from it — not just that the source exists. If any fail, sweep that writer's whole section
@@ -58,7 +63,7 @@ Goal: a publication-quality paper — deterministically verified for internal co
 
    Fix every failure before proceeding. These checks are cheap; reviewer rounds are not.
 
-7. **Supplementary materials:** full experiment table from `results.tsv` (all runs, all statuses, including failures and exploratory runs), hyperparameter configs per run, additional figures, long proofs, environment and reproducibility checklist.
+7. **Supplementary materials:** full experiment table from `results.tsv` (all runs, all statuses, including failures and exploratory runs), hyperparameter configs per run, additional figures, long proofs, environment and reproducibility checklist, and a **data & code availability statement** (what is released where, what is restricted and by which recorded restriction — drawn from `data-governance.md`; per-figure source data ships as the `paper/figures/*.source.csv` files).
 
 8. **Review gate.** All dispatches are **sterile** (template content only); reviewers read the assembled paper **from disk** and report its line count (VERIFY against `git show HEAD:<path> | wc -l`). Budget: 2 review rounds — **`spent` increments at dispatch time, every round, regardless of verdict; every verdict is logged verbatim before any re-dispatch; an adverse verdict can never be declared invalid.**
    - **Light/Medium intensity:** single reviewer, `prompts/paper-reviewer.md`.
@@ -73,12 +78,14 @@ Goal: a publication-quality paper — deterministically verified for internal co
 
 11. **Run the cycle retrospective** (SKILL.md — Skill Retrospective; the task Phase 5 Path C enqueued): after the user has reviewed the draft, write `research-log/[NNN]-retrospective.md` — domain lessons, then process-defect proposals, each naming the sciagent skill file + section, the concrete edit, and this cycle's evidence for it. Present the proposals to the user. Never apply skill-file edits yourself.
 
+12. **Offer Phase 7** (never auto-enter): if the user wants to submit to a venue or later receives external reviews, `phases/phase-7-submission.md` covers submission prep (venue verification, separated disclosures, data-availability audit) and the tracked rebuttal loop.
+
 ## Gate (record evidence in `state.json.gates["6"]`)
 
 - [ ] Test set was evaluated exactly once, and the paper's headline numbers are those numbers (empirical projects)
 - [ ] Fresh literature pass done; concurrent work cited
-- [ ] Writing plan built before writing: `paper/narrative-arc.md`, `paper/motivation-surface-map.md`, `paper/writing-rationale-matrix.md`
-- [ ] All deterministic consistency checks passed (list them with results, including the logged random selections)
+- [ ] Writing plan built before writing: `paper/narrative-arc.md`, `paper/motivation-surface-map.md`, `paper/writing-rationale-matrix.md`, `paper/claim-to-source.md`
+- [ ] All deterministic consistency checks passed (list them with results, including the logged random selections, the overclaim-lint hits and their resolutions, the reference field-verification counts, and the figure QA results)
 - [ ] Disclosure requirements met (pre-specified vs post-hoc, iteration count, AI-assistance per venue policy, compute)
 - [ ] Paper reviewer verdict PUBLISH_READY with evidence of scrutiny, OR review budget exhausted with open issues disclosed to user; all dispatches counted, all verdicts logged
 - [ ] User has reviewed the draft

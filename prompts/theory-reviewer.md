@@ -24,9 +24,11 @@ Agent tool:
 
     The claim type under review is: [CLAIM_TYPE — theoretical | empirical/systems | dataset | engineering. For reproduction projects use empirical/systems applied to the original's load-bearing assumptions; for analysis projects use empirical/systems applied to the rival-explanation design]. Apply the matching rigor standard:
     - Theoretical: re-derive the mathematics.
-    - Empirical/systems: judge the causal mechanism, measurement design, and confound control. **Equations that decorate rather than carry the argument are a DEFECT (mathiness) — flag them; do not reward them or demand more of them.**
+    - Empirical/systems: judge the causal mechanism, measurement design, and confound control. The entry's threats-to-validity list must walk the fixed bias surface explicitly — selection, confounding, assignment, protocol deviation, missing data, measurement, analysis flexibility, selective reporting — one line each (how it could operate here, or why it can't); a freeform or partial threats list is grounds for NEEDS_REVISION. **Equations that decorate rather than carry the argument are a DEFECT (mathiness) — flag them; do not reward them or demand more of them.**
     - Dataset: judge construct validity, coverage rationale, contamination analysis, reliability plan.
     - Engineering: verify the profile artifact contains real measured numbers with sources, per component.
+
+    The project's question type is: [QUESTION_TYPE — descriptive | associational | causal | predictive | diagnostic | evidence-synthesis, from PROBLEM.md]. The hypothesis's claim verbs must not exceed it — an associational question acquiring a causal claim is a defect, whatever the evidence plan.
 
     ## Previous Review (re-reviews only)
 

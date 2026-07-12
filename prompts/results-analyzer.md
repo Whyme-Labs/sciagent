@@ -43,18 +43,35 @@ Agent tool:
 
     1. **Comprehensive results table** — Markdown table comparing all kept runs: run ID, description, primary metric, secondary metrics, runtime, memory. Highlight best result and baseline. Sort by primary metric, best first (respect metric direction: lower is better for losses).
 
-    2. **Statistical rigor** — for each comparison against baseline:
+    2. **Statistical rigor** — open the analysis with the declaration block, then apply it to every comparison:
+
+       ```
+       independent_unit:   <what one independent observation IS — normally one training run (seed) or one fold>
+       n_units:            <independent units per condition — seeds/folds, NEVER eval examples, batches, or checkpoints of one run>
+       comparison_family:  <total number of baseline comparisons in this analysis>
+       correction:         <none — single pre-specified primary | Holm/Bonferroni/BH across the family>
+       ```
+
+       For each comparison against baseline:
        - Improvement, absolute and relative %, and **effect size in units of the measured seed standard deviation**
-       - Multiple seeds (required for any paper-bound comparison): mean ± std across seeds, t-test, 95% CI, p-value
+       - Multiple seeds (required for any paper-bound comparison): mean ± std across seeds, t-test (PAIRED when the same seed set is used across methods — it usually is), 95% CI, exact p-value
        - Single seed: label the comparison EXPLORATORY — it cannot appear as a paper claim
        - **Disclose the comparison family:** state the total number of baseline comparisons in this analysis, and mark which single comparison was pre-specified as primary [PASTE THE PRE-SPECIFIED PRIMARY COMPARISON]. Everything else is secondary. Flag any secondary result that would not survive a multiple-comparisons correction across the family
        - Flag any improvement within seed-noise range
+       - **Never infer a difference from a difference in significance** ("A is significant, B is not, so A > B" is invalid) — compare the effect sizes with their intervals, or test the interaction
+       - Name every error bar and interval (s.d. / s.e.m. / 95% CI) and the units it is computed over
 
-    3. **Figures** — save to `paper/figures/`, clean academic styling (no grid, clear labels, appropriate font sizes, 300 DPI):
-       - `comparison_chart.png` — primary metric across all kept runs + baseline
-       - `ablation_heatmap.png` — component contributions (if ablation data exists)
-       - `scaling_curve.png` — metric vs. scale (if scaling data exists)
-       - `training_curve.png` — trajectory over training steps (if per-step logs exist)
+    3. **Figures** — save to `paper/figures/`, following the publication figure spec below EXACTLY (it is machine-checked):
+
+       [PASTE reference/figure-spec.md SECTIONS 1-4 AND 6 — the rcParams block, layout laws, size discipline, export policy, and legend skeleton]
+
+       Per figure: save `.svg` (primary) + `.png` (300 dpi) with the same basename, AND write the plotted data to `<basename>.source.csv`. Write each figure's legend (following the skeleton — n + unit, error-bar type, test, exact p) into the tables file. Standard set:
+       - `comparison_chart` — primary metric across all kept runs + baseline
+       - `ablation_heatmap` — component contributions (if ablation data exists)
+       - `scaling_curve` — metric vs. scale (if scaling data exists)
+       - `training_curve` — trajectory over training steps (if per-step logs exist)
+
+       For any multi-panel figure: one line per panel in the tables file naming the question only that panel answers — a panel whose removal loses nothing gets removed.
 
     4. **Write the full analysis** to `[TABLES_FILE_PATH — the orchestrator supplies the exact research-log/[NNN]-analysis-iter-[X]-tables.md path]`: the results table, all statistical tests, and a 3-5 paragraph summary answering: what worked and what didn't; whether the distinguishing prediction held; which components contributed most; how robust the results are; how they compare to literature baselines.
 

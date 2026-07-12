@@ -50,8 +50,9 @@ Agent tool:
 
     For your assigned dimensions, list every issue you find with:
     - Specific location (section, paragraph, sentence — quote when possible).
-    - Why it matters (what claim does it undermine?).
+    - **Conclusion impact** — how would this change the paper's conclusion or a reader's decision if unaddressed? An issue that changes nothing belongs in coaching, not here.
     - Severity: blocking / major / minor.
+    - **Fix type:** `fixable` (the artifact can be repaired) or `downgrade` — the limitation cannot be fixed by revision, so the honest fix is narrowing the claim (scope it, weaken the verb, or drop it). A limitations-section mention under an unchanged strong abstract does not resolve a `downgrade` issue.
 
     **Your vote:** ACCEPT / WEAK_ACCEPT / WEAK_REJECT / REJECT.
 
@@ -88,6 +89,7 @@ You evaluate the methodology, derivations, and reproducibility. Your assigned di
 - **Specification completeness** — a competent researcher could reimplement the method from the methodology section alone (combined with the experimental setup section).
 - **Assumption honesty** — load-bearing assumptions are stated plainly in the methodology, not buried.
 - **Methodology-results alignment** — every experiment described in Methods has a corresponding Results section; no Results without Methods.
+- **Design validity** — walk the bias surface explicitly: selection (how data/examples/runs entered the sample), confounding (a third variable driving both method and outcome — tuning effort, compute), assignment (how conditions map to units), deviation from the pre-specified protocol, missing data (dropped runs correlated with condition?), measurement (metric implementation), analysis flexibility (forking paths), selective reporting. For non-randomized comparisons: what randomized experiment is this imitating, and what confounding does the imitation leave? Statistical significance cannot cure a design bias, and a large n cannot fix a systematic measurement error. Claims must not exceed the validation stage performed (internal validation results support internal-validation claims, not deployment claims).
 - **Reproducibility** — hyperparameters, seeds, data splits, hardware, and software versions are specified.
 
 Out of scope for you: critiquing baselines, narrative arc, motivation framing, related-work fairness (unless directly relevant to a methodological claim).
@@ -102,6 +104,9 @@ You evaluate the experimental section: baselines, statistical analysis, figures,
 - **Figure and table integrity** — every figure and table is referenced; captions match content; axis labels and units are correct; figures support (not just illustrate) the claims.
 - **Robustness** — claims of generalization or transfer are supported by results spanning seeds, splits, or scales, not by a single run.
 - **Negative-result discipline** — disconfirmations are reported, not hidden. Failed ablations are explained, not omitted.
+- **Unit of analysis** — what is n in each statistic? Independent units (seeds, folds) only; eval examples, batches, or checkpoints of one run counted as n is pseudoreplication and invalidates the significance claim. Paired designs (same seeds across methods) must use paired tests. And a difference in significance is never itself evidence of a difference — "ours is significant, the baseline's isn't" requires an interaction test or a direct effect-size comparison.
+- **Leakage and split independence** — could train/eval contamination, entity/temporal overlap across splits, or preprocessing fit on the full dataset explain the headline gain? Stress this before believing any above-trend improvement.
+- **Operating envelope** — the breadth of the claims vs. where the method was actually evaluated (scales, datasets, conditions). Out-of-domain and rare-event behavior claimed but not tested is an overclaim.
 
 Out of scope for you: critiquing the mathematical derivation, the narrative arc, or the related-work framing (unless directly relevant to a results claim).
 
