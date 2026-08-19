@@ -10,10 +10,10 @@ permissions:
   contents: read
 
 jobs:
-  calibrate:
-    name: calibrate-${{ matrix.label }}
+  neural-dev:
+    name: neural-dev-${{ matrix.label }}
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
@@ -37,23 +37,25 @@ jobs:
           python --version
           free -h
           nproc
+          sha256sum experiments/jumpbench/neural_eval.py experiments/jumpbench/neural_dev_manifest.json
       - name: Install CPU inference dependencies
         run: |
           python -m pip install --upgrade --quiet pip
           python -m pip install --quiet --index-url https://download.pytorch.org/whl/cpu torch
-          python -m pip install --quiet "transformers>=4.52,<5" "accelerate>=1.2" safetensors huggingface_hub
-      - name: Run frozen calibration probe
+          python -m pip install --quiet "transformers>=4.52,<5" "accelerate>=1.2" safetensors huggingface_hub numpy
+      - name: Run development-only neural acquisition probe
         env:
           HF_HUB_DISABLE_TELEMETRY: "1"
           TOKENIZERS_PARALLELISM: "false"
         run: |
           mkdir -p neural-results
-          python experiments/jumpbench/neural_probe.py \
+          python experiments/jumpbench/neural_eval.py \
             --model "${{ matrix.model }}" \
             --revision "${{ matrix.revision }}" \
+            --manifest experiments/jumpbench/neural_dev_manifest.json \
             --output "neural-results/${{ matrix.label }}.json"
       - uses: actions/upload-artifact@v4
         with:
-          name: jumpbench-calibration-${{ matrix.label }}
+          name: jumpbench-neural-dev-${{ matrix.label }}
           path: neural-results/${{ matrix.label }}.json
           if-no-files-found: error
