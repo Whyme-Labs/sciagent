@@ -10,10 +10,10 @@ permissions:
   contents: read
 
 jobs:
-  neural-dev:
-    name: neural-dev-${{ matrix.label }}
+  neural-confirmatory:
+    name: confirm-${{ matrix.label }}-s${{ matrix.start }}
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 150
     strategy:
       fail-fast: false
       matrix:
@@ -21,41 +21,71 @@ jobs:
           - label: bounded-base-0p6b
             model: littlelearner/littlelearner-0.6b-base
             revision: 822ef3a9700a952f74a3923b45829d53bdc76bee
+            start: 0
+          - label: bounded-base-0p6b
+            model: littlelearner/littlelearner-0.6b-base
+            revision: 822ef3a9700a952f74a3923b45829d53bdc76bee
+            start: 24
           - label: unfiltered-base-0p6b
             model: littlelearner/unfiltered-0.6b-base
             revision: fb0bb25397dca503e1a9741b2e7e826170dc525d
+            start: 0
+          - label: unfiltered-base-0p6b
+            model: littlelearner/unfiltered-0.6b-base
+            revision: fb0bb25397dca503e1a9741b2e7e826170dc525d
+            start: 24
           - label: bounded-grpo-0p6b
             model: littlelearner/littlelearner-0.6b-grpo-math-expert
             revision: 301a228c83efdf45759e88e697589b9e18ae8222
+            start: 0
+          - label: bounded-grpo-0p6b
+            model: littlelearner/littlelearner-0.6b-grpo-math-expert
+            revision: 301a228c83efdf45759e88e697589b9e18ae8222
+            start: 24
           - label: unfiltered-grpo-0p6b
             model: littlelearner/unfiltered-0.6b-grpo-math-expert
             revision: 819453e53d7d8d304c0e986a5a9f2ad6a57243ca
+            start: 0
+          - label: unfiltered-grpo-0p6b
+            model: littlelearner/unfiltered-0.6b-grpo-math-expert
+            revision: 819453e53d7d8d304c0e986a5a9f2ad6a57243ca
+            start: 24
     steps:
       - uses: actions/checkout@v4
-      - name: Environment
+      - name: Materialize and verify frozen artifacts
         run: |
+          set -euo pipefail
+          mkdir -p frozen-runtime
+          base64 --decode experiments/jumpbench/frozen/neural_eval_v0.3.py.gz.b64 | gzip -dc > frozen-runtime/neural_eval.py
+          base64 --decode experiments/jumpbench/frozen/neural_confirmatory_manifest.json.gz.b64 | gzip -dc > frozen-runtime/neural_confirmatory_manifest.json
+          base64 --decode experiments/jumpbench/frozen/neural_confirmatory_preregistration.md.gz.b64 | gzip -dc > frozen-runtime/NEURAL_CONFIRMATORY_PREREGISTRATION.md
+          echo "1435900ccc75bf7310ab4fb920cb6eee855e1091b14049bdc71a5384d7e7c985  frozen-runtime/neural_eval.py" | sha256sum --check
+          echo "fbf1eecd4273575aa70071662bf03cd1b02c5f59df25bcd5c36765bf84362e92  frozen-runtime/neural_confirmatory_manifest.json" | sha256sum --check
+          echo "3d7e0c8be15d1e44624e156f6354dfe6ab8899abf5440d9daf000644461271fc  frozen-runtime/NEURAL_CONFIRMATORY_PREREGISTRATION.md" | sha256sum --check
           python --version
           free -h
           nproc
-          sha256sum experiments/jumpbench/neural_eval.py experiments/jumpbench/neural_dev_manifest.json
       - name: Install CPU inference dependencies
         run: |
           python -m pip install --upgrade --quiet pip
           python -m pip install --quiet --index-url https://download.pytorch.org/whl/cpu torch
           python -m pip install --quiet "transformers>=4.52,<5" "accelerate>=1.2" safetensors huggingface_hub numpy
-      - name: Run development-only neural acquisition probe
+      - name: Run preregistered neural acquisition shard
         env:
           HF_HUB_DISABLE_TELEMETRY: "1"
           TOKENIZERS_PARALLELISM: "false"
         run: |
+          set -euo pipefail
           mkdir -p neural-results
-          python experiments/jumpbench/neural_eval.py \
+          python frozen-runtime/neural_eval.py \
             --model "${{ matrix.model }}" \
             --revision "${{ matrix.revision }}" \
-            --manifest experiments/jumpbench/neural_dev_manifest.json \
-            --output "neural-results/${{ matrix.label }}.json"
+            --manifest frozen-runtime/neural_confirmatory_manifest.json \
+            --start-index "${{ matrix.start }}" \
+            --max-tasks 24 \
+            --output "neural-results/${{ matrix.label }}-s${{ matrix.start }}.json"
       - uses: actions/upload-artifact@v4
         with:
-          name: jumpbench-neural-dev-${{ matrix.label }}
-          path: neural-results/${{ matrix.label }}.json
+          name: jumpbench-neural-confirm-${{ matrix.label }}-s${{ matrix.start }}
+          path: neural-results/${{ matrix.label }}-s${{ matrix.start }}.json
           if-no-files-found: error
