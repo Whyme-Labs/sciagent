@@ -1,9 +1,6 @@
 name: JumpBench neural evaluation
 
 on:
-  push:
-    branches:
-      - research/jumpbench-neural-eval
   pull_request:
     branches:
       - master
@@ -13,9 +10,26 @@ permissions:
   contents: read
 
 jobs:
-  discover-models:
+  calibrate:
+    name: calibrate-${{ matrix.label }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: bounded-base-0p6b
+            model: littlelearner/littlelearner-0.6b-base
+            revision: 822ef3a9700a952f74a3923b45829d53bdc76bee
+          - label: unfiltered-base-0p6b
+            model: littlelearner/unfiltered-0.6b-base
+            revision: fb0bb25397dca503e1a9741b2e7e826170dc525d
+          - label: bounded-grpo-0p6b
+            model: littlelearner/littlelearner-0.6b-grpo-math-expert
+            revision: 301a228c83efdf45759e88e697589b9e18ae8222
+          - label: unfiltered-grpo-0p6b
+            model: littlelearner/unfiltered-0.6b-grpo-math-expert
+            revision: 819453e53d7d8d304c0e986a5a9f2ad6a57243ca
     steps:
       - uses: actions/checkout@v4
       - name: Environment
@@ -23,35 +37,23 @@ jobs:
           python --version
           free -h
           nproc
-      - name: Discover LittleLearner model repositories
+      - name: Install CPU inference dependencies
         run: |
-          set -euo pipefail
-          python - <<'PY'
-          import json, urllib.parse, urllib.request
-          queries = [
-              {"author": "littlelearner", "limit": 100, "full": "true"},
-              {"search": "LittleLearner", "limit": 100, "full": "true"},
-              {"search": "littlelearner-ll", "limit": 100, "full": "true"},
-              {"filter": "arxiv:2608.13545", "limit": 100, "full": "true"},
-          ]
-          found = {}
-          for params in queries:
-              url = "https://huggingface.co/api/models?" + urllib.parse.urlencode(params)
-              print("QUERY", url)
-              with urllib.request.urlopen(url, timeout=60) as response:
-                  payload = json.load(response)
-              print("COUNT", len(payload))
-              for model in payload:
-                  model_id = model.get("id") or model.get("modelId")
-                  if model_id:
-                      found[model_id] = model
-                      print("MODEL", model_id, "sha=", model.get("sha"), "private=", model.get("private"))
-          with open("hf_models.json", "w", encoding="utf-8") as handle:
-              json.dump(found, handle, indent=2)
-          print("UNIQUE_MODELS", len(found))
-          PY
+          python -m pip install --upgrade --quiet pip
+          python -m pip install --quiet --index-url https://download.pytorch.org/whl/cpu torch
+          python -m pip install --quiet "transformers>=4.52,<5" "accelerate>=1.2" safetensors huggingface_hub
+      - name: Run frozen calibration probe
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+          TOKENIZERS_PARALLELISM: "false"
+        run: |
+          mkdir -p neural-results
+          python experiments/jumpbench/neural_probe.py \
+            --model "${{ matrix.model }}" \
+            --revision "${{ matrix.revision }}" \
+            --output "neural-results/${{ matrix.label }}.json"
       - uses: actions/upload-artifact@v4
         with:
-          name: jumpbench-hf-model-discovery
-          path: hf_models.json
+          name: jumpbench-calibration-${{ matrix.label }}
+          path: neural-results/${{ matrix.label }}.json
           if-no-files-found: error
