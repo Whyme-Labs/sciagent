@@ -1,0 +1,57 @@
+name: JumpBench neural evaluation
+
+on:
+  push:
+    branches:
+      - research/jumpbench-neural-eval
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  discover-models:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Environment
+        run: |
+          python --version
+          free -h
+          nproc
+      - name: Discover LittleLearner model repositories
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, urllib.parse, urllib.request
+          queries = [
+              {"author": "littlelearner", "limit": 100, "full": "true"},
+              {"search": "LittleLearner", "limit": 100, "full": "true"},
+              {"search": "littlelearner-ll", "limit": 100, "full": "true"},
+              {"filter": "arxiv:2608.13545", "limit": 100, "full": "true"},
+          ]
+          found = {}
+          for params in queries:
+              url = "https://huggingface.co/api/models?" + urllib.parse.urlencode(params)
+              print("QUERY", url)
+              with urllib.request.urlopen(url, timeout=60) as response:
+                  payload = json.load(response)
+              print("COUNT", len(payload))
+              for model in payload:
+                  model_id = model.get("id") or model.get("modelId")
+                  if model_id:
+                      found[model_id] = model
+                      print("MODEL", model_id, "sha=", model.get("sha"), "private=", model.get("private"))
+          with open("hf_models.json", "w", encoding="utf-8") as handle:
+              json.dump(found, handle, indent=2)
+          print("UNIQUE_MODELS", len(found))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jumpbench-hf-model-discovery
+          path: hf_models.json
+          if-no-files-found: error
